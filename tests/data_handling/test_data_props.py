@@ -18,7 +18,7 @@ class TestAPISchema:
             sky_scrapper_flight_search.minified(required=True)
         )
 
-        assert isinstance(sky_scrapper_flight_search, MinifiedAPI)
+        assert isinstance(sky_scrapper_flight_search_minified, MinifiedAPI)
         assert sky_scrapper_flight_search_minified.inputs == [
             "originSkyId",
             "destinationSkyId",
