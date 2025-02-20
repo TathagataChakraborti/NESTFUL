@@ -7,7 +7,7 @@ authors = [
 ]
 description = "A python wrapper over NESTFUL data"
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.11"
 
 keywords = [
   "automated planning",
