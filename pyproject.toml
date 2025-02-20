@@ -37,8 +37,6 @@ classifiers = [
 dependencies = [
     "pydantic",
     "jsonref",
-    "sentence-transformers",
-    "nltk",
 ]
 
 [project.optional-dependencies]
@@ -114,7 +112,7 @@ py-version=3.12
 max-line-length = 80
 
 [tool.flake8]
-extend-ignore = ["E203", "E501"]
+extend-ignore = ["F401"]
 count = true
 max-line-length = 80
 max-complexity = 18
