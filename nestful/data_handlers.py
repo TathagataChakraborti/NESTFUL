@@ -5,7 +5,7 @@ from os import listdir
 from os.path import isfile, join
 from jsonref import replace_refs
 from http import HTTPStatus
-from typing import Any, Optional, Tuple, Union, List
+from typing import Any, Optional, Tuple, List
 
 from nestful import SequencingDataset, SequencingData, Catalog, API
 from nestful.schemas.openapi import OpenAPI, Component, PathSpec
@@ -30,7 +30,7 @@ def data_path_constructor(
     path_to_file = Path(__file__).parent.resolve()
 
     exe_string = f"{'non-' if not executable else ''}executable"
-    name = f"-{name}" or ""
+    name = f"-{name}" if name else ""
 
     relative_path_to_data = (
         f"../data_{version}/{exe_string}/{exe_string}{name}-{data_type}.json"
@@ -66,8 +66,7 @@ def get_nestful_data(
     executable: bool = True,
     name: Optional[str] = None,
     version: Optional[str] = "v1",
-    index: Optional[int] = None,
-) -> Tuple[Union[SequencingData, SequencingDataset], Catalog]:
+) -> Tuple[SequencingDataset, Catalog]:
     catalog = get_nestful_catalog(executable, name, version)
     raw_sequence_data = read_raw_data(DataType.DATA, executable, name, version)
 
@@ -75,16 +74,23 @@ def get_nestful_data(
         data=[SequencingData.model_validate(item) for item in raw_sequence_data]
     )
 
-    if index is None:
-        return sequence_data, catalog
+    return sequence_data, catalog
 
-    else:
-        assert index < len(sequence_data.data), (
-            f"Requested dataset has {len(sequence_data.data)} samples, asked"
-            f" for {index}!"
-        )
 
-        return sequence_data.data[index], catalog
+def get_nestful_data_instance(
+    index: int,
+    executable: bool = True,
+    name: Optional[str] = None,
+    version: Optional[str] = "v1",
+) -> Tuple[SequencingData, Catalog]:
+    sequence_data, catalog = get_nestful_data(executable, name, version)
+
+    assert index < len(sequence_data.data), (
+        f"Requested dataset has {len(sequence_data.data)} samples, asked"
+        f" for {index}!"
+    )
+
+    return sequence_data.data[index], catalog
 
 
 def parse_api_from_openapi_spec(openapi_spec: OpenAPI) -> List[API]:
@@ -140,7 +146,6 @@ def get_catalog_from_openapi_specs(abs_path_to_specs: Path) -> Catalog:
             )
 
             openapi_object = OpenAPI(**openapi_spec_flat)
-
             new_catalog.apis.extend(parse_api_from_openapi_spec(openapi_object))
 
         except Exception as e:

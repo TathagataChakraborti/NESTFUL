@@ -64,7 +64,7 @@ def get_token(index: int, token: str = "var") -> str:
 
 
 def extract_label(label_string: Optional[str]) -> Tuple[str, Optional[str]]:
-    label, mapping = "", None
+    label, mapping = label_string or "", None
 
     if label_string is not None:
         if "." in label_string:

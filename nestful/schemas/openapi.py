@@ -46,6 +46,12 @@ class Component(BaseModel):
 
             elif isinstance(item, ResponseSelection):
                 nested_parameters = item.get_parameters(is_required)
+                parameters.append(
+                    Parameter(
+                        name=key,
+                        required=is_required,
+                    )
+                )
 
                 if nested_parameters:
                     for np in nested_parameters:
