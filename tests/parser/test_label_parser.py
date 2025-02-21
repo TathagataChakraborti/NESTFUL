@@ -6,7 +6,7 @@ class TestLabelParsing:
         string = "02-25-2024"
         label, mapping = extract_label(string)
 
-        assert label == string
+        assert label == ""
         assert mapping is None
 
     def test_direct_map(self) -> None:

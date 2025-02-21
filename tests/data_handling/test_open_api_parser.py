@@ -16,19 +16,27 @@ class TestOpenAPISpecs:
         catalog = get_catalog_from_openapi_specs(abs_path_to_specs=abs_path)
         assert len(catalog.apis) == 37
 
-    def get_kubernetes_api(self) -> Catalog:
-        rel_path_to_specs = "./open_api_specs"
+    def get_kubernetes_api(self, rel_path_to_specs: str) -> Catalog:
         abs_path = self.get_abs_path(rel_path_to_specs)
 
         catalog = get_catalog_from_openapi_specs(abs_path_to_specs=abs_path)
         return catalog
 
-    def test_read_kubernetes_api(self) -> None:
-        kube_catalog = self.get_kubernetes_api()
+    def test_read_kubernetes_api_by_directory(self) -> None:
+        rel_path_to_specs = "./open_api_specs"
+        kube_catalog = self.get_kubernetes_api(rel_path_to_specs)
+
         assert len(kube_catalog.apis) == 322
 
+    def test_read_kubernetes_api_by_file(self) -> None:
+        rel_path_to_specs = "./open_api_specs/kubeappsapi.json"
+        kube_catalog = self.get_kubernetes_api(rel_path_to_specs)
+
+        assert len(kube_catalog.apis) == 77
+
     def test_rogue_parameters(self) -> None:
-        kube_catalog = self.get_kubernetes_api()
+        rel_path_to_specs = "./open_api_specs/kubeappsapi.json"
+        kube_catalog = self.get_kubernetes_api(rel_path_to_specs)
 
         test_api = kube_catalog.get_api(
             name="listAppsV1ControllerRevisionForAllNamespaces"

@@ -48,6 +48,9 @@ include-package-data = true
 [tool.setuptools.packages.find]
 include = ["nestful*", "data_v1*"]
 
+[tool.setuptools.package-data]
+data_v1 = ["**/*.json"]
+
 [project.urls]
 "Repository" = "https://github.com/TathagataChakraborti/NESTFUL"
 "Issues" = "https://github.com/TathagataChakraborti/NESTFUL/issues"
