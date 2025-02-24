@@ -37,25 +37,29 @@ class SequenceStep(BaseModel):
     def pretty_print(
         self,
         mapper_tag: Optional[str] = None,
+        collapse_maps: bool = True,
     ) -> str:
         label = f"{self.label} = " if self.label else ""
 
         required_arguments = list(self.arguments.keys())
         pretty_strings = []
 
-        if mapper_tag is not None:
+        if collapse_maps:
+            required_arguments = [
+                f'{item}="{self.arguments.get(item)}"'
+                for item in required_arguments
+            ]
+        else:
+            assert (
+                mapper_tag
+            ), "You must provide a mapper tag if you are not collapsing maps."
+
             for item in required_arguments:
                 value = self.arguments.get(item)
 
                 if item != value:
                     mapping_string = f'{mapper_tag}("{value}", {item})'
-
                     pretty_strings.append(mapping_string)
-        else:
-            required_arguments = [
-                f'{item}="{self.arguments.get(item)}"'
-                for item in required_arguments
-            ]
 
         action_string = f"{label}{self.name}({', '.join(required_arguments)})"
         pretty_strings.append(action_string)
@@ -82,8 +86,11 @@ class SequencingData(BaseModel):
     def pretty_print(
         self,
         mapper_tag: Optional[str] = None,
+        collapse_maps: bool = True,
     ) -> str:
-        tokens = [op.pretty_print(mapper_tag) for op in self.output]
+        tokens = [
+            op.pretty_print(mapper_tag, collapse_maps) for op in self.output
+        ]
         return "\n".join(tokens)
 
 
