@@ -69,10 +69,13 @@ def get_nestful_data(
 ) -> Tuple[SequencingDataset, Catalog]:
     catalog = get_nestful_catalog(executable, name, version)
     raw_sequence_data = read_raw_data(DataType.DATA, executable, name, version)
+    sequence_data = SequencingDataset(data=[])
 
-    sequence_data = SequencingDataset(
-        data=[SequencingData.model_validate(item) for item in raw_sequence_data]
-    )
+    for item in raw_sequence_data:
+        sequence_instance = SequencingData.model_validate(item)
+        sequence_instance.output = sequence_instance.output[:-1]
+
+        sequence_data.data.append(sequence_instance)
 
     return sequence_data, catalog
 
