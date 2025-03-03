@@ -43,6 +43,9 @@ class API(BaseModel):
         if self.parameters:
             self.query_parameters = self.parameters
 
+        if self.arguments:
+            self.query_parameters = self.arguments
+
         return self
 
     def get_arguments(self, required: Optional[bool] = True) -> List[str]:

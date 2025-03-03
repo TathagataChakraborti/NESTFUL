@@ -1,5 +1,5 @@
 from __future__ import annotations
-from pydantic import BaseModel, ConfigDict, model_validator
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 from typing import Dict, Optional, Any, Union, List
 from http import HTTPStatus, HTTPMethod
 
@@ -15,7 +15,7 @@ class Parameter(BaseModel):
     description: Optional[str] = ""
     required: Optional[bool] = False
     type: Optional[str] = None
-    schema: Optional[Component] = None  # type: ignore
+    parameter_schema: Optional[Component] = Field(alias="schema", default=None)
 
 
 class Component(BaseModel):
@@ -61,7 +61,7 @@ class Component(BaseModel):
                                 description=np.description,
                                 required=np.required,
                                 type=np.type,
-                                schema=np.schema,
+                                schema=np.parameter_schema,
                             )
                         )
                 else:
@@ -104,15 +104,15 @@ class ResponseSelection(BaseModel):
 
 
 class SchemaObject(BaseModel):
-    schema: Union[ResponseSelection, Component]  # type: ignore
+    object_schema: Union[ResponseSelection, Component] = Field(alias="schema")
 
     def get_parameters(
         self, is_required: Optional[bool] = None
     ) -> List[Parameter]:
-        if isinstance(self.schema, Component):
-            if self.schema.type == "array":
+        if isinstance(self.object_schema, Component):
+            if self.object_schema.type == "array":
                 # TODO: https://github.com/TathagataChakraborti/NESTFUL/issues/4
-                items = self.schema.items
+                items = self.object_schema.items
 
                 if not items:
                     raise ValueError(f"Empty array specification: {self}")
@@ -122,8 +122,8 @@ class SchemaObject(BaseModel):
 
                     return items.transform_properties_to_parameter(is_required)
 
-            elif self.schema.type == "object":
-                return self.schema.transform_properties_to_parameter(
+            elif self.object_schema.type == "object":
+                return self.object_schema.transform_properties_to_parameter(
                     is_required
                 )
 
@@ -131,8 +131,8 @@ class SchemaObject(BaseModel):
                 # TODO: https://github.com/TathagataChakraborti/NESTFUL/issues/3
                 return [Parameter(name="None")]
 
-        elif isinstance(self.schema, ResponseSelection):
-            return self.schema.get_parameters(is_required)
+        elif isinstance(self.object_schema, ResponseSelection):
+            return self.object_schema.get_parameters(is_required)
 
         else:
             raise NotImplementedError
