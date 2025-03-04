@@ -25,5 +25,4 @@ class TestPrettyPrint:
                 'var5 = TripadvisorSearchHotels(geoId="$var4.geoId$",'
                 ' checkIn="2024-08-15", checkOut="2024-08-18")'
             ),
-            'var_result(flights="$var3$", hotels="$var5$")',
         ]

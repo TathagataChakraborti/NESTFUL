@@ -1386,33 +1386,6 @@
         }
     },
     {
-        "name": "translate_text",
-        "description": "Translate a text from one language to another",
-        "parameters": {
-            "text": {
-                "type": "string",
-                "required": true,
-                "description": "The text to translate"
-            },
-            "source_language": {
-                "type": "string",
-                "required": true,
-                "description": "The source language of the text"
-            },
-            "target_language": {
-                "type": "string",
-                "required": true,
-                "description": "The target language to translate the text"
-            }
-        },
-        "output_parameters": {
-            "translated_text": {
-                "type": "string",
-                "description": "The translated text"
-            }
-        }
-    },
-    {
         "name": "schedule_meeting",
         "description": "Schedule a meeting with participants",
         "parameters": {
@@ -1440,28 +1413,6 @@
             "meeting_id": {
                 "type": "string",
                 "description": "The unique identifier for the scheduled meeting"
-            }
-        }
-    },
-    {
-        "name": "search_music",
-        "description": "Search for music tracks or albums by artist or genre",
-        "parameters": {
-            "artist": {
-                "type": "string",
-                "required": true,
-                "description": "The name of the artist"
-            },
-            "genre": {
-                "type": "string",
-                "required": false,
-                "description": "The genre of the music"
-            }
-        },
-        "output_parameters": {
-            "search_results": {
-                "type": "array",
-                "description": "An array of search results containing music tracks or albums"
             }
         }
     },
@@ -1489,37 +1440,6 @@
             "emi": {
                 "type": "number",
                 "description": "The monthly payment for the loan"
-            }
-        }
-    },
-    {
-        "name": "schedule_meeting",
-        "description": "Schedule a meeting with participants",
-        "parameters": {
-            "title": {
-                "type": "string",
-                "required": true,
-                "description": "The title of the meeting"
-            },
-            "date": {
-                "type": "string",
-                "required": true,
-                "format": "date",
-                "description": "The date of the meeting"
-            },
-            "participants": {
-                "type": "array",
-                "required": true,
-                "items": {
-                    "type": "string"
-                },
-                "description": "The list of participants"
-            }
-        },
-        "output_parameters": {
-            "meeting_id": {
-                "type": "string",
-                "description": "The unique identifier for the scheduled meeting"
             }
         }
     },
@@ -1654,59 +1574,6 @@
         }
     },
     {
-        "name": "search_product",
-        "description": "Search for a product on an e-commerce website",
-        "parameters": {
-            "query": {
-                "type": "string",
-                "required": true,
-                "description": "The search query"
-            },
-            "category": {
-                "type": "string",
-                "required": false,
-                "description": "The category of the product"
-            },
-            "price_range": {
-                "type": "object",
-                "required": false,
-                "properties": {
-                    "min": {
-                        "type": "number",
-                        "description": "The minimum price"
-                    },
-                    "max": {
-                        "type": "number",
-                        "description": "The maximum price"
-                    }
-                }
-            }
-        },
-        "output_parameters": {
-            "product_results": {
-                "type": "array",
-                "description": "The search results",
-                "items": {
-                    "type": "object",
-                    "properties": {
-                        "product_id": {
-                            "type": "string"
-                        },
-                        "product_name": {
-                            "type": "string"
-                        },
-                        "product_description": {
-                            "type": "string"
-                        },
-                        "product_price": {
-                            "type": "number"
-                        }
-                    }
-                }
-            }
-        }
-    },
-    {
         "name": "calculate_mortgage_payment",
         "description": "Calculate the monthly mortgage payment amount based on the loan amount, interest rate, and loan term",
         "parameters": {
@@ -1730,86 +1597,6 @@
             "monthly_payment": {
                 "type": "number",
                 "description": "The monthly mortgage payment amount"
-            }
-        }
-    },
-    {
-        "name": "search_product",
-        "description": "Search for a product on an e-commerce website",
-        "parameters": {
-            "query": {
-                "type": "string",
-                "required": true,
-                "description": "The search query"
-            },
-            "category": {
-                "type": "string",
-                "required": false,
-                "description": "The category of the product"
-            },
-            "price_range": {
-                "type": "object",
-                "required": false,
-                "properties": {
-                    "min": {
-                        "type": "number",
-                        "description": "The minimum price"
-                    },
-                    "max": {
-                        "type": "number",
-                        "description": "The maximum price"
-                    }
-                }
-            }
-        },
-        "output_parameters": {
-            "product_results": {
-                "type": "array",
-                "description": "The search results",
-                "items": {
-                    "type": "object",
-                    "properties": {
-                        "product_id": {
-                            "type": "string"
-                        },
-                        "product_name": {
-                            "type": "string"
-                        },
-                        "product_description": {
-                            "type": "string"
-                        },
-                        "product_price": {
-                            "type": "number"
-                        }
-                    }
-                }
-            }
-        }
-    },
-    {
-        "name": "generate_password",
-        "description": "Generate a random password",
-        "parameters": {
-            "length": {
-                "type": "integer",
-                "required": true,
-                "description": "The desired length of the password"
-            },
-            "include_numbers": {
-                "type": "boolean",
-                "required": false,
-                "description": "Whether to include numbers in the password"
-            },
-            "include_special_characters": {
-                "type": "boolean",
-                "required": false,
-                "description": "Whether to include special characters in the password"
-            }
-        },
-        "output_parameters": {
-            "password": {
-                "type": "string",
-                "description": "The generated password"
             }
         }
     },
