@@ -73,7 +73,7 @@ class SequencingData(BaseModel):
 
     @model_validator(mode="after")
     def remove_final_step(self) -> SequencingData:
-        if self.output[-1].name == "var_result":
+        if self.output and self.output[-1].name == "var_result":
             self.output = self.output[:-1]
 
         return self
