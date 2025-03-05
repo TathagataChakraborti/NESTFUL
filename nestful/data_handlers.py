@@ -73,8 +73,6 @@ def get_nestful_data(
 
     for item in raw_sequence_data:
         sequence_instance = SequencingData.model_validate(item)
-        sequence_instance.output = sequence_instance.output[:-1]
-
         sequence_data.data.append(sequence_instance)
 
     return sequence_data, catalog
