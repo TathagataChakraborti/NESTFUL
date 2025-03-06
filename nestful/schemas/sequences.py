@@ -71,6 +71,13 @@ class SequencingData(BaseModel):
     input: str = ""
     output: List[SequenceStep] = []
 
+    @model_validator(mode="after")
+    def remove_final_step(self) -> SequencingData:
+        if self.output and self.output[-1].name == "var_result":
+            self.output = self.output[:-1]
+
+        return self
+
     @staticmethod
     def parse_pretty_print(
         pretty_print: Union[str, List[str]]
