@@ -11,6 +11,13 @@ class SequenceStep(BaseModel):
     arguments: Dict[str, Any] = dict()
     label: Optional[str] = None
 
+    def is_same_as(self, ground_truth: SequenceStep | SequencingData) -> bool:
+        return (
+            self == ground_truth
+            if isinstance(ground_truth, SequenceStep)
+            else self in ground_truth.output
+        )
+
     @model_validator(mode="after")
     def non_string_assignments(self) -> SequenceStep:
         self.arguments = {
