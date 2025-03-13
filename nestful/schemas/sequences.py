@@ -30,7 +30,11 @@ class SequenceStep(BaseModel):
         arguments = {}
         for item in parameters:
             item_split = item.split("=")
-            arguments[item_split[0]] = item_split[1].replace('"', "")
+            try:
+                arguments[item_split[0]] = item_split[1].replace('"', "")
+            except IndexError as e:
+                print(e)
+                pass
 
         return SequenceStep(name=action_name, arguments=arguments, label=label)
 
