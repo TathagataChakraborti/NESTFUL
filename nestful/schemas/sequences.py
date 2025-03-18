@@ -23,6 +23,7 @@ class SequenceStep(BaseModel):
         self.arguments = {
             key: str(item) for key, item in self.arguments.items()
         }
+
         return self
 
     @staticmethod
@@ -37,11 +38,7 @@ class SequenceStep(BaseModel):
         arguments = {}
         for item in parameters:
             item_split = item.split("=")
-            try:
-                arguments[item_split[0]] = item_split[1].replace('"', "")
-            except IndexError as e:
-                print(e)
-                pass
+            arguments[item_split[0]] = item_split[1].replace('"', "")
 
         return SequenceStep(name=action_name, arguments=arguments, label=label)
 
