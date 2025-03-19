@@ -1,6 +1,6 @@
 from __future__ import annotations
-from pydantic import BaseModel, ConfigDict, model_validator
 from typing import List, Dict, Optional, Any, Union
+from pydantic import BaseModel, ConfigDict, model_validator
 from nestful.utils import parse_parameters
 from nestful.schemas.api import Catalog, API
 
@@ -110,10 +110,12 @@ class SequenceStep(BaseModel):
 class SequencingData(BaseModel):
     input: str = ""
     output: List[SequenceStep] = []
+    var_result: Dict[str, str] = {}
 
     @model_validator(mode="after")
     def remove_final_step(self) -> SequencingData:
         if self.output and self.output[-1].name == "var_result":
+            self.var_result = self.output[-1].arguments
             self.output = self.output[:-1]
 
         return self

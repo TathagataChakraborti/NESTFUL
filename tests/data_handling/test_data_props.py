@@ -31,10 +31,12 @@ class TestAPISchema:
         catalog = get_nestful_catalog(
             version="v1", executable=False, name="glaive"
         )
+
         assert len(catalog.apis) == 64
 
     def test_parse_api_data_sgd(self) -> None:
         catalog = get_nestful_catalog(
             version="v1", executable=False, name="sgd"
         )
+
         assert len(catalog.apis) == 30
