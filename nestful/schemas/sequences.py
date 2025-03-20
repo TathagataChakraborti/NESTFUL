@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import List, Dict, Optional, Any, Union
+from typing import List, Dict, Optional, Any, Union, Tuple
 from pydantic import BaseModel, ConfigDict, model_validator
 from nestful.utils import parse_parameters
 from nestful.schemas.api import Catalog, API
@@ -119,6 +119,32 @@ class SequencingData(BaseModel):
             self.output = self.output[:-1]
 
         return self
+
+    def who_produced(self, var: str) -> Tuple[Optional[str], int]:
+        index_map: Dict[str, int] = {}
+
+        for step in self.output:
+            if step.name is not None:
+                current_index = index_map.get(step.name, 0)
+                index_map[step.name] = current_index + 1
+
+                if step.label == var:
+                    return step.name, index_map[step.name]
+
+        return None, 0
+
+    def get_label(self, name: str, index: int = 1) -> Optional[str]:
+        index_map: Dict[str, int] = {}
+
+        for step in self.output:
+            if step.name is not None:
+                current_index = index_map.get(step.name, 0)
+                index_map[step.name] = current_index + 1
+
+                if step.name == name and index_map[step.name] == index:
+                    return step.label
+
+        return None
 
     @staticmethod
     def parse_pretty_print(
