@@ -1,7 +1,8 @@
 from __future__ import annotations
-from pydantic import BaseModel, ConfigDict, model_validator
 from typing import List, Dict, Optional, Any, Union
+from pydantic import BaseModel, ConfigDict, model_validator
 from nestful.utils import parse_parameters
+from nestful.schemas.api import Catalog, API
 
 
 class SequenceStep(BaseModel):
@@ -11,18 +12,49 @@ class SequenceStep(BaseModel):
     arguments: Dict[str, Any] = dict()
     label: Optional[str] = None
 
-    def is_same_as(self, ground_truth: SequenceStep | SequencingData) -> bool:
-        return (
-            self == ground_truth
-            if isinstance(ground_truth, SequenceStep)
-            else self in ground_truth.output
-        )
+    def is_same_as(
+        self,
+        ground_truth: SequenceStep | SequencingData,
+        catalog: Catalog,
+        required_schema_only: bool = False,
+    ) -> bool:
+        if required_schema_only:
+            if isinstance(ground_truth, SequenceStep):
+                api_spec = (
+                    catalog.get_api(name=self.name, required=True)
+                    if self.name
+                    else None
+                )
+
+                return (
+                    api_spec is not None
+                    and isinstance(api_spec, API)
+                    and set(api_spec.get_arguments(required=True))
+                    == set(self.arguments.keys())
+                )
+
+            else:
+                return any(
+                    [
+                        self.is_same_as(
+                            ground_truth_step, catalog, required_schema_only
+                        )
+                        for ground_truth_step in ground_truth.output
+                    ]
+                )
+        else:
+            return (
+                self == ground_truth
+                if isinstance(ground_truth, SequenceStep)
+                else self in ground_truth.output
+            )
 
     @model_validator(mode="after")
     def non_string_assignments(self) -> SequenceStep:
         self.arguments = {
             key: str(item) for key, item in self.arguments.items()
         }
+
         return self
 
     @staticmethod
@@ -37,11 +69,7 @@ class SequenceStep(BaseModel):
         arguments = {}
         for item in parameters:
             item_split = item.split("=")
-            try:
-                arguments[item_split[0]] = item_split[1].replace('"', "")
-            except IndexError as e:
-                print(e)
-                pass
+            arguments[item_split[0]] = item_split[1].replace('"', "")
 
         return SequenceStep(name=action_name, arguments=arguments, label=label)
 
@@ -60,6 +88,7 @@ class SequenceStep(BaseModel):
                 f'{item}="{self.arguments.get(item)}"'
                 for item in required_arguments
             ]
+
         else:
             assert (
                 mapper_tag
@@ -81,10 +110,12 @@ class SequenceStep(BaseModel):
 class SequencingData(BaseModel):
     input: str = ""
     output: List[SequenceStep] = []
+    var_result: Dict[str, str] = {}
 
     @model_validator(mode="after")
     def remove_final_step(self) -> SequencingData:
         if self.output and self.output[-1].name == "var_result":
+            self.var_result = self.output[-1].arguments
             self.output = self.output[:-1]
 
         return self
@@ -109,6 +140,7 @@ class SequencingData(BaseModel):
         tokens = [
             op.pretty_print(mapper_tag, collapse_maps) for op in self.output
         ]
+
         return "\n".join(tokens)
 
 
