@@ -13,7 +13,7 @@ class TestLabelParsing:
         string = "$data$"
         label, mapping = extract_label(string)
 
-        assert label == get_token(index=0, token="var")
+        assert label == get_token(index=0)
         assert mapping == "data"
 
     def test_keyed_map(self) -> None:
@@ -29,3 +29,17 @@ class TestLabelParsing:
 
         assert label == "var2"
         assert mapping == "location.geoId"
+
+    def test_var_result_reference(self) -> None:
+        string = "$var5$"
+        label, mapping = extract_label(string)
+
+        assert label == get_token(index=0)
+        assert mapping == "var5"
+
+    def test_indexed_reference(self) -> None:
+        string = "$var5.authors[0]$"
+        label, mapping = extract_label(string)
+
+        assert label == "var5"
+        assert mapping == "authors"
