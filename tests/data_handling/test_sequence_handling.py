@@ -56,7 +56,7 @@ class TestTrajectoryCheck:
             ]
         )
 
-        test_sequence_dict = [
+        self.test_sequence_dict = [
             {
                 "name": "SkyScrapperSearchAirport",
                 "arguments": {"query": "New York"},
@@ -138,7 +138,8 @@ class TestTrajectoryCheck:
 
         self.test_sequence = SequencingData(
             output=[
-                SequenceStep.model_validate(item) for item in test_sequence_dict
+                SequenceStep.model_validate(item)
+                for item in self.test_sequence_dict
             ]
         )
 
@@ -204,4 +205,18 @@ class TestTrajectoryCheck:
         assert (
             name is not None
             and self.test_sequence.get_label(name, index) == "var6"
+        )
+
+    def test_missing_step(self) -> None:
+        test_sequence = SequencingData(
+            output=[
+                SequenceStep.model_validate(item)
+                for item in self.test_sequence_dict[:5]
+            ]
+        )
+
+        name, index = self.ground_truth_sequence.who_produced("var5")
+        assert (
+            name == "TripadvisorSearchHotels"
+            and test_sequence.get_label(name, index) is None
         )
