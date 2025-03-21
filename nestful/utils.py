@@ -87,4 +87,8 @@ def extract_label(label_string: Optional[str]) -> Tuple[str, Optional[str]]:
                 label = get_token(index=0)
                 mapping = match_object.groupdict().get("map", None)
 
+    # TODO: Generic transformation
+    if mapping is not None and "[" in mapping:
+        mapping = mapping.split("[")[0]
+
     return label, mapping
