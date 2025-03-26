@@ -26,3 +26,40 @@ class TestPrettyPrint:
                 ' checkIn="2024-08-15", checkOut="2024-08-18")'
             ),
         ]
+
+    def test_sequence_step_str(self) -> None:
+        sequence, _ = get_nestful_data_instance(executable=True, index=0)
+
+        assert (
+            str(sequence.output[1])
+            == "{'name': 'SkyScrapperSearchAirport', 'arguments': {'query':"
+            " 'London'}}"
+        )
+
+        assert (
+            str(sequence.output[4])
+            == "{'name': 'TripadvisorSearchHotels', 'arguments': {'geoId':"
+            " '$var4.geoId$', 'checkIn': '2024-08-15', 'checkOut':"
+            " '2024-08-18'}}"
+        )
+
+    def test_sequence_str(self) -> None:
+        sequence, _ = get_nestful_data_instance(executable=True, index=0)
+
+        print(sequence)
+
+        assert (
+            str(sequence)
+            == "[\n{'name': 'SkyScrapperSearchAirport', 'arguments': {'query':"
+            " 'New York'}},\n{'name': 'SkyScrapperSearchAirport',"
+            " 'arguments': {'query': 'London'}},\n{'name':"
+            " 'SkyScrapperFlightSearch', 'arguments': {'originSkyId':"
+            " '$var1.skyId$', 'destinationSkyId': '$var2.skyId$',"
+            " 'originEntityId': '$var1.entityId$', 'destinationEntityId':"
+            " '$var2.entityId$', 'date': '2024-08-15', 'returnDate':"
+            " '2024-08-18'}},\n{'name': 'TripadvisorSearchLocation',"
+            " 'arguments': {'query': 'London'}},\n{'name':"
+            " 'TripadvisorSearchHotels', 'arguments': {'geoId':"
+            " '$var4.geoId$', 'checkIn': '2024-08-15', 'checkOut':"
+            " '2024-08-18'}}\n]"
+        )
