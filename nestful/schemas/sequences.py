@@ -13,9 +13,7 @@ class SequenceStep(BaseModel):
     label: Optional[str] = None
 
     def __str__(self) -> str:
-        dict_form = self.dict()
-        del dict_form["label"]
-        return str(dict_form)
+        return str(self.dict())
 
     def is_same_as(
         self,

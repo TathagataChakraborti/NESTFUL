@@ -33,14 +33,14 @@ class TestPrettyPrint:
         assert (
             str(sequence.output[1])
             == "{'name': 'SkyScrapperSearchAirport', 'arguments': {'query':"
-            " 'London'}}"
+            " 'London'}, 'label': 'var2'}"
         )
 
         assert (
             str(sequence.output[4])
             == "{'name': 'TripadvisorSearchHotels', 'arguments': {'geoId':"
             " '$var4.geoId$', 'checkIn': '2024-08-15', 'checkOut':"
-            " '2024-08-18'}}"
+            " '2024-08-18'}, 'label': 'var5'}"
         )
 
     def test_sequence_str(self) -> None:
@@ -51,15 +51,16 @@ class TestPrettyPrint:
         assert (
             str(sequence)
             == "[\n{'name': 'SkyScrapperSearchAirport', 'arguments': {'query':"
-            " 'New York'}},\n{'name': 'SkyScrapperSearchAirport',"
-            " 'arguments': {'query': 'London'}},\n{'name':"
-            " 'SkyScrapperFlightSearch', 'arguments': {'originSkyId':"
-            " '$var1.skyId$', 'destinationSkyId': '$var2.skyId$',"
-            " 'originEntityId': '$var1.entityId$', 'destinationEntityId':"
-            " '$var2.entityId$', 'date': '2024-08-15', 'returnDate':"
-            " '2024-08-18'}},\n{'name': 'TripadvisorSearchLocation',"
-            " 'arguments': {'query': 'London'}},\n{'name':"
+            " 'New York'}, 'label': 'var1'},\n{'name':"
+            " 'SkyScrapperSearchAirport', 'arguments': {'query': 'London'},"
+            " 'label': 'var2'},\n{'name': 'SkyScrapperFlightSearch',"
+            " 'arguments': {'originSkyId': '$var1.skyId$',"
+            " 'destinationSkyId': '$var2.skyId$', 'originEntityId':"
+            " '$var1.entityId$', 'destinationEntityId': '$var2.entityId$',"
+            " 'date': '2024-08-15', 'returnDate': '2024-08-18'}, 'label':"
+            " 'var3'},\n{'name': 'TripadvisorSearchLocation', 'arguments':"
+            " {'query': 'London'}, 'label': 'var4'},\n{'name':"
             " 'TripadvisorSearchHotels', 'arguments': {'geoId':"
             " '$var4.geoId$', 'checkIn': '2024-08-15', 'checkOut':"
-            " '2024-08-18'}}\n]"
+            " '2024-08-18'}, 'label': 'var5'}\n]"
         )
