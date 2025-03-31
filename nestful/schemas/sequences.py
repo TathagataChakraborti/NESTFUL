@@ -12,6 +12,9 @@ class SequenceStep(BaseModel):
     arguments: Dict[str, Any] = dict()
     label: Optional[str] = None
 
+    def __str__(self) -> str:
+        return str(self.dict())
+
     def is_same_as(
         self,
         ground_truth: SequenceStep | SequencingData,
@@ -111,6 +114,11 @@ class SequencingData(BaseModel):
     input: str = ""
     output: List[SequenceStep] = []
     var_result: Dict[str, str] = {}
+
+    def __str__(self) -> str:
+        list_of_str = [str(item) for item in self.output]
+        string_form = ",\n".join(list_of_str)
+        return f"[\n{string_form}\n]"
 
     @model_validator(mode="after")
     def remove_final_step(self) -> SequencingData:
