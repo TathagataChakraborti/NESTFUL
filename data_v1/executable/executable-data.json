@@ -121,7 +121,7 @@
       {
         "name": "TripadvisorSearchRestaurants",
         "arguments": {
-          "geoId": "$var1.geoId$",
+          "locationId": "$var1.geoId$",
           "sort": "rating"
         },
         "label": "var2"
@@ -204,7 +204,6 @@
       {
         "name": "RedditTopPostsBySubreddit",
         "arguments": {
-          "query": "$var1.title$",
           "subreddit": "news",
           "time": "week"
         },
@@ -233,7 +232,6 @@
       {
         "name": "RedditTopPostsBySubreddit",
         "arguments": {
-          "query": "$var1.title$",
           "subreddit": "economy",
           "time": "month"
         },
@@ -262,7 +260,6 @@
       {
         "name": "RedditTopPostsBySubreddit",
         "arguments": {
-          "query": "$var1.title$",
           "subreddit": "sports",
           "time": "day"
         },
@@ -291,7 +288,6 @@
       {
         "name": "RedditTopPostsBySubreddit",
         "arguments": {
-          "query": "$var1.title$",
           "subreddit": "India",
           "time": "week"
         },
@@ -320,7 +316,6 @@
       {
         "name": "RedditTopPostsBySubreddit",
         "arguments": {
-          "query": "$var1.title$",
           "subreddit": "United States",
           "time": "week"
         },
@@ -356,6 +351,7 @@
           "business_id": "$var1.business_id$",
           "limit": 20,
           "offset": 0,
+          "query": "Gyms in London, UK",
           "sortBy": "most_relevant",
           "region": "us",
           "language": "en"
@@ -391,6 +387,7 @@
           "business_id": "$var1.business_id$",
           "limit": 20,
           "offset": 0,
+          "query": "Pet groomers near Sydney, Australia",
           "sortBy": "most_relevant",
           "region": "us",
           "language": "en"
@@ -427,6 +424,7 @@
           "business_id": "$var1.business_id$",
           "limit": 20,
           "offset": 0,
+          "query": "Bars in Manhattan, USA",
           "sortBy": "most_relevant",
           "region": "us",
           "language": "en"
@@ -463,6 +461,7 @@
           "business_id": "$var1.business_id$",
           "limit": 20,
           "offset": 0,
+          "query": "Nightclubs in Las Vegas",
           "sortBy": "most_relevant",
           "region": "us",
           "language": "en"
@@ -498,6 +497,7 @@
           "business_id": "$var1.business_id$",
           "limit": 20,
           "offset": 0,
+          "query": "Hair salons in Paris, France",
           "sortBy": "most_relevant",
           "region": "us",
           "language": "en"
@@ -693,7 +693,7 @@
           "language": "en",
           "page": 1,
           "limit": 30,
-          "sortBy": "BEST_MATCH",
+          "sort_by": "BEST_MATCH",
           "product_condition": "ANY"
         },
         "label": "var1"
@@ -739,7 +739,7 @@
           "language": "en",
           "page": 1,
           "limit": 30,
-          "sortBy": "BEST_MATCH",
+          "sort_by": "BEST_MATCH",
           "product_condition": "ANY",
           "min_rating": "ANY"
         },
@@ -748,12 +748,12 @@
       {
         "name": "Real-Time_Product_Search_Product_Details",
         "arguments": {
-          "product_id": "var1.product_id$",
+          "q": "Nike Air Force One's",
           "country": "us",
           "language": "en",
           "page": 1,
           "limit": 30,
-          "sortBy": "BEST_MATCH",
+          "sort_by": "BEST_MATCH",
           "product_condition": "ANY",
           "free_returns": false,
           "free_shipping": false,
@@ -793,7 +793,7 @@
           "language": "en",
           "page": 1,
           "limit": 30,
-          "sortBy": "BEST_MATCH",
+          "sort_by": "BEST_MATCH",
           "product_condition": "ANY",
           "min_rating": "ANY"
         },
@@ -840,7 +840,7 @@
           "language": "en",
           "page": 1,
           "limit": 30,
-          "sortBy": "BEST_MATCH",
+          "sort_by": "BEST_MATCH",
           "product_condition": "ANY",
           "min_rating": "ANY"
         },
@@ -849,12 +849,12 @@
       {
         "name": "Real-Time_Product_Search_Product_Details",
         "arguments": {
-          "product_id": "$var1.product_id$",
+          "q": "Apple iPhone 13 Pro Max",
           "country": "us",
           "language": "en",
           "page": 1,
           "limit": 30,
-          "sortBy": "BEST_MATCH",
+          "sort_by": "BEST_MATCH",
           "product_condition": "ANY",
           "free_returns": false,
           "free_shipping": false,
@@ -894,7 +894,7 @@
           "language": "en",
           "page": 1,
           "limit": 30,
-          "sortBy": "BEST_MATCH",
+          "sort_by": "BEST_MATCH",
           "product_condition": "ANY",
           "min_rating": "ANY"
         },
@@ -930,7 +930,7 @@
           "language": "en",
           "page": 1,
           "limit": 30,
-          "sortBy": "BEST_MATCH",
+          "sort_by": "BEST_MATCH",
           "product_condition": "ANY",
           "min_rating": "ANY"
         },
@@ -977,7 +977,7 @@
           "language": "en",
           "page": 1,
           "limit": 30,
-          "sortBy": "BEST_MATCH",
+          "sort_by": "BEST_MATCH",
           "product_condition": "ANY",
           "min_rating": "ANY"
         },
@@ -986,12 +986,12 @@
       {
         "name": "Real-Time_Product_Search_Product_Details",
         "arguments": {
-          "product_id": "$var1.product_id$",
+          "q": "Macbook Pro 13 inch",
           "country": "us",
           "language": "en",
           "page": 1,
           "limit": 30,
-          "sortBy": "BEST_MATCH",
+          "sort_by": "BEST_MATCH",
           "product_condition": "ANY",
           "free_returns": false,
           "free_shipping": false,
@@ -1031,7 +1031,7 @@
           "language": "en",
           "page": 1,
           "limit": 30,
-          "sortBy": "BEST_MATCH",
+          "sort_by": "BEST_MATCH",
           "product_condition": "ANY",
           "min_rating": "ANY"
         },
@@ -1050,12 +1050,12 @@
       {
         "name": "Real-Time_Product_Search_Product_Details",
         "arguments": {
-          "product_id": "$var1.product_id$",
+          "q": "Canon G7x",
           "country": "us",
           "language": "en",
           "page": 1,
           "limit": 30,
-          "sortBy": "BEST_MATCH",
+          "sort_by": "BEST_MATCH",
           "product_condition": "ANY",
           "free_returns": false,
           "free_shipping": false,
@@ -1085,7 +1085,7 @@
           "language": "en",
           "page": 1,
           "limit": 30,
-          "sortBy": "BEST_MATCH",
+          "sort_by": "BEST_MATCH",
           "product_condition": "ANY",
           "min_rating": "ANY"
         },
@@ -1132,7 +1132,7 @@
           "language": "en",
           "page": 1,
           "limit": 30,
-          "sortBy": "BEST_MATCH",
+          "sort_by": "BEST_MATCH",
           "product_condition": "ANY",
           "min_rating": "ANY"
         },
@@ -1141,12 +1141,12 @@
       {
         "name": "Real-Time_Product_Search_Product_Details",
         "arguments": {
-          "product_id": "$var1.product_id$",
+          "q": "XBox One",
           "country": "us",
           "language": "en",
           "page": 1,
           "limit": 30,
-          "sortBy": "BEST_MATCH",
+          "sort_by": "BEST_MATCH",
           "product_condition": "ANY",
           "free_returns": false,
           "free_shipping": false,
@@ -1197,7 +1197,7 @@
           "language": "en",
           "page": 1,
           "limit": 30,
-          "sortBy": "BEST_MATCH",
+          "sort_by": "BEST_MATCH",
           "product_condition": "ANY",
           "min_rating": "ANY"
         },
@@ -1206,12 +1206,12 @@
       {
         "name": "Real-Time_Product_Search_Product_Details",
         "arguments": {
-          "product_id": "$var1.product_id$",
+          "q": "Sony PlayStation 5",
           "country": "us",
           "language": "en",
           "page": 1,
           "limit": 30,
-          "sortBy": "BEST_MATCH",
+          "sort_by": "BEST_MATCH",
           "product_condition": "ANY",
           "free_returns": false,
           "free_shipping": false,
@@ -1547,7 +1547,7 @@
         "name": "WeatherAPI.com_Forecast_Weather_API",
         "arguments": {
           "q": "$var1.location.name$",
-          "date": "2024-10-01"
+          "dt": "2024-10-01"
         },
         "label": "var4"
       },
@@ -1662,7 +1662,7 @@
         "name": "WeatherAPI.com_Forecast_Weather_API",
         "arguments": {
           "q": "Chicago",
-          "date": "2024-08-10"
+          "dt": "2024-08-10"
         },
         "label": "var4"
       },
@@ -1732,7 +1732,7 @@
         "name": "WeatherAPI.com_Forecast_Weather_API",
         "arguments": {
           "q": "$var1.location.name$",
-          "date": "2024-09-05"
+          "dt": "2024-09-05"
         },
         "label": "var7"
       },

@@ -1,0 +1,777 @@
+/Users/tchakra2/miniconda3/envs/refraction/bin/python -X pycache_prefix=/Users/tchakra2/Library/Caches/JetBrains/PyCharmCE2023.3/cpython-cache /Applications/PyCharm CE.app/Contents/plugins/python-ce/helpers/pydev/pydevd.py --multiprocess --qt-support=auto --client 127.0.0.1 --port 49545 --file /Applications/PyCharm CE.app/Contents/plugins/python-ce/helpers/pycharm/_jb_pytest_runner.py --target test_offline_analysis.py::TestOfflineAnalysis.test_ground_truth_exe
+Testing started at 10:54 AM ...
+Connected to pydev debugger (build 233.15619.17)
+Launching pytest with arguments test_offline_analysis.py::TestOfflineAnalysis::test_ground_truth_exe --no-header --no-summary -q in /Users/tchakra2/refraction/tests/nestful_experiments
+
+============================= test session starts ==============================
+collecting ... collected 1 item
+
+test_offline_analysis.py::TestOfflineAnalysis::test_ground_truth_exe <- tests/utils.py
+
+================== 1 passed, 6 warnings in 1062.50s (0:17:42) ==================
+PASSED [100%]
+
+Validating sequence 1/85
+
+
+  var1 = SkyScrapperSearchAirport(query="New York")
+  var2 = SkyScrapperSearchAirport(query="London")
+  var3 = SkyScrapperFlightSearch(originSkyId="$var1.skyId$", destinationSkyId="$var2.skyId$", originEntityId="$var1.entityId$", destinationEntityId="$var2.entityId$", date="2024-08-15", returnDate="2024-08-18")
+  var4 = TripadvisorSearchLocation(query="London")
+  var5 = TripadvisorSearchHotels(geoId="$var4.geoId$", checkIn="2024-08-15", checkOut="2024-08-18")
+
+
+Validating sequence 2/85
+
+
+  var1 = SkyScrapperSearchAirport(query="Los Angeles")
+  var2 = SkyScrapperSearchAirport(query="Paris")
+  var3 = SkyScrapperFlightSearch(originSkyId="$var1.skyId$", destinationSkyId="$var2.skyId$", originEntityId="$var1.entityId$", destinationEntityId="$var2.entityId$", date="2024-10-05", returnDate="2024-10-15")
+  var4 = TripadvisorSearchLocation(query="Paris")
+  var5 = TripadvisorSearchHotels(geoId="$var4.geoId$", checkIn="2024-10-05", checkOut="2024-10-15", sort="rating")
+
+
+Validating sequence 3/85
+
+
++ ask(locationId)
+  var1 = TripadvisorSearchLocation(query="Rome")
+- var2 = TripadvisorSearchRestaurants(geoId="$var1.geoId$", sort="rating")
++ var2 = TripadvisorSearchRestaurants(locationId="$locationId$")
+
+
+Validating sequence 4/85
+
+
+  var1 = TripadvisorSearchLocation(query="Costa Rica")
+  var2 = TripadvisorSearchHotels(geoId="$var1.geoId$", checkIn="2024-12-01", checkOut="2024-12-15", style="['eco']")
+  var3 = SkyScrapperSearchAirport(query="New York")
+  var4 = SkyScrapperSearchAirport(query="Costa Rica")
+  var5 = SkyScrapperFlightSearch(originSkyId="$var3.skyId$", destinationSkyId="$var4.skyId$", originEntityId="$var3.entityId$", destinationEntityId="$var4.entityId$", date="2024-12-01", returnDate="2024-12-15")
+
+
+Validating sequence 5/85
+
+
+  var1 = NewsAPISearchByKeyWord(query="COVID-19")
+- var2 = RedditTopPostsBySubreddit(query="$var1.title$", subreddit="news", time="week")
+?                                  ----------------------
+
++ var2 = RedditTopPostsBySubreddit(subreddit="news", time="week")
+
+
+Validating sequence 6/85
+
+
+  var1 = NewsAPISearchByKeyWord(query="economy", region="US")
+- var2 = RedditTopPostsBySubreddit(query="$var1.title$", subreddit="economy", time="month")
+?                                  ----------------------
+
++ var2 = RedditTopPostsBySubreddit(subreddit="economy", time="month")
+
+
+Validating sequence 7/85
+
+
+  var1 = NewsAPISearchByKeyWord(query="sports", region="GB")
+- var2 = RedditTopPostsBySubreddit(query="$var1.title$", subreddit="sports", time="day")
+?                                  ----------------------
+
++ var2 = RedditTopPostsBySubreddit(subreddit="sports", time="day")
+
+
+Validating sequence 8/85
+
+
+  var1 = NewsAPISearchByKeyWord(query="politics", region="IN")
+- var2 = RedditTopPostsBySubreddit(query="$var1.title$", subreddit="India", time="week")
+?                                  ----------------------
+
++ var2 = RedditTopPostsBySubreddit(subreddit="India", time="week")
+
+
+Validating sequence 9/85
+
+
+  var1 = NewsAPISearchByKeyWord(query="2024 election", region="US")
+- var2 = RedditTopPostsBySubreddit(query="$var1.title$", subreddit="United States", time="week")
+?                                  ----------------------
+
++ var2 = RedditTopPostsBySubreddit(subreddit="United States", time="week")
+
+
+Validating sequence 10/85
+
+
+- var1 = LocalBusinessData(query="Gyms in London, UK", verified="True", limit="20", zoom="13", language="en", region="us")
+?                                                      -----------------
+
++ var1 = LocalBusinessData(query="Gyms in London, UK", limit="20", zoom="13", language="en", region="us", verified="True")
+?                                                                                                       +++++++++++++++++
+
+- var2 = LocalBusinessDataBusinessReviews(business_id="$var1.business_id$", limit="20", offset="0", sortBy="most_relevant", region="us", language="en")
++ var2 = LocalBusinessDataBusinessReviews(business_id="$var1.business_id$", limit="20", offset="0", query="Gyms in London, UK", sortBy="most_relevant", region="us", language="en")
+?                                                                                                   ++++++++++++++++++++++++++++
+
+
+
+Validating sequence 11/85
+
+
+  var1 = LocalBusinessData(query="Pet groomers near Sydney, Australia", limit="20", zoom="13", language="en", region="us")
+- var2 = LocalBusinessDataBusinessReviews(business_id="$var1.business_id$", limit="20", offset="0", sortBy="most_relevant", region="us", language="en")
++ var2 = LocalBusinessDataBusinessReviews(business_id="$var1.business_id$", limit="20", offset="0", query="Pet groomers near Sydney, Australia", sortBy="most_relevant", region="us", language="en")
+?                                                                                                   +++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+Validating sequence 12/85
+
+
+- var1 = LocalBusinessData(query="Bars in Manhattan, USA", business_status="OPEN", limit="20", zoom="13", language="en", region="us")
+?                                                          ------------------------
+
++ var1 = LocalBusinessData(query="Bars in Manhattan, USA", limit="20", zoom="13", language="en", region="us", business_status="OPEN")
+?                                                                                                           ++++++++++++++++++++++++
+
+- var2 = LocalBusinessDataBusinessReviews(business_id="$var1.business_id$", limit="20", offset="0", sortBy="most_relevant", region="us", language="en")
++ var2 = LocalBusinessDataBusinessReviews(business_id="$var1.business_id$", limit="20", offset="0", query="Bars in Manhattan, USA", sortBy="most_relevant", region="us", language="en")
+?                                                                                                   ++++++++++++++++++++++++++++++++
+
+
+
+Validating sequence 13/85
+
+
+- var1 = LocalBusinessData(query="Nightclubs in Las Vegas", business_status="OPEN", limit="100", zoom="13", language="en", region="us")
+?                                                           ------------------------
+
++ var1 = LocalBusinessData(query="Nightclubs in Las Vegas", limit="100", zoom="13", language="en", region="us", business_status="OPEN")
+?                                                                                                             ++++++++++++++++++++++++
+
+- var2 = LocalBusinessDataBusinessReviews(business_id="$var1.business_id$", limit="20", offset="0", sortBy="most_relevant", region="us", language="en")
++ var2 = LocalBusinessDataBusinessReviews(business_id="$var1.business_id$", limit="20", offset="0", query="Nightclubs in Las Vegas", sortBy="most_relevant", region="us", language="en")
+?                                                                                                   +++++++++++++++++++++++++++++++++
+
+
+
+Validating sequence 14/85
+
+
+  var1 = LocalBusinessData(query="Hair salons in Paris, France", limit="50", zoom="13", language="en", region="us")
+- var2 = LocalBusinessDataBusinessReviews(business_id="$var1.business_id$", limit="20", offset="0", sortBy="most_relevant", region="us", language="en")
++ var2 = LocalBusinessDataBusinessReviews(business_id="$var1.business_id$", limit="20", offset="0", query="Hair salons in Paris, France", sortBy="most_relevant", region="us", language="en")
+?                                                                                                   ++++++++++++++++++++++++++++++++++++++
+
+
+
+Validating sequence 15/85
+
+
+- var1 = Alpha_Vantage_CURRENCY_EXCHANGE_RATE(function="CURRENCY_EXCHANGE_RATE", from_currency="ETH", to_currency="USD")
+?                                                                                ---------------------
+
++ var1 = Alpha_Vantage_CURRENCY_EXCHANGE_RATE(from_currency="ETH", function="CURRENCY_EXCHANGE_RATE", to_currency="USD")
+?                                              +++++++++++++++++++++
+
+- var2 = CipherCircuit_Math_Assistant_CalculateAllArithmeticOperations(numbers="5 * $var1.Exchange Rate$")
+?                                                                               ----
+
++ var2 = CipherCircuit_Math_Assistant_CalculateAllArithmeticOperations(numbers="$var1.Exchange Rate$")
+
+
+Validating sequence 16/85
+
+
+- var1 = Alpha_Vantage_CURRENCY_EXCHANGE_RATE(function="CURRENCY_EXCHANGE_RATE", from_currency="LTC", to_currency="USD")
+?                                                                                ---------------------
+
++ var1 = Alpha_Vantage_CURRENCY_EXCHANGE_RATE(from_currency="LTC", function="CURRENCY_EXCHANGE_RATE", to_currency="USD")
+?                                              +++++++++++++++++++++
+
+- var2 = CipherCircuit_Math_Assistant_CalculateAllArithmeticOperations(numbers="10 * $var1.Exchange Rate$")
+?                                                                               -----
+
++ var2 = CipherCircuit_Math_Assistant_CalculateAllArithmeticOperations(numbers="$var1.Exchange Rate$")
+
+
+Validating sequence 17/85
+
+
+- var1 = Alpha_Vantage_CURRENCY_EXCHANGE_RATE(function="CURRENCY_EXCHANGE_RATE", from_currency="XRP", to_currency="USD")
+?                                                                                ---------------------
+
++ var1 = Alpha_Vantage_CURRENCY_EXCHANGE_RATE(from_currency="XRP", function="CURRENCY_EXCHANGE_RATE", to_currency="USD")
+?                                              +++++++++++++++++++++
+
+- var2 = CipherCircuit_Math_Assistant_CalculateAllArithmeticOperations(numbers="100 * $var1.Exchange Rate$")
+?                                                                               ------
+
++ var2 = CipherCircuit_Math_Assistant_CalculateAllArithmeticOperations(numbers="$var1.Exchange Rate$")
+
+
+Validating sequence 18/85
+
+
+- var1 = Alpha_Vantage_CURRENCY_EXCHANGE_RATE(function="CURRENCY_EXCHANGE_RATE", from_currency="BTC", to_currency="GBP")
+?                                                                                ---------------------
+
++ var1 = Alpha_Vantage_CURRENCY_EXCHANGE_RATE(from_currency="BTC", function="CURRENCY_EXCHANGE_RATE", to_currency="GBP")
+?                                              +++++++++++++++++++++
+
+- var2 = CipherCircuit_Math_Assistant_CalculateAllArithmeticOperations(numbers="2 * $var1.Exchange Rate$")
+?                                                                               ----
+
++ var2 = CipherCircuit_Math_Assistant_CalculateAllArithmeticOperations(numbers="$var1.Exchange Rate$")
+
+
+Validating sequence 19/85
+
+
+- var1 = Alpha_Vantage_CURRENCY_EXCHANGE_RATE(function="CURRENCY_EXCHANGE_RATE", from_currency="ETH", to_currency="EUR")
+?                                                                                ---------------------
+
++ var1 = Alpha_Vantage_CURRENCY_EXCHANGE_RATE(from_currency="ETH", function="CURRENCY_EXCHANGE_RATE", to_currency="EUR")
+?                                              +++++++++++++++++++++
+
+- var2 = CipherCircuit_Math_Assistant_CalculateAllArithmeticOperations(numbers="3 * $var1.Ask Price$")
+?                                                                               ----
+
++ var2 = CipherCircuit_Math_Assistant_CalculateAllArithmeticOperations(numbers="$var1.Ask Price$")
+
+
+Validating sequence 20/85
+
+
+- var1 = Alpha_Vantage_CURRENCY_EXCHANGE_RATE(function="CURRENCY_EXCHANGE_RATE", from_currency="INR", to_currency="JPY")
+?                                                                                ---------------------
+
++ var1 = Alpha_Vantage_CURRENCY_EXCHANGE_RATE(from_currency="INR", function="CURRENCY_EXCHANGE_RATE", to_currency="JPY")
+?                                              +++++++++++++++++++++
+
+- var2 = CipherCircuit_Math_Assistant_CalculateAllArithmeticOperations(numbers="100 * $var1.Exchange Rate$")
+?                                                                               ------
+
++ var2 = CipherCircuit_Math_Assistant_CalculateAllArithmeticOperations(numbers="$var1.Exchange Rate$")
+
+
+Validating sequence 21/85
+
+
+- var1 = Real-Time_Product_Search_Search(q="high-quality running shoes", min_rating="4", country="us", language="en", page="1", limit="30", sortBy="BEST_MATCH", product_condition="ANY")
+?                                                                        ----------------                                                   ---------------------
+
++ var1 = Real-Time_Product_Search_Search(q="high-quality running shoes", country="us", language="en", page="1", limit="30", product_condition="ANY", min_rating="4")
+?                                                                                                                                                  ++++++++++++++++
+
+  var2 = Real-Time_Product_Search_Product_Reviews(product_id="$var1.product_id$", limit="10", country="us", language="en")
+  var3 = Real-Time_Product_Search_Product_Offers(product_id="$var1.product_id$", page="1", country="us", language="en")
+
+
+Validating sequence 22/85
+
+
+- var1 = Real-Time_Product_Search_Search(q="Nike Air Force One's", country="us", language="en", page="1", limit="30", sortBy="BEST_MATCH", product_condition="ANY", min_rating="ANY")
+?                                                                                                                     ---------------------
+
++ var1 = Real-Time_Product_Search_Search(q="Nike Air Force One's", country="us", language="en", page="1", limit="30", product_condition="ANY", min_rating="ANY")
+- var2 = Real-Time_Product_Search_Product_Details(product_id="var1.product_id$", country="us", language="en", page="1", limit="30", sortBy="BEST_MATCH", product_condition="ANY", free_returns="False", free_shipping="False", on_sale="False", min_rating="ANY")
+?                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^                                                   ---------------------
+
++ var2 = Real-Time_Product_Search_Product_Details(q="Nike Air Force One's", country="us", language="en", page="1", limit="30", product_condition="ANY", free_returns="False", free_shipping="False", on_sale="False", min_rating="ANY")
+?                                                 ^^^^^^^^^^^^^^^^^^^^^^^
+
+- var3 = Real-Time_Product_Search_Product_Offers(product_id="$var1.product_id$", page="1", country="us", language="en")
+?                                                                ^
+
++ var3 = Real-Time_Product_Search_Product_Offers(product_id="$var2.product_id$", page="1", country="us", language="en")
+?                                                                ^
+
+
+
+Validating sequence 23/85
+
+
+- var1 = Real-Time_Product_Search_Search(q="Sony WH-1000XM4 headphones", country="us", language="en", page="1", limit="30", sortBy="BEST_MATCH", product_condition="ANY", min_rating="ANY")
+?                                                                                                                           ---------------------
+
++ var1 = Real-Time_Product_Search_Search(q="Sony WH-1000XM4 headphones", country="us", language="en", page="1", limit="30", product_condition="ANY", min_rating="ANY")
+  var2 = Real-Time_Product_Search_Product_Offers(product_id="$var1.product_id$", page="1", country="us", language="en")
+- var3 = Real-Time_Product_Search_Product_Reviews(product_id="$var1.product_id$", limit="10", country="us", language="en")
+?                                                                 ^
+
++ var3 = Real-Time_Product_Search_Product_Reviews(product_id="$var2.product_id$", limit="10", country="us", language="en")
+?                                                                 ^
+
+
+
+Validating sequence 24/85
+
+
+- var1 = Real-Time_Product_Search_Search(q="Apple iPhone 13 Pro Max", country="us", language="en", page="1", limit="30", sortBy="BEST_MATCH", product_condition="ANY", min_rating="ANY")
+?                                                                                                                        ---------------------
+
++ var1 = Real-Time_Product_Search_Search(q="Apple iPhone 13 Pro Max", country="us", language="en", page="1", limit="30", product_condition="ANY", min_rating="ANY")
+- var2 = Real-Time_Product_Search_Product_Details(product_id="$var1.product_id$", country="us", language="en", page="1", limit="30", sortBy="BEST_MATCH", product_condition="ANY", free_returns="False", free_shipping="False", on_sale="False", min_rating="ANY")
+?                                                 ^^^^^^^^^^^^^^^^ ^^^^^^^^^^^^                                                   ---------------------
+
++ var2 = Real-Time_Product_Search_Product_Details(q="Apple iPhone 13 Pro Max", country="us", language="en", page="1", limit="30", product_condition="ANY", free_returns="False", free_shipping="False", on_sale="False", min_rating="ANY")
+?                                                 ^^^^^^^^^^^^^^^^ ^^^^^^^^^
+
+- var3 = Real-Time_Product_Search_Product_Reviews(product_id="$var1.product_id$", limit="10", country="us", language="en")
+?                                                                 ^
+
++ var3 = Real-Time_Product_Search_Product_Reviews(product_id="$var2.product_id$", limit="10", country="us", language="en")
+?                                                                 ^
+
+
+
+Validating sequence 25/85
+
+
+- var1 = Real-Time_Product_Search_Search(q="Samsung Galaxy S21 Ultra", country="us", language="en", page="1", limit="30", sortBy="BEST_MATCH", product_condition="ANY", min_rating="ANY")
+?                                                                                                                         ---------------------
+
++ var1 = Real-Time_Product_Search_Search(q="Samsung Galaxy S21 Ultra", country="us", language="en", page="1", limit="30", product_condition="ANY", min_rating="ANY")
+  var2 = Real-Time_Product_Search_Product_Offers(product_id="$var1.product_id$", page="1", country="us", language="en")
+
+
+Validating sequence 26/85
+
+
+- var1 = Real-Time_Product_Search_Search(q="Bose QuietComfort 35 II", country="us", language="en", page="1", limit="30", sortBy="BEST_MATCH", product_condition="ANY", min_rating="ANY")
+?                                                                                                                        ---------------------
+
++ var1 = Real-Time_Product_Search_Search(q="Bose QuietComfort 35 II", country="us", language="en", page="1", limit="30", product_condition="ANY", min_rating="ANY")
+  var2 = Real-Time_Product_Search_Product_Reviews(product_id="$var1.product_id$", limit="10", country="us", language="en")
+  var3 = Real-Time_Product_Search_Product_Offers(product_id="$var1.product_id$", page="1", country="us", language="en")
+
+
+Validating sequence 27/85
+
+
+- var1 = Real-Time_Product_Search_Search(q="Macbook Pro 13 inch", country="us", language="en", page="1", limit="30", sortBy="BEST_MATCH", product_condition="ANY", min_rating="ANY")
+?                                                                                                                    ---------------------
+
++ var1 = Real-Time_Product_Search_Search(q="Macbook Pro 13 inch", country="us", language="en", page="1", limit="30", product_condition="ANY", min_rating="ANY")
+- var2 = Real-Time_Product_Search_Product_Details(product_id="$var1.product_id$", country="us", language="en", page="1", limit="30", sortBy="BEST_MATCH", product_condition="ANY", free_returns="False", free_shipping="False", on_sale="False", min_rating="ANY")
+?                                                 ^^^^^^^^^^^^^^^^ ^^^^^^^^^^^^                                                   ---------------------
+
++ var2 = Real-Time_Product_Search_Product_Details(q="Macbook Pro 13 inch", country="us", language="en", page="1", limit="30", product_condition="ANY", free_returns="False", free_shipping="False", on_sale="False", min_rating="ANY")
+?                                                 ^^^^^^^^^^^^^^^ ^^^^^^
+
+- var3 = Real-Time_Product_Search_Product_Offers(product_id="$var1.product_id$", page="1", country="us", language="en")
+?                                                                ^
+
++ var3 = Real-Time_Product_Search_Product_Offers(product_id="$var2.product_id$", page="1", country="us", language="en")
+?                                                                ^
+
+
+
+Validating sequence 28/85
+
+
+- var1 = Real-Time_Product_Search_Search(q="Canon G7x", country="us", language="en", page="1", limit="30", sortBy="BEST_MATCH", product_condition="ANY", min_rating="ANY")
+?                                                                                                          ---------------------
+
++ var1 = Real-Time_Product_Search_Search(q="Canon G7x", country="us", language="en", page="1", limit="30", product_condition="ANY", min_rating="ANY")
+  var2 = Real-Time_Product_Search_Product_Reviews(product_id="$var1.product_id$", limit="10", country="us", language="en")
+- var3 = Real-Time_Product_Search_Product_Details(product_id="$var1.product_id$", country="us", language="en", page="1", limit="30", sortBy="BEST_MATCH", product_condition="ANY", free_returns="False", free_shipping="False", on_sale="False", min_rating="ANY")
+?                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^                                                   ---------------------
+
++ var3 = Real-Time_Product_Search_Product_Details(q="Canon G7x", country="us", language="en", page="1", limit="30", product_condition="ANY", free_returns="False", free_shipping="False", on_sale="False", min_rating="ANY")
+?                                                 ^^^^^^^^^^^^
+
+
+
+Validating sequence 29/85
+
+
+- var1 = Real-Time_Product_Search_Search(q="Dyson Airwarp", country="us", language="en", page="1", limit="30", sortBy="BEST_MATCH", product_condition="ANY", min_rating="ANY")
+?                                                                                                              ---------------------
+
++ var1 = Real-Time_Product_Search_Search(q="Dyson Airwarp", country="us", language="en", page="1", limit="30", product_condition="ANY", min_rating="ANY")
+  var2 = Real-Time_Product_Search_Product_Offers(product_id="$var1.product_id$", page="1", country="us", language="en")
+- var3 = Real-Time_Product_Search_Product_Reviews(product_id="$var1.product_id$", limit="10", country="us", language="en")
+?                                                                 ^
+
++ var3 = Real-Time_Product_Search_Product_Reviews(product_id="$var2.product_id$", limit="10", country="us", language="en")
+?                                                                 ^
+
+
+
+Validating sequence 30/85
+
+
+- var1 = Real-Time_Product_Search_Search(q="XBox One", country="us", language="en", page="1", limit="30", sortBy="BEST_MATCH", product_condition="ANY", min_rating="ANY")
+?                                                                                                         ---------------------
+
++ var1 = Real-Time_Product_Search_Search(q="XBox One", country="us", language="en", page="1", limit="30", product_condition="ANY", min_rating="ANY")
+- var2 = Real-Time_Product_Search_Product_Details(product_id="$var1.product_id$", country="us", language="en", page="1", limit="30", sortBy="BEST_MATCH", product_condition="ANY", free_returns="False", free_shipping="False", on_sale="False", min_rating="ANY")
+?                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^                                                   ---------------------
+
++ var2 = Real-Time_Product_Search_Product_Details(q="XBox One", country="us", language="en", page="1", limit="30", product_condition="ANY", free_returns="False", free_shipping="False", on_sale="False", min_rating="ANY")
+?                                                 ^^^^^^^^^^^
+
+- var3 = Real-Time_Product_Search_Product_Reviews(product_id="$var1.product_id$", limit="10", country="us", language="en")
+?                                                                 ^
+
++ var3 = Real-Time_Product_Search_Product_Reviews(product_id="$var2.product_id$", limit="10", country="us", language="en")
+?                                                                 ^
+
+- var4 = Real-Time_Product_Search_Product_Offers(product_id="$var1.product_id$", page="1", country="us", language="en")
+?                                                                ^
+
++ var4 = Real-Time_Product_Search_Product_Offers(product_id="$var2.product_id$", page="1", country="us", language="en")
+?                                                                ^
+
+
+
+Validating sequence 31/85
+
+
+- var1 = Real-Time_Product_Search_Search(q="Sony PlayStation 5", country="us", language="en", page="1", limit="30", sortBy="BEST_MATCH", product_condition="ANY", min_rating="ANY")
+?                                                                                                                   ---------------------
+
++ var1 = Real-Time_Product_Search_Search(q="Sony PlayStation 5", country="us", language="en", page="1", limit="30", product_condition="ANY", min_rating="ANY")
+- var2 = Real-Time_Product_Search_Product_Details(product_id="$var1.product_id$", country="us", language="en", page="1", limit="30", sortBy="BEST_MATCH", product_condition="ANY", free_returns="False", free_shipping="False", on_sale="False", min_rating="ANY")
+?                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^                                                   ---------------------
+
++ var2 = Real-Time_Product_Search_Product_Details(q="Sony PlayStation 5", country="us", language="en", page="1", limit="30", product_condition="ANY", free_returns="False", free_shipping="False", on_sale="False", min_rating="ANY")
+?                                                 ^^^^^^^^^^^^^^^^^^^^^
+
+- var3 = Real-Time_Product_Search_Product_Reviews(product_id="$var1.product_id$", limit="10", country="us", language="en")
+?                                                                 ^
+
++ var3 = Real-Time_Product_Search_Product_Reviews(product_id="$var2.product_id$", limit="10", country="us", language="en")
+?                                                                 ^
+
+- var4 = Real-Time_Product_Search_Product_Offers(product_id="$var1.product_id$", page="1", country="us", language="en")
+?                                                                ^
+
++ var4 = Real-Time_Product_Search_Product_Offers(product_id="$var2.product_id$", page="1", country="us", language="en")
+?                                                                ^
+
+
+
+Validating sequence 32/85
+
+
+  var1 = Goodreads_Search_Quotes_By_Keyword(keyword="love", page="1")
+  var2 = Goodreads_Search_Book_By_Keyword(keyword="$var1.quoteText$", page="1")
+
+
+Validating sequence 33/85
+
+
+  var1 = Goodreads_Search_Book_By_Keyword(keyword="the tipping point", page="1")
+- var2 = Goodreads_Get_Authors_Books(authorID="$var1.author[0].id$")
+?                                                          ------
+
++ var2 = Goodreads_Get_Authors_Books(authorID="$var1.author$")
+
+
+Validating sequence 34/85
+
+
+  var1 = Goodreads_Search_Quotes_By_Keyword(keyword="J.K. Rowling", page="1")
+  var2 = Goodreads_Search_Book_By_Keyword(keyword="$var1.quoteText$", page="1")
+
+
+Validating sequence 35/85
+
+
++ ask(numbers)
+  var1 = WeatherAPI.com_Time_Zone_API(q="Morocco")
+  var2 = WeatherAPI.com_Time_Zone_API(q="New York")
+- var3 = CipherCircuit_Math_Assistant_CalculateAllArithmeticOperations(numbers="$var1.localtime$ - $var2.localtime$")
+?                                                                                ^^ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
++ var3 = CipherCircuit_Math_Assistant_CalculateAllArithmeticOperations(numbers="$numbers$")
+?                                                                                ^^^^^ ^
+
+
+
+Validating sequence 36/85
+
+
+  var1 = WeatherAPI.com_Forecast_Weather_API(q="Paris", days="3")
+  var2 = WeatherAPI.com_Realtime_Weather_Api(q="$var1.location.name$")
+
+
+Validating sequence 37/85
+
+
+  var1 = WeatherAPI.com_Realtime_Weather_Api(q="Tokyo")
+- var2 = WeatherAPI.com_Forecast_Weather_API(q="$var1.location.name$", days="2")
+?                                               ^^^^^^^ ^^^^ -------
+
++ var2 = WeatherAPI.com_Forecast_Weather_API(q="Tokyo", days="2")
+?                                               ^ ^^
+
+  var3 = WeatherAPI.com_Time_Zone_API(q="$var1.location.name$")
+
+
+Validating sequence 38/85
+
+
+  var1 = WeatherAPI.com_Forecast_Weather_API(q="Berlin", days="5")
+  var2 = WeatherAPI.com_Realtime_Weather_Api(q="$var1.location.name$")
+
+
+Validating sequence 39/85
+
+
+  var1 = WeatherAPI.com_Forecast_Weather_API(q="Cape Town", days="3")
+- var2 = WeatherAPI.com_Realtime_Weather_Api(q="$var1.location.name$")
+?                                               ^^ ^^^^ ^^^^^ ------
+
++ var2 = WeatherAPI.com_Realtime_Weather_Api(q="Cape Town")
+?                                               ^ ^^^^ ^
+
+  var3 = WeatherAPI.com_Time_Zone_API(q="$var1.location.name$")
+
+
+Validating sequence 40/85
+
+
+  var1 = WeatherAPI.com_Forecast_Weather_API(q="Mumbai", days="10")
+  var2 = WeatherAPI.com_Time_Zone_API(q="$var1.location.name$")
+
+
+Validating sequence 41/85
+
+
+  var1 = WeatherAPI.com_Realtime_Weather_Api(q="Miami")
+  var2 = TripadvisorSearchLocation(query="$var1.location.name$")
+  var3 = TripadvisorSearchHotels(geoId="$var2.geoId$", checkIn="2024-10-01", checkOut="2024-10-06")
+- var4 = WeatherAPI.com_Forecast_Weather_API(q="$var1.location.name$", date="2024-10-01")
++ var4 = WeatherAPI.com_Forecast_Weather_API(q="Miami")
+
+
+Validating sequence 42/85
+
+
+Validating sequence 43/85
+
+
+  var1 = WeatherAPI.com_Realtime_Weather_Api(q="Los Angeles")
+  var2 = TripadvisorSearchLocation(query="Chicago")
+  var3 = TripadvisorSearchHotels(geoId="$var2.geoId$", checkIn="2024-08-10", checkOut="2024-08-15")
+- var4 = WeatherAPI.com_Forecast_Weather_API(q="Chicago", date="2024-08-10")
+?                                                       -------------------
+
++ var4 = WeatherAPI.com_Forecast_Weather_API(q="Chicago")
+
+
+Validating sequence 44/85
+
+
+  var1 = WeatherAPI.com_Realtime_Weather_Api(q="Paris")
+  var2 = SkyScrapperSearchAirport(query="Atlanta")
+  var3 = SkyScrapperSearchAirport(query="Paris")
+  var4 = SkyScrapperFlightSearch(originSkyId="$var2.skyId$", destinationSkyId="$var3.skyId$", originEntityId="$var2.entityId$", destinationEntityId="$var3.entityId$", date="2024-09-05", returnDate="2024-09-10")
+  var5 = TripadvisorSearchLocation(query="Paris")
+  var6 = TripadvisorSearchHotels(geoId="$var5.geoId$", checkIn="2024-09-05", checkOut="2024-09-10")
+- var7 = WeatherAPI.com_Forecast_Weather_API(q="$var1.location.name$", date="2024-09-05")
+?                                                                    -------------------
+
++ var7 = WeatherAPI.com_Forecast_Weather_API(q="$var1.location.name$")
+
+
+Validating sequence 45/85
+
+
+
+
+
+Validating sequence 46/85
+
+
+
+
+
+Validating sequence 47/85
+
+
+
+
+
+Validating sequence 48/85
+
+
+
+
+
+Validating sequence 49/85
+
+
+
+
+
+Validating sequence 50/85
+
+
+
+
+
+Validating sequence 51/85
+
+
+Validating sequence 52/85
+
+
+Validating sequence 53/85
+
+
+Validating sequence 54/85
+
+
+Validating sequence 55/85
+
+
+Validating sequence 56/85
+
+
+Validating sequence 57/85
+
+
+Validating sequence 58/85
+
+
+Validating sequence 59/85
+
+
+Validating sequence 60/85
+
+
+Validating sequence 61/85
+
+
+Validating sequence 62/85
+
+
+Validating sequence 63/85
+
+
+Validating sequence 64/85
+
+
+Validating sequence 65/85
+
+
+Validating sequence 66/85
+
+
+Validating sequence 67/85
+
+
+Validating sequence 68/85
+
+
+Validating sequence 69/85
+
+
+Validating sequence 70/85
+
+
+Validating sequence 71/85
+
+
+Validating sequence 72/85
+
+
+  var1 = Instagram_Followers(username_or_id_or_url="aliciakeys", amount="1")
+  var2 = Instagram_Info(username_or_id_or_url="$var1.username$")
+
+
+Validating sequence 73/85
+
+
+  var1 = Instagram_Following(username_or_id_or_url="kyliejenner")
+  var2 = Instagram_Posts_Reels(username_or_id_or_url="$var1.username$")
+
+
+Validating sequence 74/85
+
+
+  var1 = Instagram_Search_User(search_query="Beyonce")
+  var2 = Instagram_Followers(username_or_id_or_url="$var1.username$")
+
+
+Validating sequence 75/85
+
+
+  var1 = Instagram_Search_User(search_query="Bella Hadid")
+  var2 = Instagram_Posts_Reels(username_or_id_or_url="$var1.username$")
+
+
+Validating sequence 76/85
+
+
+  var1 = Instagram_Search_User(search_query="Virat Kohli")
+  var2 = Instagram_Posts_Reels(username_or_id_or_url="$var1.username$")
+
+
+Validating sequence 77/85
+
+
+  var1 = Instagram_Search_User(search_query="Kendrick Lamar")
+  var2 = Instagram_Posts_Reels(username_or_id_or_url="$var1.username$")
+
+
+Validating sequence 78/85
+
+
+  var1 = Instagram_Search_User(search_query="The Weeknd")
+  var2 = Instagram_Posts_Reels(username_or_id_or_url="$var1.username$")
+
+
+Validating sequence 79/85
+
+
+  var1 = Instagram_Search_User(search_query="NASA")
+  var2 = Instagram_Info(username_or_id_or_url="$var1.username$")
+
+
+Validating sequence 80/85
+
+
+  var1 = SEC_Balance_Sheet(ticker="MSFT", formtype="10-K")
+  var2 = SEC_Financial_Statements_and_Disclosures(cik="$var1.company.cik$", accessionNumber="$var1.filing.accessionNumber$")
+
+
+Validating sequence 81/85
+
+
+  var1 = SEC_Balance_Sheet(ticker="GOOGL", formtype="10-K")
+  var2 = SEC_Financial_Statements_and_Disclosures(cik="$var1.company.cik$", accessionNumber="$var1.filing.accessionNumber$")
+
+
+Validating sequence 82/85
+
+
+  var1 = SEC_Balance_Sheet(ticker="IBM", formtype="10-K")
+  var2 = SEC_Filings(identifier="$var1.company.cik$")
+
+
+Validating sequence 83/85
+
+
+  var1 = Get_Country_Details_By_Country_Name(name="China")
+  var2 = Coronavirus_Smartable_GetNews(location="$var1.short_name$")
+
+
+Validating sequence 84/85
+
+
+Validating sequence 85/85
+
+
+Average time taken: 0.36 sec
+Success Rate: 20/85
+Compression Rate: 0.15
+
+Time taken: 1061.97 secs
+
+Process finished with exit code 0
