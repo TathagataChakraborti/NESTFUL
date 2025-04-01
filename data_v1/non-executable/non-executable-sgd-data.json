@@ -262,7 +262,7 @@
                 "name": "Hotels.ReserveHotel",
                 "arguments": {
                     "hotel_name": "$var1.hotel_name$",
-                    "location": "Paris",
+                    "destination": "Paris",
                     "check_in_date": "05/01/2024",
                     "number_of_days": "2",
                     "number_of_rooms": "1"
@@ -348,13 +348,14 @@
         ]
     },
     {
-        "input": "Reserve a rental car for a compact car in Los Angeles from 03/01/2023 to 03/05/2023.",
+        "input": "Reserve a rental car for a compact car in Los Angeles from 3 AM 03/01/2023 to 03/05/2023.",
         "output": [
             {
                 "name": "RentalCars.GetCarsAvailable",
                 "arguments": {
                     "pickup_city": "Los Angeles",
                     "pickup_date": "03/01/2023",
+                    "pickup_time": "3 AM",
                     "dropoff_date": "03/05/2023",
                     "type": "Compact"
                 },
@@ -589,8 +590,7 @@
                     "category": "Music",
                     "city_of_event": "Atlanta",
                     "date": "2024-10-10",
-                    "subcategory": "festival",
-                    "number_of_days": "3"
+                    "subcategory": "festival"
                 },
                 "label": "var1"
             },
@@ -916,6 +916,7 @@
                 "arguments": {
                     "origin_city": "$var1.origin_city$",
                     "destination_city": "$var1.destination_city$",
+                    "airlines": "$var1.airlines$",
                     "departure_date": "$var1.departure_date$",
                     "return_date": "$var1.return_date$",
                     "outbound_departure_time": "$var1.outbound_departure_time$",
@@ -980,6 +981,7 @@
                 "name": "Hotels.BookHouse",
                 "arguments": {
                     "where_to": "$var1.where_to$",
+                    "number_of_adults": "$var1.number_of_adults$",
                     "check_in_date": "2024-02-01",
                     "check_out_date": "2024-02-08"
                 },
@@ -1014,6 +1016,7 @@
                 "arguments": {
                     "origin_city": "$var1.origin_city$",
                     "destination_city": "$var1.destination_city$",
+                    "airlines": "$var1.airlines$",
                     "departure_date": "$var1.departure_date$",
                     "return_date": "$var1.return_date$",
                     "outbound_departure_time": "$var1.outbound_departure_time$",
@@ -1167,6 +1170,7 @@
                 "arguments": {
                     "origin_city": "$var1.origin_city$",
                     "destination_city": "$var1.destination_city$",
+                    "airlines": "$var1.airlines$",
                     "departure_date": "$var1.departure_date$",
                     "return_date": "$var1.return_date$",
                     "outbound_departure_time": "$var1.outbound_departure_time$",
@@ -1200,6 +1204,7 @@
                 "name": "Restaurants.ReserveRestaurant",
                 "arguments": {
                     "restaurant_name": "$var1.restaurant_name$",
+                    "city": "New York City",
                     "date": "2024-02-10",
                     "time": "7pm",
                     "party_size": "4"
@@ -1442,7 +1447,7 @@
         ]
     },
     {
-        "input": "Schedule a visit to a salon for a haircut in Boston the 20th March.",
+        "input": "Schedule a visit to a salon for a haircut in Boston the 20th March 3 AM.",
         "output": [
             {
                 "name": "Services_Salon.FindProvider",
@@ -1455,6 +1460,7 @@
                 "name": "Services_Salon.BookAppointment",
                 "arguments": {
                     "stylist_name": "$var1.stylist_name$",
+                    "appointment_time": "3 AM",
                     "appointment_date": "2019-03-20"
                 },
                 "label": "var2"

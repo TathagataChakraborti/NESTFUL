@@ -175,11 +175,10 @@
         "input": "Create a task with the title 'Send SMS to John', due date '2022-12-31', and priority 'high'. Then, encrypt the string 'Hello John' using the encryption key 'secret'. After that, calculate the sales tax on a purchase of $100 with a tax rate of 0.08. Finally, send an SMS to the phone number '1234567890' with the message as the encrypted data.",
         "output": [
             {
-                "name": "create_task",
+                "name": "create_todo",
                 "arguments": {
                     "title": "Send SMS to John",
-                    "due_date": "2022-12-31",
-                    "priority": "high"
+                    "due_date": "2022-12-31"
                 },
                 "label": "var1"
             },
@@ -386,9 +385,9 @@
                 "label": "var3"
             },
             {
-                "name": "get_news_headlines",
+                "name": "get_news",
                 "arguments": {
-                    "country": "US"
+                    "category": "US"
                 },
                 "label": "var4"
             },
@@ -1109,9 +1108,9 @@
         "input": "Get the latest news headlines from the US, search for a song called 'Happy', calculate the discount on a $20 item with a 10% discount, and analyze the sentiment of the headlines",
         "output": [
             {
-                "name": "get_news_headlines",
+                "name": "get_news",
                 "arguments": {
-                    "country": "US"
+                    "category": "US"
                 },
                 "label": "var1"
             },
@@ -1218,7 +1217,7 @@
             {
                 "name": "encrypt_data",
                 "arguments": {
-                    "data": "$var1.area$",
+                    "data": "$var2.area$",
                     "encryption_key": "abc123"
                 },
                 "label": "var3"
@@ -1284,11 +1283,10 @@
                 "label": "var1"
             },
             {
-                "name": "create_task",
+                "name": "create_todo",
                 "arguments": {
                     "title": "Pay Loan",
-                    "due_date": "YYYY-MM-DD",
-                    "priority": "High"
+                    "due_date": "YYYY-MM-DD"
                 },
                 "label": "var2"
             },
@@ -1401,9 +1399,9 @@
         "input": "Analyze the sentiment of the latest news headlines from the US, schedule a meeting with the title 'Weekly Update' on '2023-03-15' with participants ['john@example.com', 'jane@example.com'], and send an SMS message with the sentiment of the news headlines to the phone number '555-1234'.",
         "output": [
             {
-                "name": "get_news_headlines",
+                "name": "get_news",
                 "arguments": {
-                    "country": "US"
+                    "category": "US"
                 },
                 "label": "var1"
             },
@@ -1730,7 +1728,7 @@
         ]
     },
     {
-        "input": "Generate a random password of length 8 with numbers and special characters. Send an SMS message containing the password to the phone number \"123-456-7890\". Then, calculate the perimeter of a rectangle with a length of 5 and a width of 10. Finally, convert the temperature from 32 degrees Fahrenheit to Celsius.",
+        "input": "Generate a random password of length 8 with numbers and special characters. Send an SMS message containing the password to the phone number \"123-456-7890\".",
         "output": [
             {
                 "name": "generate_password",
@@ -1750,29 +1748,10 @@
                 "label": "var2"
             },
             {
-                "name": "calculate_rectangle_perimeter",
-                "arguments": {
-                    "length": 5,
-                    "width": 10
-                },
-                "label": "var3"
-            },
-            {
-                "name": "convert_temperature",
-                "arguments": {
-                    "from": "Fahrenheit",
-                    "temperature": 32,
-                    "to": "Celsius"
-                },
-                "label": "var4"
-            },
-            {
                 "name": "var_result",
                 "arguments": {
                     "password": "$var1$",
-                    "send_sms": "$var2$",
-                    "perimeter": "$var3$",
-                    "temperature": "$var4$"
+                    "send_sms": "$var2$"
                 }
             }
         ]
@@ -1954,9 +1933,9 @@
         "input": "I had a dinner party last night and I want to calculate the tip amount for the bill. The bill amount was 300 dollars. I want to give a 15% tip. Also, I want to convert the tip amount to euros and create a calendar event for my next dinner party on 2023-03-15 from 18:00 to 20:00 with the title \"Dinner Party\".",
         "output": [
             {
-                "name": "calculate_tip_amount",
+                "name": "calculate_tip",
                 "arguments": {
-                    "bill_amount": 300,
+                    "bill_total": 300,
                     "tip_percentage": 15
                 },
                 "label": "var1"
@@ -2042,12 +2021,11 @@
         "input": "Create a new contact with the first name 'John', last name 'Doe', email 'john.doe@example.com', and phone number '1234567890'. Then generate a barcode for the contact ID in the 'CODE128' format. Finally, calculate the square of the contact ID.",
         "output": [
             {
-                "name": "create_contact",
+                "name": "add_contact",
                 "arguments": {
-                    "first_name": "John",
-                    "last_name": "Doe",
+                    "name": "John Doe",
                     "email": "john.doe@example.com",
-                    "phone_number": "1234567890"
+                    "phone": "1234567890"
                 },
                 "label": "var1"
             },
@@ -2116,7 +2094,7 @@
         ]
     },
     {
-        "input": "Calculate the pace for a distance of 5 kilometers in 30 minutes, encrypt the pace with the encryption key 'secret_key', and calculate the perimeter of a rectangle with a length of 10 and a width of the encrypted pace.",
+        "input": "Calculate the pace for a distance of 5 kilometers in 30 minutes, encrypt the pace with the encryption key 'secret_key'.",
         "output": [
             {
                 "name": "calculate_pace",
@@ -2135,19 +2113,10 @@
                 "label": "var2"
             },
             {
-                "name": "calculate_rectangle_perimeter",
-                "arguments": {
-                    "length": 10,
-                    "width": "$var2.encrypted_data$"
-                },
-                "label": "var3"
-            },
-            {
                 "name": "var_result",
                 "arguments": {
                     "pace": "$var1$",
-                    "encrypted_data": "$var2$",
-                    "perimeter": "$var3$"
+                    "encrypted_data": "$var2$"
                 }
             }
         ]
@@ -2382,8 +2351,9 @@
             {
                 "name": "get_translation",
                 "arguments": {
-                    "word": "$var1.lyrics$",
-                    "language": "French"
+                    "text": "$var1.lyrics$",
+                    "source_language": "English",
+                    "target_language": "French"
                 },
                 "label": "var2"
             },
@@ -2411,7 +2381,7 @@
             {
                 "name": "convert_currency",
                 "arguments": {
-                    "word": "$var1.total_sales$",
+                    "amount": "$var1.total_sales$",
                     "from": "USD",
                     "to": "Euro"
                 },
@@ -2631,7 +2601,7 @@
         ]
     },
     {
-        "input": "Record an audio for 60 seconds and then create a new contact Kamala Harris 4562345670 with the recorded audio as a ringtone.",
+        "input": "Record an audio for 60 seconds and then create a new contact Kamala Harris 4562345670.",
         "output": [
             {
                 "name": "record_audio",
@@ -2644,8 +2614,7 @@
                 "name": "add_contact",
                 "arguments": {
                     "name": "Kamala Harris",
-                    "phone": "4562345670",
-                    "ringtone": "$var1.audio_file$"
+                    "phone": "4562345670"
                 },
                 "label": "var2"
             },
@@ -2754,8 +2723,9 @@
             {
                 "name": "get_translation",
                 "arguments": {
-                    "word": "$var1.joke$",
-                    "language": "french"
+                    "text": "$var1.joke$",
+                    "source_language": "English",
+                    "target_language": "French"
                 },
                 "label": "var2"
             },
@@ -2899,8 +2869,7 @@
             {
                 "name": "search_books",
                 "arguments": {
-                    "query": "$var1.results$",
-                    "author": "J.K. Rowling"
+                    "query": "J.K. Rowling"
                 },
                 "label": "var2"
             },
@@ -2965,7 +2934,7 @@
                 "name": "send_sms",
                 "arguments": {
                     "phone_number": "991-898-8887",
-                    "message": "$var2.password$"
+                    "message": "$var2.random_password$"
                 },
                 "label": "var3"
             },
@@ -3120,7 +3089,7 @@
                 "arguments": {
                     "title": "Read Stephen King books",
                     "due_date": "2024-10-01",
-                    "items": "$var1.book_list$"
+                    "items": "$var1.results$"
                 },
                 "label": "var2"
             },
@@ -3217,7 +3186,7 @@
             {
                 "name": "calculate_tip",
                 "arguments": {
-                    "bill_total": "$var1.discounted_price$",
+                    "bill_total": "$var2.discounted_price$",
                     "tip_percentage": 20
                 },
                 "label": "var3"
@@ -3336,8 +3305,9 @@
             {
                 "name": "get_translation",
                 "arguments": {
-                    "word": "$var1.definition$",
-                    "language": "German"
+                    "text": "$var1.definition$",
+                    "source_language": "English",
+                    "target_language": "German"
                 },
                 "label": "var2"
             },
@@ -3428,7 +3398,7 @@
             {
                 "name": "search_movies",
                 "arguments": {
-                    "director": "$var1.director$"
+                    "genre": "$var1.director$"
                 },
                 "label": "var2"
             },
@@ -3577,8 +3547,9 @@
             {
                 "name": "get_translation",
                 "arguments": {
-                    "word": "$var1.sentiment$",
-                    "language": "french"
+                    "text": "$var1.sentiment$",
+                    "source_language": "English",
+                    "target_language": "French"
                 },
                 "label": "var2"
             },
@@ -4771,9 +4742,9 @@
                 "label": "var2"
             },
             {
-                "name": "search_music",
+                "name": "search_song",
                 "arguments": {
-                    "genre": "pop"
+                    "query": "pop"
                 },
                 "label": "var3"
             },
@@ -5046,6 +5017,7 @@
                 "arguments": {
                     "client_name": "John",
                     "amount": "$var1.discount_amount$",
+                    "description": "",
                     "due_date": "2022-12-31"
                 },
                 "label": "var2"
@@ -5259,7 +5231,7 @@
                 "arguments": {
                     "category": "Electronics",
                     "price_range": "500-1000",
-                    "query": "electronics"
+                    "query": "Electronics"
                 },
                 "label": "var2"
             },
@@ -5600,8 +5572,9 @@
             {
                 "name": "get_translation",
                 "arguments": {
-                    "language": "French",
-                    "word": "$var1.password$"
+                    "source_language": "English",
+                    "target_language": "French",
+                    "text": "$var1.password$"
                 },
                 "label": "var2"
             },
@@ -6047,7 +6020,7 @@
                 "arguments": {
                     "source_language": "English",
                     "target_language": "French",
-                    "word": "hello"
+                    "text": "hello"
                 },
                 "label": "var4"
             },

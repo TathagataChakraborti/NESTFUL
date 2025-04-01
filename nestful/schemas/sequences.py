@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import List, Dict, Optional, Any, Union, Tuple
+from typing import List, Dict, Optional, Any, Union, Tuple, Set
 from pydantic import BaseModel, ConfigDict, model_validator
 from nestful.utils import parse_parameters
 from nestful.schemas.api import Catalog, API
@@ -15,6 +15,22 @@ class SequenceStep(BaseModel):
     def __str__(self) -> str:
         return str(self.dict())
 
+    def get_required_args(self, catalog: Catalog) -> Set[str]:
+        api_spec = (
+            catalog.get_api(name=self.name, required=True)
+            if self.name
+            else None
+        )
+
+        required_arguments = set()
+
+        if isinstance(api_spec, API):
+            for item in self.arguments:
+                if item in api_spec.get_arguments(required=True):
+                    required_arguments.add(item)
+
+        return required_arguments
+
     def is_same_as(
         self,
         ground_truth: SequenceStep | SequencingData,
@@ -23,17 +39,12 @@ class SequenceStep(BaseModel):
     ) -> bool:
         if required_schema_only:
             if isinstance(ground_truth, SequenceStep):
-                api_spec = (
-                    catalog.get_api(name=self.name, required=True)
-                    if self.name
-                    else None
-                )
+                gt_arguments = ground_truth.get_required_args(catalog)
+                self_arguments = self.get_required_args(catalog)
 
                 return (
-                    api_spec is not None
-                    and isinstance(api_spec, API)
-                    and set(api_spec.get_arguments(required=True))
-                    == set(self.arguments.keys())
+                    self.name == ground_truth.name
+                    and gt_arguments == self_arguments
                 )
 
             else:
@@ -115,11 +126,6 @@ class SequencingData(BaseModel):
     output: List[SequenceStep] = []
     var_result: Dict[str, str] = {}
 
-    def __str__(self) -> str:
-        list_of_str = [str(item) for item in self.output]
-        string_form = ",\n".join(list_of_str)
-        return f"[\n{string_form}\n]"
-
     @model_validator(mode="after")
     def remove_final_step(self) -> SequencingData:
         if self.output and self.output[-1].name == "var_result":
@@ -127,6 +133,24 @@ class SequencingData(BaseModel):
             self.output = self.output[:-1]
 
         return self
+
+    def __str__(self) -> str:
+        list_of_str = [str(item) for item in self.output]
+        string_form = ",\n".join(list_of_str)
+        return f"[\n{string_form}\n]"
+
+    def is_same_as(
+        self,
+        ground_truth: SequencingData,
+        catalog: Catalog,
+        required_schema_only: bool = False,
+    ) -> bool:
+        return all(
+            [
+                step.is_same_as(ground_truth, catalog, required_schema_only)
+                for step in self.output
+            ]
+        ) and len(self.output) == len(ground_truth.output)
 
     def who_produced(self, var: str) -> Tuple[Optional[str], int]:
         index_map: Dict[str, int] = {}
