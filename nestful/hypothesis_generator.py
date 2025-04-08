@@ -1,71 +1,9 @@
 from nestful import Catalog, API
-from nestful.schemas.openapi import Component
+from nestful.schemas.openapi import Component, ResponseSelection
 from typing import Dict, Any, Optional
 from hypothesis_jsonschema import from_schema
 from hypothesis.strategies import SearchStrategy
-from hypothesis import given
-
-
-def get_output_in_json_form(
-    output_parameters: Dict[str, Component],
-    min_string_length: int = 3,
-    min_array_length: int = 3,
-    pattern: str = "^[a-zA-Z0-9_.-]*$",
-) -> Dict[str, Any]:
-    json_form: Dict[str, Any] = {
-        "type": "object",
-        "additionalProperties": False,
-        "required": list(output_parameters.keys()),
-        "properties": dict(),
-    }
-
-    for item, value in output_parameters.items():
-        if value.required:
-            json_form["required"].append(item)
-
-        json_form["properties"][item] = {"type": value.type}
-
-        if value.type == "object":
-            json_form["properties"][item]["additionalProperties"] = (
-                value.properties != {}
-            )
-            json_form["properties"][item]["properties"] = dict()
-
-            if value.properties:
-                if not all(
-                    [
-                        isinstance(value, Component)
-                        for value in value.properties.values()
-                    ]
-                ):
-                    raise NotImplementedError()
-
-                json_form["properties"][item]["properties"] = (
-                    get_output_in_json_form(
-                        value.properties,  # type: ignore
-                        min_string_length,
-                        min_array_length,
-                        pattern,
-                    )
-                )
-
-        elif value.type == "array":
-            json_form["properties"][item]["minItems"] = min_array_length
-
-        else:
-            json_form["properties"][item] = {
-                "type": (
-                    "number"
-                    if value.type in ["float", "double"]
-                    else value.type
-                )
-            }
-
-            if value.type == "string":
-                json_form["properties"][item]["minLength"] = min_string_length
-                json_form["properties"][item]["pattern"] = pattern
-
-    return json_form
+from hypothesis import given, settings, HealthCheck
 
 
 class Hypothesis:
@@ -88,6 +26,7 @@ class Hypothesis:
             min_array_length,
             pattern,
         )
+
         self.strategy = from_schema(json_form)
         self.store_value()  # type: ignore
 
@@ -96,5 +35,117 @@ class Hypothesis:
             method
         )(self, *args, **kwargs)
     )
+    @settings(
+        suppress_health_check=(
+            HealthCheck.too_slow,
+            HealthCheck.filter_too_much,
+        )
+    )
     def store_value(self, value: Any) -> None:
         self.random_value = value
+
+
+def add_basic_item(
+    component: Optional[Component], min_string_length: int, pattern: str
+) -> Dict[str, Any]:
+    if component is not None:
+        type_form = (
+            "number"
+            if component.type in ["float", "double"]
+            else component.type
+        )
+    else:
+        type_form = "string"
+
+    return {
+        "type": type_form,
+        "minimum": 0,
+        "maximum": 100,
+        "minLength": min_string_length,
+        "pattern": pattern,
+    }
+
+
+def get_output_in_json_form(
+    output_parameters: Dict[str, Component],
+    min_string_length: int = 3,
+    min_array_length: int = 3,
+    pattern: str = "^[a-zA-Z0-9_.-]*$",
+) -> Dict[str, Any]:
+    json_form: Dict[str, Any] = {
+        "type": "object",
+        "additionalProperties": False,
+        "required": list(output_parameters.keys()),
+        "properties": dict(),
+    }
+
+    for item, value in output_parameters.items():
+        if value.required:
+            json_form["required"].append(item)
+
+        json_form["properties"][item] = {"type": value.type}
+
+        if value.type == "object":
+            if value.properties:
+                if any(
+                    [
+                        isinstance(v, ResponseSelection)
+                        for v in value.properties.values()
+                    ]
+                ):
+                    raise NotImplementedError()
+
+                if all(
+                    [
+                        isinstance(v, Component)
+                        for v in value.properties.values()
+                    ]
+                ):
+                    json_form["properties"][item] = get_output_in_json_form(
+                        value.properties,  # type: ignore
+                        min_string_length,
+                        min_array_length,
+                        pattern,
+                    )
+
+                else:
+                    tmp_properties = {
+                        key: Component(type=value)
+                        for key, value in value.properties.items()
+                        if isinstance(value, str)
+                    }
+
+                    json_form["properties"][item] = get_output_in_json_form(
+                        tmp_properties,
+                        min_string_length,
+                        min_array_length,
+                        pattern,
+                    )
+            else:
+                json_form["properties"][item]["additionalProperties"] = True
+
+        elif value.type == "array":
+            json_form["properties"][item]["minItems"] = min_array_length
+
+            if (
+                isinstance(value.items, Component)
+                and value.items.type == "object"
+            ):
+                json_form["properties"][item]["items"] = (
+                    get_output_in_json_form(
+                        value.items.properties,  # type: ignore
+                        min_string_length,
+                        min_array_length,
+                        pattern,
+                    )
+                )
+            else:
+                json_form["properties"][item]["items"] = add_basic_item(
+                    value.items, min_string_length, pattern
+                )
+        else:
+            json_form["properties"][item] = add_basic_item(
+                value, min_string_length, pattern
+            )
+
+    return json_form

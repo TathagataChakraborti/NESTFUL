@@ -1,6 +1,7 @@
 from nestful.data_handlers import get_nestful_catalog
 from nestful.hypothesis_generator import Hypothesis
 from nestful import API
+from typing import List
 
 
 class TestHypothesisJSONSchema:
@@ -13,17 +14,45 @@ class TestHypothesisJSONSchema:
         )
 
         hypothesis.generate_sample()
-        first_value = hypothesis.random_value
+        value = hypothesis.random_value
+
+        assert isinstance(hypothesis.api, API)
+        assert set(hypothesis.api.get_outputs()) == set(value.keys())
+
+    def test_nested_level(self) -> None:
+        hypothesis = Hypothesis(
+            name="SkyScrapperSearchAirport", catalog=self.catalog
+        )
 
         hypothesis.generate_sample()
-        second_value = hypothesis.random_value
+        value = hypothesis.random_value
 
-        assert first_value != second_value
         assert isinstance(hypothesis.api, API)
-        assert set(hypothesis.api.get_outputs()) == set(first_value.keys())
 
-    def test_nested_level_1(self) -> None:
-        pass
+        assert value["navigation"]["localizedName"]
+        assert value["navigation"]["relevantFlightParams"]["skyId"]
 
-    def test_array_length(self) -> None:
-        pass
+    def test_array_length_1(self) -> None:
+        hypothesis = Hypothesis(
+            name="TripadvisorSearchHotels", catalog=self.catalog
+        )
+
+        hypothesis.generate_sample(min_array_length=5)
+        value = hypothesis.random_value
+
+        assert isinstance(hypothesis.api, API)
+        assert isinstance(value["cardPhotos"], List)
+        assert len(value["cardPhotos"]) >= 5
+
+    def test_array_length_2(self) -> None:
+        hypothesis = Hypothesis(
+            name="Goodreads_Search_Quotes_By_Keyword", catalog=self.catalog
+        )
+
+        hypothesis.generate_sample()
+        value = hypothesis.random_value
+
+        assert isinstance(hypothesis.api, API)
+        assert isinstance(value["urls"], List)
+        assert len(value["urls"]) >= 3
+        assert all([isinstance(item, str) for item in value["urls"]])
