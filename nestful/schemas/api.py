@@ -48,6 +48,18 @@ class API(BaseModel):
 
         return self
 
+    def __str__(self) -> str:
+        return str(
+            self.dict(
+                include={
+                    "name",
+                    "description",
+                    "query_parameters",
+                    "output_parameters",
+                }
+            )
+        )
+
     def get_arguments(self, required: Optional[bool] = True) -> List[str]:
         if required is None:
             return list(self.query_parameters.keys())
