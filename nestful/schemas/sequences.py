@@ -39,34 +39,39 @@ class SequenceStep(BaseModel):
 
     def is_same_as(
         self,
-        ground_truth: SequenceStep | SequencingData,
+        ground_truth: SequenceStep,
         catalog: Catalog,
         required_schema_only: bool = False,
+        check_values: bool = False,
     ) -> bool:
-        if required_schema_only:
-            if isinstance(ground_truth, SequenceStep):
-                gt_arguments = ground_truth.get_required_args(catalog)
-                self_arguments = self.get_required_args(catalog)
+        gt_arguments = (
+            ground_truth.get_required_args(catalog)
+            if required_schema_only
+            else set(ground_truth.arguments.keys())
+        )
 
-                return (
-                    self.name == ground_truth.name
-                    and gt_arguments == self_arguments
-                )
+        self_arguments = (
+            self.get_required_args(catalog)
+            if required_schema_only
+            else set(self.arguments.keys())
+        )
 
-            else:
-                return any(
-                    [
-                        self.is_same_as(
-                            ground_truth_step, catalog, required_schema_only
-                        )
-                        for ground_truth_step in ground_truth.output
-                    ]
-                )
+        if check_values:
+            tmp_1 = {
+                k: v
+                for k, v in ground_truth.arguments.items()
+                if k in gt_arguments
+            }
+            tmp_2 = {
+                k: v for k, v in self.arguments.items() if k in self_arguments
+            }
+
+            return self.name == ground_truth.name and tmp_1 == tmp_2
+
         else:
             return (
-                self == ground_truth
-                if isinstance(ground_truth, SequenceStep)
-                else self in ground_truth.output
+                self.name == ground_truth.name
+                and gt_arguments == self_arguments
             )
 
     @model_validator(mode="after")
@@ -156,18 +161,42 @@ class SequencingData(BaseModel):
 
         return list_of_apis
 
+    def contains(
+        self,
+        step: SequenceStep,
+        catalog: Catalog,
+        required_schema_only: bool = False,
+        check_values: bool = False,
+    ) -> bool:
+        return any(
+            [
+                item.is_same_as(
+                    step, catalog, required_schema_only, check_values
+                )
+                for item in self.output
+            ]
+        )
+
     def is_same_as(
         self,
         ground_truth: SequencingData,
         catalog: Catalog,
         required_schema_only: bool = False,
+        check_values: bool = False,
     ) -> bool:
         return all(
             [
-                step.is_same_as(ground_truth, catalog, required_schema_only)
+                ground_truth.contains(
+                    step, catalog, required_schema_only, check_values
+                )
                 for step in self.output
             ]
-        ) and len(self.output) == len(ground_truth.output)
+        ) and all(
+            [
+                self.contains(step, catalog, required_schema_only, check_values)
+                for step in ground_truth.output
+            ]
+        )
 
     def who_produced(self, var: str) -> Tuple[Optional[str], int]:
         index_map: Dict[str, int] = {}

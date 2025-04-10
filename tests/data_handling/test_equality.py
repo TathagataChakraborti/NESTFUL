@@ -1,12 +1,215 @@
 from nestful import SequenceStep, SequencingData
-from nestful.data_handlers import get_nestful_catalog
+from nestful.data_handlers import get_nestful_data_instance
 
 
 class TestEquality:
     def setup_method(self) -> None:
-        self.catalog = get_nestful_catalog(executable=True)
-        self.tokens = [
+        self.sequence, self.catalog = get_nestful_data_instance(
+            index=0, executable=True
+        )
+
+        # [
+        #     'var1 = SkyScrapperSearchAirport(query="New York")',
+        #     'var2 = SkyScrapperSearchAirport(query="London")',
+        #     (
+        #         'var3 = SkyScrapperFlightSearch(originSkyId="$var1.skyId$",'
+        #         ' destinationSkyId="$var2.skyId$",'
+        #         ' originEntityId="$var1.entityId$",'
+        #         ' destinationEntityId="$var2.entityId$", date="2024-08-15",'
+        #         ' returnDate="2024-08-18")'
+        #     ),
+        #     'var4 = TripadvisorSearchLocation(query="London")',
+        #     (
+        #         'var5 = TripadvisorSearchHotels(geoId="$var4.geoId$",'
+        #         ' checkIn="2024-08-15", checkOut="2024-08-18")'
+        #     ),
+        # ]
+
+    def test_exact_same_step(self) -> None:
+        step_str = (
+            'var5 = TripadvisorSearchHotels(geoId="$var4.geoId$",'
+            ' checkIn="2024-08-15", checkOut="2024-08-18")'
+        )
+
+        step_obj = SequenceStep.parse_pretty_print(step_str)
+
+        assert step_obj.is_same_as(
+            self.sequence.output[4], catalog=self.catalog, check_values=True
+        )
+
+        assert self.sequence.contains(
+            step_obj, catalog=self.catalog, check_values=True
+        )
+
+    def test_wrong_name(self) -> None:
+        step_str = (
+            'var5 = TripadvisorSearchHotelsAPI(geoId="$var4.geoId$",'
+            ' checkIn="2024-08-15", checkOut="2024-08-18")'
+        )
+
+        step_obj = SequenceStep.parse_pretty_print(step_str)
+
+        assert not step_obj.is_same_as(
+            self.sequence.output[4], catalog=self.catalog, check_values=True
+        )
+
+        assert not self.sequence.contains(step_obj, catalog=self.catalog)
+
+    def test_exact_same_step_disorder(self) -> None:
+        step_str = (
+            'var5 = TripadvisorSearchHotels(geoId="$var4.geoId$",'
+            ' checkOut="2024-08-18", checkIn="2024-08-15")'
+        )
+
+        step_obj = SequenceStep.parse_pretty_print(step_str)
+
+        assert step_obj.is_same_as(
+            self.sequence.output[4], catalog=self.catalog, check_values=True
+        )
+
+        assert self.sequence.contains(
+            step_obj, catalog=self.catalog, check_values=True
+        )
+
+    def test_same_step_wrong_assignment(self) -> None:
+        step_str = (
+            'var5 = TripadvisorSearchHotels(geoId="$var4.geoId$",'
+            ' checkOut="2024-08-18", checkIn="2024-15-08")'
+        )
+
+        step_obj = SequenceStep.parse_pretty_print(step_str)
+
+        assert step_obj.is_same_as(
+            self.sequence.output[4], catalog=self.catalog
+        )
+
+        assert not step_obj.is_same_as(
+            self.sequence.output[4], catalog=self.catalog, check_values=True
+        )
+
+        assert self.sequence.contains(step_obj, catalog=self.catalog)
+
+        assert not self.sequence.contains(
+            step_obj, catalog=self.catalog, check_values=True
+        )
+
+    def test_same_step_wrong_assignment_optional(self) -> None:
+        step_str_1 = (
+            'var5 = TripadvisorSearchHotels(geoId="$var4.geoId$",'
+            ' checkOut="2024-08-18", checkIn="2024-08-15", pageNumber="3")'
+        )
+
+        step_str_2 = (
+            'var3 = TripadvisorSearchHotels(geoId="$var4.geoId$",'
+            ' checkOut="2024-08-18", checkIn="2024-08-15", pageNumber="2")'
+        )
+
+        step_obj_1 = SequenceStep.parse_pretty_print(step_str_1)
+        step_obj_2 = SequenceStep.parse_pretty_print(step_str_2)
+
+        assert not step_obj_1.is_same_as(
+            step_obj_2, catalog=self.catalog, check_values=True
+        )
+
+        assert step_obj_1.is_same_as(
+            self.sequence.output[4],
+            catalog=self.catalog,
+            required_schema_only=True,
+            check_values=True,
+        )
+
+        assert not self.sequence.contains(
+            step_obj_1, catalog=self.catalog, check_values=True
+        )
+
+        assert not self.sequence.contains(step_obj_1, catalog=self.catalog)
+
+        assert self.sequence.contains(
+            step_obj_1,
+            catalog=self.catalog,
+            required_schema_only=True,
+        )
+
+        assert self.sequence.contains(
+            step_obj_1,
+            catalog=self.catalog,
+            required_schema_only=True,
+            check_values=True,
+        )
+
+    def test_same_step_wrong_assignment_optional_made_up(self) -> None:
+        step_str = (
+            'var5 = TripadvisorSearchHotels(geoId="$var4.geoId$",'
+            ' checkOut="2024-08-18", checkIn="2024-08-15", madeup="3")'
+        )
+
+        step_obj = SequenceStep.parse_pretty_print(step_str)
+
+        assert not step_obj.is_same_as(
+            self.sequence.output[4], catalog=self.catalog, check_values=True
+        )
+
+        assert step_obj.is_same_as(
+            self.sequence.output[4],
+            catalog=self.catalog,
+            required_schema_only=True,
+            check_values=True,
+        )
+
+        assert not self.sequence.contains(
+            step_obj, catalog=self.catalog, check_values=True
+        )
+
+        assert not self.sequence.contains(step_obj, catalog=self.catalog)
+
+        assert self.sequence.contains(
+            step_obj,
+            catalog=self.catalog,
+            required_schema_only=True,
+        )
+
+        assert self.sequence.contains(
+            step_obj,
+            catalog=self.catalog,
+            required_schema_only=True,
+            check_values=True,
+        )
+
+    def test_sequence_disorder(self) -> None:
+        tokens = [
+            'var1 = SkyScrapperSearchAirport(query="London")',
+            'var2 = SkyScrapperSearchAirport(query="New York")',
+            'var3 = TripadvisorSearchLocation(query="London")',
+            (
+                'var4 = TripadvisorSearchHotels(geoId="$var4.geoId$",'
+                ' checkOut="2024-08-18", checkIn="2024-08-15")'
+            ),
+            (
+                'var5 = SkyScrapperFlightSearch(originSkyId="$var1.skyId$",'
+                ' originEntityId="$var1.entityId$",'
+                ' destinationSkyId="$var2.skyId$",'
+                ' destinationEntityId="$var2.entityId$", date="2024-08-15",'
+                ' returnDate="2024-08-18")'
+            ),
+        ]
+
+        sequence_object = SequencingData.parse_pretty_print(tokens)
+
+        assert sequence_object.is_same_as(
+            ground_truth=self.sequence, catalog=self.catalog, check_values=True
+        )
+
+    def test_sequence_disorder_extra_steps(self) -> None:
+        tokens = [
             'var1 = SkyScrapperSearchAirport(query="New York")',
+            'var2 = SkyScrapperSearchAirport(query="London")',
+            (
+                'var3 = SkyScrapperFlightSearch(originSkyId="$var1.skyId$",'
+                ' destinationSkyId="$var2.skyId$",'
+                ' originEntityId="$var1.entityId$",'
+                ' destinationEntityId="$var2.entityId$", date="2024-08-15",'
+                ' returnDate="2024-08-18")'
+            ),
             'var2 = SkyScrapperSearchAirport(query="London")',
             (
                 'var3 = SkyScrapperFlightSearch(originSkyId="$var1.skyId$",'
@@ -22,117 +225,55 @@ class TestEquality:
             ),
         ]
 
-        self.sequence_step = SequenceStep.parse_pretty_print(self.tokens[1])
-        self.sequence_data = SequencingData.parse_pretty_print(self.tokens)
+        sequence_object = SequencingData.parse_pretty_print(tokens)
 
-    def test_direct_same(self) -> None:
-        test_step = SequenceStep.parse_pretty_print(self.tokens[1])
-        assert test_step.is_same_as(self.sequence_step, catalog=self.catalog)
-
-    def test_direct_not_same(self) -> None:
-        test_step = SequenceStep.parse_pretty_print(self.tokens[0])
-        assert not test_step.is_same_as(
-            self.sequence_step, catalog=self.catalog
+        assert sequence_object.is_same_as(
+            ground_truth=self.sequence, catalog=self.catalog, check_values=True
         )
 
-    def test_membership(self) -> None:
-        test_step = SequenceStep.parse_pretty_print(self.tokens[0])
-        assert test_step.is_same_as(self.sequence_data, catalog=self.catalog)
+        sequence_object = SequencingData.parse_pretty_print(tokens[:-2])
 
-    def test_not_membership(self) -> None:
-        self.tokens[0] = 'var1 = SkyScrapperSearchAirport(query="Paris")'
-        self.sequence_data = SequencingData.parse_pretty_print(self.tokens)
-
-        test_step = SequenceStep.parse_pretty_print(
-            'var1 = SkyScrapperSearchAirport(query="New York")'
+        assert not sequence_object.is_same_as(
+            ground_truth=self.sequence, catalog=self.catalog, check_values=True
         )
 
-        assert not test_step.is_same_as(
-            self.sequence_data, catalog=self.catalog
+    def test_sequence_optionals(self) -> None:
+        tokens = [
+            'var1 = SkyScrapperSearchAirport(query="New York")',
+            'var2 = SkyScrapperSearchAirport(query="London")',
+            'var3 = TripadvisorSearchLocation(query="London")',
+            (
+                'var5 = SkyScrapperFlightSearch(originSkyId="$var1.skyId$",'
+                ' originEntityId="$var1.entityId$",'
+                ' destinationSkyId="$var2.skyId$",'
+                ' destinationEntityId="$var2.entityId$", date="2024-08-15",'
+                ' returnDate="2024-18-08")'
+            ),
+            (
+                'var4 = TripadvisorSearchHotels(geoId="$var4.geoId$",'
+                ' checkOut="2024-08-18", checkIn="2024-08-15", pageNumber="3")'
+            ),
+        ]
+
+        sequence_object = SequencingData.parse_pretty_print(tokens)
+
+        assert not sequence_object.is_same_as(
+            ground_truth=self.sequence, catalog=self.catalog, check_values=True
         )
 
-    def test_required_only_direct(self) -> None:
-        test_step = 'var1 = SkyScrapperSearchAirport(query="New York")'
-        test_step_object = SequenceStep.parse_pretty_print(test_step)
-
-        assert test_step_object.is_same_as(
-            self.sequence_step, catalog=self.catalog, required_schema_only=True
+        assert not sequence_object.is_same_as(
+            ground_truth=self.sequence, catalog=self.catalog
         )
 
-    def test_required_only_direct_not(self) -> None:
-        test_step = (
-            'var4 = SkyScrapperFlightSearch(originSkyId="$var1.skyId$",'
-            ' destinationSkyId="$var2.skyId$",'
-            ' originEntityId="$var1.entityId$", date="2024-08-15",'
-            ' returnDate="2024-08-18")'
-        )
-
-        test_step_object = SequenceStep.parse_pretty_print(test_step)
-
-        assert (
-            test_step_object.is_same_as(
-                ground_truth=self.sequence_data.output[3],
-                catalog=self.catalog,
-                required_schema_only=True,
-            )
-            is False
-        )
-
-    def test_required_only_direct_member(self) -> None:
-        test_step = (
-            'var4 = SkyScrapperFlightSearch(originSkyId="$var1.skyId$",'
-            ' destinationSkyId="$var2.skyId$",'
-            ' originEntityId="$var1.entityId$",'
-            ' destinationEntityId="$var2.entityId$", date="2024-08-15")'
-        )
-
-        test_step_object = SequenceStep.parse_pretty_print(test_step)
-
-        assert test_step_object.is_same_as(
-            ground_truth=self.sequence_data,
+        assert sequence_object.is_same_as(
+            ground_truth=self.sequence,
             catalog=self.catalog,
             required_schema_only=True,
+            check_values=False,
         )
 
-    def test_required_only_direct_member_not(self) -> None:
-        test_step = (
-            'var4 = SkyScrapperFlightSearch(originSkyId="$var1.skyId$",'
-            ' destinationSkyId="$var2.skyId$",'
-            ' originEntityId="$var1.entityId$", date="2024-08-15",'
-            ' returnDate="2024-08-18")'
-        )
-
-        test_step_object = SequenceStep.parse_pretty_print(test_step)
-
-        assert (
-            test_step_object.is_same_as(
-                ground_truth=self.sequence_data,
-                catalog=self.catalog,
-                required_schema_only=True,
-            )
-            is False
-        )
-
-    def test_made_up_api(self) -> None:
-        test_step = 'var1 = SkyCrapperSearchAirport(query="New York")'
-        test_step_object = SequenceStep.parse_pretty_print(test_step)
-
-        assert (
-            test_step_object.is_same_as(
-                self.sequence_step, catalog=self.catalog
-            )
-            is False
-        )
-
-    def test_made_up_api_required_only(self) -> None:
-        test_step = 'var1 = SkyCrapperSearchAirport(query="New York")'
-        test_step_object = SequenceStep.parse_pretty_print(test_step)
-
-        assert (
-            test_step_object.is_same_as(
-                self.sequence_step,
-                catalog=self.catalog,
-                required_schema_only=True,
-            )
-            is False
+        assert sequence_object.is_same_as(
+            ground_truth=self.sequence,
+            catalog=self.catalog,
+            required_schema_only=True,
         )
