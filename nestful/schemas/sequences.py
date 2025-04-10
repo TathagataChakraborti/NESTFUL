@@ -2,7 +2,7 @@ from __future__ import annotations
 from typing import List, Dict, Optional, Any, Union, Tuple, Set
 from pydantic import BaseModel, ConfigDict, model_validator
 from nestful.utils import parse_parameters
-from nestful.schemas.api import Catalog, API
+from nestful.schemas.api import Catalog, API, MinifiedAPI
 
 
 class SequenceStep(BaseModel):
@@ -14,6 +14,12 @@ class SequenceStep(BaseModel):
 
     def __str__(self) -> str:
         return str(self.dict())
+
+    def get_tool_spec(self, catalog: Catalog) -> Optional[API]:
+        tool_spec = catalog.get_api(name=self.name or "")
+
+        assert not isinstance(tool_spec, MinifiedAPI)
+        return tool_spec
 
     def get_required_args(self, catalog: Catalog) -> Set[str]:
         api_spec = (
@@ -138,6 +144,17 @@ class SequencingData(BaseModel):
         list_of_str = [str(item) for item in self.output]
         string_form = ",\n".join(list_of_str)
         return f"[\n{string_form}\n]"
+
+    def get_tool_specs(self, catalog: Catalog) -> List[API]:
+        list_of_apis: List[API] = []
+
+        for step in self.output:
+            tool_spec = step.get_tool_spec(catalog)
+
+            if isinstance(tool_spec, API) and tool_spec not in list_of_apis:
+                list_of_apis.append(tool_spec)
+
+        return list_of_apis
 
     def is_same_as(
         self,

@@ -1,5 +1,5 @@
 from nestful.data_handlers import get_nestful_catalog
-from nestful import SequencingData, SequenceStep
+from nestful import SequencingData, SequenceStep, API
 
 
 class TestTrajectoryCheck:
@@ -220,3 +220,40 @@ class TestTrajectoryCheck:
             name == "TripadvisorSearchHotels"
             and test_sequence.get_label(name, index) is None
         )
+
+    def test_get_spec_step(self) -> None:
+        step = SequenceStep(name="TripadvisorSearchHotels")
+        spec = step.get_tool_spec(catalog=self.catalog)
+
+        assert isinstance(spec, API)
+        assert spec.name == "TripadvisorSearchHotels"
+        assert spec.get_arguments(required=True) == [
+            "geoId",
+            "checkIn",
+            "checkOut",
+        ]
+
+        print(spec)
+
+    def test_get_spec_made_up_step(self) -> None:
+        step = SequenceStep(name="IamanLLMImadethisup!")
+        spec = step.get_tool_spec(catalog=self.catalog)
+
+        assert spec is None
+
+    def test_get_spec_sequence(self) -> None:
+        sequence = SequencingData(
+            output=[
+                SequenceStep(name="SkyScrapperSearchAirport"),
+                SequenceStep(name="SkyScrapperSearchAirport"),
+                SequenceStep(name="IamanLLMImadethisup"),
+                SequenceStep(name="SkyScrapperFlightSearch"),
+            ]
+        )
+
+        specs = sequence.get_tool_specs(catalog=self.catalog)
+
+        assert [spec.name for spec in specs] == [
+            "SkyScrapperSearchAirport",
+            "SkyScrapperFlightSearch",
+        ]
