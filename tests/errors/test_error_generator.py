@@ -1,10 +1,9 @@
-from nestful.error_generator import (
-    induce_error_in_step,
-    transform_variable,
-    ErrorType,
-)
 from nestful.data_handlers import get_nestful_data_instance
 from nestful.utils import extract_label
+from nestful.errors.error_generator import transform_variable
+from nestful.errors import induce_error_in_step
+from nestful.schemas.errors import ErrorType
+from nestful.schemas.sequences import ErrorTag
 
 
 class TestErrorGenerator:
@@ -42,6 +41,24 @@ class TestErrorGenerator:
 
         assert len(remaining_parameters) == 0
         assert len(error_step.arguments.keys()) == 1
+
+        error_count = 0
+
+        for item in [
+            "originSkyId",
+            "destinationSkyId",
+            "originEntityId",
+            "destinationEntityId",
+            "date",
+        ]:
+            error_count += 1
+            assert (
+                ErrorTag(error_type=ErrorType.MISSING_PARAMETER, info=item)
+                in error_step.errors
+            )
+
+        assert error_count == 5
+        assert error_count == len(error_step.errors)
 
         error_step, _ = induce_error_in_step(
             original_step,
@@ -86,15 +103,24 @@ class TestErrorGenerator:
             == original_parameters
         )
 
+        made_up_parameter = compromised_parameters.pop()
+
+        assert (
+            ErrorTag(
+                error_type=ErrorType.MADE_UP_PARAMETER, info=made_up_parameter
+            )
+            in error_step.errors
+        )
+
     def test_missing_memory(self) -> None:
         memory = {
             "var1": {
                 "skyId": "foo",
-                "entityId$": "bar",
+                "entityId": "bar",
             },
             "var2": {
                 "skyId": "foo",
-                "entityId$": "bar",
+                "entityId": "bar",
             },
         }
 
@@ -124,6 +150,9 @@ class TestErrorGenerator:
         )
 
         assert new_memory["var4"] == {}
+        assert ErrorTag(
+            error_type=ErrorType.MISSING_MEMORY, info="$var4.geoId$"
+        )
 
     def test_made_up_assignment(self) -> None:
         original_step = self.sequence.output[2]
@@ -151,6 +180,10 @@ class TestErrorGenerator:
                 assert original_label == new_label
                 assert original_mapping == transform_variable(new_mapping or "")
 
+                assert ErrorTag(
+                    error_type=ErrorType.MADE_UP_ASSIGNMENT, info=new_mapping
+                )
+
         assert error_count == num_errors
 
     def test_made_up_assignment_nested(self) -> None:
@@ -165,3 +198,8 @@ class TestErrorGenerator:
 
         assert error_step is not None
         assert error_step.arguments["q"] == "$var1.location.eman$"
+
+        assert ErrorTag(error_type=ErrorType.MADE_UP_ASSIGNMENT, info="enam")
+        assert ErrorTag(
+            error_type=ErrorType.MISSING_MEMORY, info="$var1.location.eman$"
+        )

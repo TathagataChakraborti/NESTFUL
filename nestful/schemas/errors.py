@@ -8,6 +8,7 @@ class ErrorType(StrEnum):
     MADE_UP_PARAMETER = auto()
     MISSING_MEMORY = auto()
     MADE_UP_ASSIGNMENT = auto()
+    WRONG_ASSIGNMENT = auto()
     MADE_UP_API = auto()
     UNNECESSARY_CALL = auto()
     MISSING_CALL = auto()
