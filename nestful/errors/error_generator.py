@@ -1,6 +1,7 @@
 from nestful import SequenceStep, SequencingData, Catalog
-from nestful.utils import extract_label
+from nestful.utils import extract_label, TOKEN
 from nestful.schemas.errors import ErrorType
+from nestful.errors.error_tagger import tag_sequence_step, tag_sequence
 from random import sample, randint
 from typing import Optional, Dict, Any, Tuple
 from copy import deepcopy
@@ -18,18 +19,26 @@ def induce_error_in_step(
 
     if error_type == ErrorType.MISSING_PARAMETER:
         error_step = remove_required_argument(step, catalog, num_errors)
-        return error_step, memory
+
     elif error_type == ErrorType.MADE_UP_PARAMETER:
         error_step = rename_required_argument(step, catalog, num_errors)
-        return error_step, memory
+
     elif error_type == ErrorType.MISSING_MEMORY:
         new_memory = remove_memory_item(step, memory, num_errors)
+        step = tag_sequence_step(step, step, memory)
+
         return step if new_memory != memory else None, memory
+
     elif error_type == ErrorType.MADE_UP_ASSIGNMENT:
         error_step = rename_assignment(step, num_errors)
-        return error_step, memory
+
     else:
         raise NotImplementedError(f"Error type {error_type} not supported yet.")
+
+    if error_step:
+        error_step = tag_sequence_step(error_step, step, memory)
+
+    return error_step, memory
 
 
 def induce_error_in_sequence(
@@ -40,22 +49,24 @@ def induce_error_in_sequence(
     num_errors: int = 1,
 ) -> SequencingData:
     error_count = 0
+    new_sequence = deepcopy(sequence)
 
     while error_count < num_errors:
-        index = randint(a=0, b=len(sequence.output) - 1)
-        step = sequence.output[index]
+        index = randint(a=0, b=len(new_sequence.output) - 1)
+        step = new_sequence.output[index]
 
         error_step, new_memory = induce_error_in_step(
             step, catalog, memory, error_type
         )
 
         if error_step is not None:
-            sequence.output[index] = error_step
+            new_sequence.output[index] = error_step
             memory = new_memory
 
             error_count += 1
 
-    return sequence
+    new_sequence = tag_sequence(new_sequence, sequence, memory)
+    return new_sequence
 
 
 def remove_required_argument(
@@ -105,7 +116,7 @@ def remove_memory_item(
     for arg, value in step.arguments.items():
         label, mapping = extract_label(str(value))
 
-        if label.startswith("var"):
+        if label.startswith(TOKEN):
             keys_of_interest.add(label)
 
     if num > len(keys_of_interest):
@@ -129,7 +140,7 @@ def rename_assignment(
     for arg, value in step.arguments.items():
         label, mapping = extract_label(str(value))
 
-        if label.startswith("var") and mapping is not None:
+        if label.startswith(TOKEN) and mapping is not None:
             args_of_interest.add(arg)
 
     if num > len(args_of_interest):

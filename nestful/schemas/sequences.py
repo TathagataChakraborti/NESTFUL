@@ -3,6 +3,7 @@ from typing import List, Dict, Optional, Any, Union, Tuple, Set
 from pydantic import BaseModel, ConfigDict, model_validator
 from nestful.utils import parse_parameters
 from nestful.schemas.api import Catalog, API, MinifiedAPI
+from nestful.schemas.errors import ErrorType
 
 
 class SequenceStep(BaseModel):
@@ -11,9 +12,10 @@ class SequenceStep(BaseModel):
     name: Optional[str] = ""
     arguments: Dict[str, Any] = dict()
     label: Optional[str] = None
+    errors: List[ErrorTag] = []
 
     def __str__(self) -> str:
-        return str(self.dict())
+        return str(self.model_dump(exclude={"errors"}))
 
     def get_tool_spec(self, catalog: Catalog) -> Optional[API]:
         tool_spec = catalog.get_api(name=self.name or "")
@@ -136,6 +138,7 @@ class SequencingData(BaseModel):
     input: str = ""
     output: List[SequenceStep] = []
     var_result: Dict[str, str] = {}
+    errors: List[ErrorTag] = []
 
     @model_validator(mode="after")
     def remove_final_step(self) -> SequencingData:
@@ -250,3 +253,8 @@ class SequencingData(BaseModel):
 
 class SequencingDataset(BaseModel):
     data: List[SequencingData]
+
+
+class ErrorTag(BaseModel):
+    error_type: ErrorType = ErrorType.UNKNOWN
+    info: str | Dict[str, Any] | SequenceStep | None
