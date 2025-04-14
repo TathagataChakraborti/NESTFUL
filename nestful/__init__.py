@@ -3,6 +3,7 @@ from nestful.schemas.sequences import (
     SequencingDataset,
     SequencingData,
     SequenceStep,
+    AtomicCall,
 )
 
 from nestful.schemas.openapi import OpenAPI

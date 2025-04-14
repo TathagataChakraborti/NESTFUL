@@ -1,10 +1,16 @@
-from nestful import SequenceStep, SequencingData, Catalog
 from nestful.utils import extract_label, TOKEN
 from nestful.schemas.errors import ErrorType
-from nestful.errors.error_tagger import tag_sequence_step, tag_sequence
 from random import sample, randint
-from typing import Optional, Dict, Any, Tuple
+from typing import Optional, Dict, Any, Tuple, List
 from copy import deepcopy
+from nestful.errors.error_tagger import tag_sequence_step, tag_sequence
+from nestful import (
+    SequenceStep,
+    SequencingData,
+    SequencingDataset,
+    Catalog,
+    AtomicCall,
+)
 
 
 def induce_error_in_step(
@@ -92,6 +98,42 @@ def induce_error_in_sequence(
 
     new_sequence = tag_sequence(new_sequence, sequence, memory, catalog)
     return new_sequence
+
+
+def batch_generate_error_steps(
+    dataset: SequencingDataset,
+    catalog: Catalog,
+    num_samples: int,
+    error_type: ErrorType = ErrorType.UNKNOWN,
+    num_error_per_sample: int = 1,
+) -> List[AtomicCall]:
+    current_samples: List[AtomicCall] = []
+
+    while len(current_samples) < num_samples:
+        random_index = randint(a=0, b=len(dataset.data) - 1)
+        random_sequence = dataset.data[random_index]
+
+        random_index = randint(a=0, b=len(random_sequence.output) - 1)
+        step = random_sequence.output[random_index]
+
+        memory = random_sequence.generate_dummy_output(
+            catalog, index=random_index
+        )
+
+        error_step, new_memory = induce_error_in_step(
+            step, catalog, memory, error_type, num_error_per_sample
+        )
+
+        if error_step is not None:
+            current_samples.append(
+                AtomicCall(
+                    call=error_step,
+                    memory=new_memory,
+                    ground_truth=AtomicCall(call=step, memory=memory),
+                )
+            )
+
+    return current_samples
 
 
 def remove_required_argument(

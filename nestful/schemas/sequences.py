@@ -9,6 +9,12 @@ from copy import deepcopy
 DUMMY_VALUE = "INIT"
 
 
+class AtomicCall(BaseModel):
+    call: SequenceStep
+    memory: Dict[str, Any]
+    ground_truth: Optional[AtomicCall] = None
+
+
 class SequenceStep(BaseModel):
     model_config = ConfigDict(extra="ignore")
 
