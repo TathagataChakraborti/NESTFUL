@@ -75,8 +75,8 @@ class TestErrorGeneratorSequence:
 
         for step in error_sequence.output:
             if step.errors:
+                assert repeat_step is None
                 repeat_step = step
-                break
 
         assert repeat_step is not None
         assert (

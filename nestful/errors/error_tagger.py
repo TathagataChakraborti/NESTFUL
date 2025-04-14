@@ -97,11 +97,14 @@ def tag_sequence(
 
         if repeat_index < len(target_indices):
             target_index = target_indices[repeat_index]
+            tmp_memory = sequence.generate_dummy_output(
+                catalog=catalog, index=index
+            )
 
             sequence.output[index] = tag_sequence_step(
                 step,
                 ground_truth=ground_truth.output[target_index],
-                memory=memory,
+                memory=tmp_memory,
             )
 
         else:

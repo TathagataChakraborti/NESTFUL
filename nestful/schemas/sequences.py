@@ -6,6 +6,8 @@ from nestful.schemas.api import Catalog, API, MinifiedAPI
 from nestful.schemas.errors import ErrorType
 from copy import deepcopy
 
+DUMMY_VALUE = "INIT"
+
 
 class SequenceStep(BaseModel):
     model_config = ConfigDict(extra="ignore")
@@ -17,6 +19,26 @@ class SequenceStep(BaseModel):
 
     def __str__(self) -> str:
         return str(self.model_dump(exclude={"errors"}))
+
+    def generate_dummy_output(self, catalog: Catalog) -> Dict[str, Any]:
+        new_memory: Dict[str, Any] = dict()
+        api_spec = next(
+            filter(lambda api: api.name == self.name, catalog.apis), None
+        )
+
+        if api_spec is None or self.label is None:
+            return new_memory
+
+        else:
+            for k, item in api_spec.output_parameters.items():
+                new_memory[k] = (
+                    {key: DUMMY_VALUE for key in item.properties}
+                    if item.properties
+                    else DUMMY_VALUE
+                )
+
+            memory = {self.label: new_memory}
+            return memory
 
     def get_tool_spec(self, catalog: Catalog) -> Optional[API]:
         tool_spec = catalog.get_api(name=self.name or "")
@@ -167,6 +189,22 @@ class SequencingData(BaseModel):
         list_of_str = [str(item) for item in self.output]
         string_form = ",\n".join(list_of_str)
         return f"[\n{string_form}\n]"
+
+    def generate_dummy_output(
+        self,
+        catalog: Catalog,
+        index: Optional[int] = None,
+    ) -> Dict[str, Any]:
+        assert index is None or index < len(self.output)
+        index = len(self.output) if index is None else index
+
+        memory: Dict[str, Any] = {}
+
+        for i in range(index):
+            step_memory = self.output[i].generate_dummy_output(catalog)
+            memory = {**memory, **step_memory}
+
+        return memory
 
     def get_tool_specs(self, catalog: Catalog) -> List[API]:
         list_of_apis: List[API] = []
