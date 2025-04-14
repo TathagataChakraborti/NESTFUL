@@ -6,7 +6,7 @@ from nestful.schemas.errors import ErrorType
 from nestful.schemas.sequences import ErrorTag
 
 
-class TestErrorGenerator:
+class TestErrorGeneratorStep:
     def setup_method(self) -> None:
         self.sequence, self.catalog = get_nestful_data_instance(
             index=0, executable=True

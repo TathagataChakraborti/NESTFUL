@@ -10,8 +10,9 @@ class ErrorType(StrEnum):
     MADE_UP_ASSIGNMENT = auto()
     WRONG_ASSIGNMENT = auto()
     MADE_UP_API = auto()
-    UNNECESSARY_CALL = auto()
+    BAD_REPEAT = auto()
     MISSING_CALL = auto()
+    NEW_CALL = auto()
     UNKNOWN = auto()
 
     @classmethod

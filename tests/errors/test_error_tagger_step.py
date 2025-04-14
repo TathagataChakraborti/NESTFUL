@@ -6,7 +6,7 @@ from nestful import SequenceStep
 from typing import Dict, Any
 
 
-class TestErrorTagger:
+class TestErrorTaggerStep:
     def setup_method(self) -> None:
         self.sequence, self.catalog = get_nestful_data_instance(
             index=0, executable=True

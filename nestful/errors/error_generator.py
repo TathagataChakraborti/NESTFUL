@@ -51,21 +51,46 @@ def induce_error_in_sequence(
     error_count = 0
     new_sequence = deepcopy(sequence)
 
+    if error_type in [ErrorType.NEW_CALL, ErrorType.MADE_UP_API]:
+        raise NotImplementedError(f"Error type {error_type} not supported yet.")
+
     while error_count < num_errors:
         index = randint(a=0, b=len(new_sequence.output) - 1)
         step = new_sequence.output[index]
 
-        error_step, new_memory = induce_error_in_step(
-            step, catalog, memory, error_type
-        )
+        if error_type == ErrorType.MISSING_CALL:
+            who_used = new_sequence.who_used(step.label or "")
 
-        if error_step is not None:
-            new_sequence.output[index] = error_step
-            memory = new_memory
+            if who_used:
+                new_sequence = new_sequence.remove_reference(step.label or "")
+                error_count += 1
+            else:
+                continue
 
-            error_count += 1
+        elif error_type == ErrorType.BAD_REPEAT:
+            error_step, new_memory = induce_error_in_step(step, catalog, memory)
 
-    new_sequence = tag_sequence(new_sequence, sequence, memory)
+            if error_step is not None:
+                new_sequence.output = (
+                    new_sequence.output[:index]
+                    + [error_step]
+                    + new_sequence.output[index:]
+                )
+                memory = new_memory
+
+                error_count += 1
+        else:
+            error_step, new_memory = induce_error_in_step(
+                step, catalog, memory, error_type
+            )
+
+            if error_step is not None:
+                new_sequence.output[index] = error_step
+                memory = new_memory
+
+                error_count += 1
+
+    new_sequence = tag_sequence(new_sequence, sequence, memory, catalog)
     return new_sequence
 
 

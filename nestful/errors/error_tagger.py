@@ -1,4 +1,4 @@
-from nestful import SequenceStep, SequencingData
+from nestful import SequenceStep, SequencingData, Catalog
 from nestful.schemas.sequences import ErrorTag
 from nestful.schemas.errors import ErrorType
 from nestful.utils import extract_label, TOKEN
@@ -83,13 +83,14 @@ def tag_sequence(
     sequence: SequencingData,
     ground_truth: SequencingData,
     memory: Dict[str, Any],
+    catalog: Catalog,
 ) -> SequencingData:
     for index, step in enumerate(sequence.output):
         indices_of_interest = [
             i for i, x in enumerate(sequence.output) if x.name == step.name
         ]
-        repeat_index = indices_of_interest.index(index)
 
+        repeat_index = indices_of_interest.index(index)
         target_indices = [
             i for i, x in enumerate(ground_truth.output) if x.name == step.name
         ]
@@ -104,6 +105,34 @@ def tag_sequence(
             )
 
         else:
-            sequence.errors.append(ErrorTag(info=step))
+            if len(target_indices) == 0:
+                reference_api = catalog.get_api(step.name or "")
+
+                if reference_api is None:
+                    sequence.errors.append(
+                        ErrorTag(
+                            error_type=ErrorType.MADE_UP_API, info=step.name
+                        )
+                    )
+
+                sequence.errors.append(
+                    ErrorTag(error_type=ErrorType.NEW_CALL, info=step.name)
+                )
+
+            else:
+                sequence.errors.append(
+                    ErrorTag(error_type=ErrorType.BAD_REPEAT, info=step.name)
+                )
+
+    for step in ground_truth.output:
+        name, repeat_index = ground_truth.who_produced(step.label or "")
+        label = None if name is None else sequence.get_label(name, repeat_index)
+
+        if label is None or step.name not in [
+            item.name for item in sequence.output
+        ]:
+            sequence.errors.append(
+                ErrorTag(error_type=ErrorType.MISSING_CALL, info=step.name)
+            )
 
     return sequence
