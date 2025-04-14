@@ -1,9 +1,10 @@
 from __future__ import annotations
 from typing import List, Dict, Optional, Any, Union, Tuple, Set
 from pydantic import BaseModel, ConfigDict, model_validator
-from nestful.utils import parse_parameters
+from nestful.utils import parse_parameters, extract_label
 from nestful.schemas.api import Catalog, API, MinifiedAPI
 from nestful.schemas.errors import ErrorType
+from copy import deepcopy
 
 
 class SequenceStep(BaseModel):
@@ -133,6 +134,20 @@ class SequenceStep(BaseModel):
 
         return "\n".join(pretty_strings)
 
+    def remove_reference(self, label: str) -> SequenceStep:
+        new_step = deepcopy(self)
+        new_step.arguments = dict()
+
+        for arg, value in self.arguments.items():
+            l, m = extract_label(str(value))
+
+            if l == label:
+                continue
+
+            new_step.arguments[arg] = value
+
+        return new_step
+
 
 class SequencingData(BaseModel):
     input: str = ""
@@ -201,6 +216,36 @@ class SequencingData(BaseModel):
             ]
         )
 
+    def remove_reference(self, label: str) -> SequencingData:
+        new_sequence = deepcopy(self)
+        cached_index = 0
+
+        for index, step in enumerate(new_sequence.output):
+            new_sequence.output[index] = step.remove_reference(label)
+
+            if step.label == label:
+                cached_index = index
+
+        new_sequence.output = (
+            new_sequence.output[:cached_index]
+            + new_sequence.output[cached_index + 1 :]
+        )
+
+        return new_sequence
+
+    def who_used(self, label: str) -> List[int]:
+        indices = []
+
+        for index, step in enumerate(self.output):
+            for arg, value in step.arguments.items():
+                l, m = extract_label(str(value))
+
+                if l == label:
+                    indices.append(index)
+                    break
+
+        return indices
+
     def who_produced(self, var: str) -> Tuple[Optional[str], int]:
         index_map: Dict[str, int] = {}
 
@@ -257,4 +302,4 @@ class SequencingDataset(BaseModel):
 
 class ErrorTag(BaseModel):
     error_type: ErrorType = ErrorType.UNKNOWN
-    info: str | Dict[str, Any] | SequenceStep | None
+    info: str | Dict[str, Any] | None
