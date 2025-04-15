@@ -116,7 +116,7 @@ py-version=3.12
 max-line-length = 80
 
 [tool.flake8]
-extend-ignore = ["F401", "E203"]
+extend-ignore = ["F401", "E203", "E501"]
 count = true
 max-line-length = 80
 max-complexity = 18

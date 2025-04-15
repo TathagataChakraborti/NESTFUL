@@ -16,6 +16,9 @@ def merge_quoted_parameters(list_of_parameters: List[str]) -> List[str]:
         if parameter.startswith('"') and parameter.count('"') % 2 == 1:
             merge_on = True
 
+        if '="' in parameter and parameter.count('"') % 2 == 1:
+            merge_on = True
+
         if merge_on:
             new_parameter += f'{", " if new_parameter else ""}{parameter}'
             num_mergers += 1

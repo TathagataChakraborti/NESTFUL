@@ -36,6 +36,17 @@ class TestErrorGeneratorStep:
             error_type=ErrorType.MISSING_PARAMETER,
         )
 
+        assert error_step is None
+
+        error_step, _ = induce_error_in_step(
+            original_step,
+            catalog=self.catalog,
+            memory={},
+            num_errors=5,
+            error_type=ErrorType.MISSING_PARAMETER,
+            referred_only=False,
+        )
+
         assert error_step is not None
         remaining_parameters = error_step.get_required_args(self.catalog)
 

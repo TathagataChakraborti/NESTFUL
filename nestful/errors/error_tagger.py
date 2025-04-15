@@ -101,6 +101,8 @@ def tag_sequence(
                 catalog=catalog, index=index
             )
 
+            tmp_memory = {**memory, **tmp_memory}
+
             sequence.output[index] = tag_sequence_step(
                 step,
                 ground_truth=ground_truth.output[target_index],

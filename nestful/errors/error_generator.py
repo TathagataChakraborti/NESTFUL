@@ -1,7 +1,7 @@
 from nestful.utils import extract_label, TOKEN
 from nestful.schemas.errors import ErrorType
 from random import sample, randint
-from typing import Optional, Dict, Any, Tuple, List
+from typing import Optional, Dict, Any, Tuple, List, Set
 from copy import deepcopy
 from nestful.errors.error_tagger import tag_sequence_step, tag_sequence
 from nestful import (
@@ -19,15 +19,20 @@ def induce_error_in_step(
     memory: Dict[str, Any],
     error_type: ErrorType = ErrorType.UNKNOWN,
     num_errors: int = 1,
+    referred_only: bool = True,
 ) -> Tuple[Optional[SequenceStep], Dict[str, Any]]:
     if error_type == ErrorType.UNKNOWN:
         error_type = ErrorType.get_random_error()
 
     if error_type == ErrorType.MISSING_PARAMETER:
-        error_step = remove_required_argument(step, catalog, num_errors)
+        error_step = remove_required_argument(
+            step, catalog, num_errors, referred_only
+        )
 
     elif error_type == ErrorType.MADE_UP_PARAMETER:
-        error_step = rename_required_argument(step, catalog, num_errors)
+        error_step = rename_required_argument(
+            step, catalog, num_errors, referred_only
+        )
 
     elif error_type == ErrorType.MISSING_MEMORY:
         new_memory = remove_memory_item(step, memory, num_errors)
@@ -53,6 +58,7 @@ def induce_error_in_sequence(
     memory: Dict[str, Any],
     error_type: ErrorType = ErrorType.UNKNOWN,
     num_errors: int = 1,
+    referred_only: bool = True,
 ) -> SequencingData:
     error_count = 0
     new_sequence = deepcopy(sequence)
@@ -74,7 +80,9 @@ def induce_error_in_sequence(
                 continue
 
         elif error_type == ErrorType.BAD_REPEAT:
-            error_step, new_memory = induce_error_in_step(step, catalog, memory)
+            error_step, new_memory = induce_error_in_step(
+                step, catalog, memory, referred_only=referred_only
+            )
 
             if error_step is not None:
                 new_sequence.output = (
@@ -87,7 +95,7 @@ def induce_error_in_sequence(
                 error_count += 1
         else:
             error_step, new_memory = induce_error_in_step(
-                step, catalog, memory, error_type
+                step, catalog, memory, error_type, referred_only=referred_only
             )
 
             if error_step is not None:
@@ -106,6 +114,7 @@ def batch_generate_error_steps(
     num_samples: int,
     error_type: ErrorType = ErrorType.UNKNOWN,
     num_error_per_sample: int = 1,
+    referred_only: bool = True,
 ) -> List[AtomicCall]:
     current_samples: List[AtomicCall] = []
 
@@ -121,7 +130,12 @@ def batch_generate_error_steps(
         )
 
         error_step, new_memory = induce_error_in_step(
-            step, catalog, memory, error_type, num_error_per_sample
+            step,
+            catalog,
+            memory,
+            error_type,
+            num_error_per_sample,
+            referred_only,
         )
 
         if error_step is not None:
@@ -137,10 +151,19 @@ def batch_generate_error_steps(
 
 
 def remove_required_argument(
-    step: SequenceStep, catalog: Catalog, num: int = 1
+    step: SequenceStep,
+    catalog: Catalog,
+    num: int = 1,
+    referred_only: bool = True,
 ) -> Optional[SequenceStep]:
     error_step = deepcopy(step)
     required_params = error_step.get_required_args(catalog)
+
+    if referred_only:
+        referred_assignments = get_args_with_labeled_assignments(step.arguments)
+        required_params = {
+            item for item in required_params if item in referred_assignments
+        }
 
     if num > len(required_params):
         return None
@@ -155,10 +178,19 @@ def remove_required_argument(
 
 
 def rename_required_argument(
-    step: SequenceStep, catalog: Catalog, num: int = 1
+    step: SequenceStep,
+    catalog: Catalog,
+    num: int = 1,
+    referred_only: bool = True,
 ) -> Optional[SequenceStep]:
     error_step = deepcopy(step)
     required_params = error_step.get_required_args(catalog)
+
+    if referred_only:
+        referred_assignments = get_args_with_labeled_assignments(step.arguments)
+        required_params = {
+            item for item in required_params if item in referred_assignments
+        }
 
     if num > len(required_params):
         return None
@@ -178,13 +210,7 @@ def rename_required_argument(
 def remove_memory_item(
     step: SequenceStep, memory: Dict[str, Any], num: int = 1
 ) -> Dict[str, Any]:
-    keys_of_interest = set()
-
-    for arg, value in step.arguments.items():
-        label, mapping = extract_label(str(value))
-
-        if label.startswith(TOKEN):
-            keys_of_interest.add(label)
+    keys_of_interest = get_labels_from_labeled_assignments(step.arguments)
 
     if num > len(keys_of_interest):
         return memory
@@ -201,14 +227,8 @@ def remove_memory_item(
 def rename_assignment(
     step: SequenceStep, num: int = 1
 ) -> Optional[SequenceStep]:
-    args_of_interest = set()
     error_step = deepcopy(step)
-
-    for arg, value in step.arguments.items():
-        label, mapping = extract_label(str(value))
-
-        if label.startswith(TOKEN) and mapping is not None:
-            args_of_interest.add(arg)
+    args_of_interest = get_args_with_labeled_assignments(step.arguments)
 
     if num > len(args_of_interest):
         return None
@@ -229,6 +249,30 @@ def rename_assignment(
                 error_step.arguments[item] = f"${label}.{new_mapping}$"
 
         return error_step
+
+
+def get_labels_from_labeled_assignments(arguments: Dict[str, Any]) -> Set[str]:
+    args_of_interest = set()
+
+    for arg, value in arguments.items():
+        label, mapping = extract_label(str(value))
+
+        if label.startswith(TOKEN):
+            args_of_interest.add(label)
+
+    return args_of_interest
+
+
+def get_args_with_labeled_assignments(arguments: Dict[str, Any]) -> Set[str]:
+    args_of_interest = set()
+
+    for arg, value in arguments.items():
+        label, mapping = extract_label(str(value))
+
+        if label.startswith(TOKEN) and mapping is not None:
+            args_of_interest.add(arg)
+
+    return args_of_interest
 
 
 def transform_variable(name: str) -> str:

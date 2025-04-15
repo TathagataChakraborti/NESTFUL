@@ -20,7 +20,6 @@ class ErrorType(StrEnum):
         available_keys = [
             cls.MISSING_PARAMETER,
             cls.MADE_UP_PARAMETER,
-            cls.MISSING_MEMORY,
             cls.MADE_UP_ASSIGNMENT,
         ]
 
