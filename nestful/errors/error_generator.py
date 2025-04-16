@@ -12,6 +12,8 @@ from nestful import (
     AtomicCall,
 )
 
+MAX_COLLISIONS = 100
+
 
 def induce_error_in_step(
     step: SequenceStep,
@@ -117,35 +119,54 @@ def batch_generate_error_steps(
     referred_only: bool = True,
 ) -> List[AtomicCall]:
     current_samples: List[AtomicCall] = []
+    stored_hashes = set()
+    total_collisions = 0
 
     while len(current_samples) < num_samples:
-        random_index = randint(a=0, b=len(dataset.data) - 1)
-        random_sequence = dataset.data[random_index]
+        num_collisions = 0
 
-        random_index = randint(a=0, b=len(random_sequence.output) - 1)
-        step = random_sequence.output[random_index]
+        while num_collisions < MAX_COLLISIONS:
+            random_index = randint(a=0, b=len(dataset.data) - 1)
+            random_sequence = dataset.data[random_index]
 
-        memory = random_sequence.generate_dummy_output(
-            catalog, index=random_index
-        )
+            random_index = randint(a=0, b=len(random_sequence.output) - 1)
+            step = random_sequence.output[random_index]
 
-        error_step, new_memory = induce_error_in_step(
-            step,
-            catalog,
-            memory,
-            error_type,
-            num_error_per_sample,
-            referred_only,
-        )
-
-        if error_step is not None:
-            current_samples.append(
-                AtomicCall(
-                    call=error_step,
-                    memory=new_memory,
-                    ground_truth=AtomicCall(call=step, memory=memory),
-                )
+            memory = random_sequence.generate_dummy_output(
+                catalog, index=random_index
             )
+
+            error_step, new_memory = induce_error_in_step(
+                step,
+                catalog,
+                memory,
+                error_type,
+                num_error_per_sample,
+                referred_only,
+            )
+
+            if error_step is not None:
+                call_str = error_step.pretty_print(collapse_maps=True)
+                new_hash = hash(call_str)
+
+                if new_hash in stored_hashes:
+                    num_collisions += 1
+                else:
+                    stored_hashes.add(new_hash)
+
+                    current_samples.append(
+                        AtomicCall(
+                            call=error_step,
+                            memory=new_memory,
+                            ground_truth=AtomicCall(call=step, memory=memory),
+                        )
+                    )
+
+            if num_collisions == MAX_COLLISIONS:
+                total_collisions += 1
+
+                if total_collisions == MAX_COLLISIONS:
+                    return current_samples
 
     return current_samples
 
