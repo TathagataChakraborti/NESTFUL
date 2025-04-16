@@ -117,17 +117,27 @@ def batch_generate_error_steps(
     error_type: ErrorType = ErrorType.UNKNOWN,
     num_error_per_sample: int = 1,
     referred_only: bool = True,
+    forbidden_indices: Optional[List[int]] = None,
 ) -> List[AtomicCall]:
     current_samples: List[AtomicCall] = []
     stored_hashes = set()
     total_collisions = 0
 
+    new_dataset = SequencingDataset(data=[])
+
+    if forbidden_indices:
+        for index, data in enumerate(dataset.data):
+            if index not in forbidden_indices:
+                new_dataset.data.append(data)
+    else:
+        new_dataset.data = dataset.data
+
     while len(current_samples) < num_samples:
         num_collisions = 0
 
         while num_collisions < MAX_COLLISIONS:
-            random_index = randint(a=0, b=len(dataset.data) - 1)
-            random_sequence = dataset.data[random_index]
+            random_index = randint(a=0, b=len(new_dataset.data) - 1)
+            random_sequence = new_dataset.data[random_index]
 
             random_index = randint(a=0, b=len(random_sequence.output) - 1)
             step = random_sequence.output[random_index]
