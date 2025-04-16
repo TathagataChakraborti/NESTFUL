@@ -1,5 +1,5 @@
 from nestful.data_handlers import get_nestful_catalog
-from nestful import SequencingData, SequenceStep
+from nestful import SequencingData, SequenceStep, API
 
 
 class TestTrajectoryCheck:
@@ -207,6 +207,23 @@ class TestTrajectoryCheck:
             and self.test_sequence.get_label(name, index) == "var6"
         )
 
+    def test_who_used(self) -> None:
+        assert self.ground_truth_sequence.who_used("var4") == [4]
+        assert self.ground_truth_sequence.who_used("var5") == []
+        assert self.test_sequence.who_used("var5") == [5, 6]
+
+    def test_remove_reference_sequence(self) -> None:
+        sequence = self.test_sequence.remove_reference(label="var5")
+
+        assert len(sequence.output) == len(self.test_sequence.output) - 1
+        assert "TripadvisorSearchLocation" not in [
+            item.name for item in sequence.output
+        ]
+
+        for i in range(1, 3):
+            assert sequence.output[-i].name == "TripadvisorSearchHotels"
+            assert "geoId" not in sequence.output[-i].arguments
+
     def test_missing_step(self) -> None:
         test_sequence = SequencingData(
             output=[
@@ -220,3 +237,40 @@ class TestTrajectoryCheck:
             name == "TripadvisorSearchHotels"
             and test_sequence.get_label(name, index) is None
         )
+
+    def test_get_spec_step(self) -> None:
+        step = SequenceStep(name="TripadvisorSearchHotels")
+        spec = step.get_tool_spec(catalog=self.catalog)
+
+        assert isinstance(spec, API)
+        assert spec.name == "TripadvisorSearchHotels"
+        assert spec.get_arguments(required=True) == [
+            "geoId",
+            "checkIn",
+            "checkOut",
+        ]
+
+        print(spec)
+
+    def test_get_spec_made_up_step(self) -> None:
+        step = SequenceStep(name="IamanLLMImadethisup!")
+        spec = step.get_tool_spec(catalog=self.catalog)
+
+        assert spec is None
+
+    def test_get_spec_sequence(self) -> None:
+        sequence = SequencingData(
+            output=[
+                SequenceStep(name="SkyScrapperSearchAirport"),
+                SequenceStep(name="SkyScrapperSearchAirport"),
+                SequenceStep(name="IamanLLMImadethisup"),
+                SequenceStep(name="SkyScrapperFlightSearch"),
+            ]
+        )
+
+        specs = sequence.get_tool_specs(catalog=self.catalog)
+
+        assert [spec.name for spec in specs] == [
+            "SkyScrapperSearchAirport",
+            "SkyScrapperFlightSearch",
+        ]

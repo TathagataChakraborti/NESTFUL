@@ -30,6 +30,26 @@ class TestParseParameters:
             ['"b, "', '"x"', "c"],
         )
 
+    def test_comma_with_assignment(self) -> None:
+        assert parse_parameters(
+            signature=(
+                'LocalBusinessDataBusinessReviews(business_id="$var1.business_id$",'
+                ' limit="20", offset="0", query="Bars in Manhattan, USA",'
+                ' sortBy="most_relevant", region="us", language="en")'
+            )
+        ) == (
+            "LocalBusinessDataBusinessReviews",
+            [
+                'business_id="$var1.business_id$"',
+                'limit="20"',
+                'offset="0"',
+                'query="Bars in Manhattan, USA"',
+                'sortBy="most_relevant"',
+                'region="us"',
+                'language="en"',
+            ],
+        )
+
     def test_comma_and_quote(self) -> None:
         assert parse_parameters(signature='a(a, "b,","x",c)') == (
             "a",

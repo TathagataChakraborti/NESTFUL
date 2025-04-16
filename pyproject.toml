@@ -1,6 +1,6 @@
 [project]
 name = "nestful-wrapper"
-version = "0.0.5"
+version = "0.0.6"
 license = {file = "LICENSE"}
 authors = [
     { name = "Tathagata Chakraborti", email = "tchakra2@ibm.com" },
@@ -115,7 +115,7 @@ py-version=3.12
 max-line-length = 80
 
 [tool.flake8]
-extend-ignore = ["F401"]
+extend-ignore = ["F401", "E203", "E501"]
 count = true
 max-line-length = 80
 max-complexity = 18

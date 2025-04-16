@@ -2,6 +2,8 @@ from typing import List, Optional, Tuple
 from re import match
 from warnings import warn
 
+TOKEN = "var"
+
 
 def merge_quoted_parameters(list_of_parameters: List[str]) -> List[str]:
     new_parameters = []
@@ -12,6 +14,9 @@ def merge_quoted_parameters(list_of_parameters: List[str]) -> List[str]:
 
     for parameter in list_of_parameters:
         if parameter.startswith('"') and parameter.count('"') % 2 == 1:
+            merge_on = True
+
+        if '="' in parameter and parameter.count('"') % 2 == 1:
             merge_on = True
 
         if merge_on:
@@ -59,7 +64,7 @@ def parse_parameters(signature: str) -> Tuple[str, List[str]]:
         return "", []
 
 
-def get_token(index: int, token: str = "var") -> str:
+def get_token(index: int, token: str = TOKEN) -> str:
     return f"{token}{index}"
 
 

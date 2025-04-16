@@ -1,8 +1,18 @@
 from __future__ import annotations
 from typing import List, Dict, Optional, Any, Union, Tuple, Set
 from pydantic import BaseModel, ConfigDict, model_validator
-from nestful.utils import parse_parameters
-from nestful.schemas.api import Catalog, API
+from nestful.utils import parse_parameters, extract_label
+from nestful.schemas.api import Catalog, API, MinifiedAPI
+from nestful.schemas.errors import ErrorType
+from copy import deepcopy
+
+DUMMY_VALUE = "INIT"
+
+
+class AtomicCall(BaseModel):
+    call: SequenceStep
+    memory: Dict[str, Any]
+    ground_truth: Optional[AtomicCall] = None
 
 
 class SequenceStep(BaseModel):
@@ -11,9 +21,36 @@ class SequenceStep(BaseModel):
     name: Optional[str] = ""
     arguments: Dict[str, Any] = dict()
     label: Optional[str] = None
+    errors: List[ErrorTag] = []
 
     def __str__(self) -> str:
-        return str(self.dict())
+        return str(self.model_dump(exclude={"errors"}))
+
+    def generate_dummy_output(self, catalog: Catalog) -> Dict[str, Any]:
+        new_memory: Dict[str, Any] = dict()
+        api_spec = next(
+            filter(lambda api: api.name == self.name, catalog.apis), None
+        )
+
+        if api_spec is None or self.label is None:
+            return new_memory
+
+        else:
+            for k, item in api_spec.output_parameters.items():
+                new_memory[k] = (
+                    {key: DUMMY_VALUE for key in item.properties}
+                    if item.properties
+                    else DUMMY_VALUE
+                )
+
+            memory = {self.label: new_memory}
+            return memory
+
+    def get_tool_spec(self, catalog: Catalog) -> Optional[API]:
+        tool_spec = catalog.get_api(name=self.name or "")
+
+        assert not isinstance(tool_spec, MinifiedAPI)
+        return tool_spec
 
     def get_required_args(self, catalog: Catalog) -> Set[str]:
         api_spec = (
@@ -33,34 +70,39 @@ class SequenceStep(BaseModel):
 
     def is_same_as(
         self,
-        ground_truth: SequenceStep | SequencingData,
+        ground_truth: SequenceStep,
         catalog: Catalog,
         required_schema_only: bool = False,
+        check_values: bool = False,
     ) -> bool:
-        if required_schema_only:
-            if isinstance(ground_truth, SequenceStep):
-                gt_arguments = ground_truth.get_required_args(catalog)
-                self_arguments = self.get_required_args(catalog)
+        gt_arguments = (
+            ground_truth.get_required_args(catalog)
+            if required_schema_only
+            else set(ground_truth.arguments.keys())
+        )
 
-                return (
-                    self.name == ground_truth.name
-                    and gt_arguments == self_arguments
-                )
+        self_arguments = (
+            self.get_required_args(catalog)
+            if required_schema_only
+            else set(self.arguments.keys())
+        )
 
-            else:
-                return any(
-                    [
-                        self.is_same_as(
-                            ground_truth_step, catalog, required_schema_only
-                        )
-                        for ground_truth_step in ground_truth.output
-                    ]
-                )
+        if check_values:
+            tmp_1 = {
+                k: v
+                for k, v in ground_truth.arguments.items()
+                if k in gt_arguments
+            }
+            tmp_2 = {
+                k: v for k, v in self.arguments.items() if k in self_arguments
+            }
+
+            return self.name == ground_truth.name and tmp_1 == tmp_2
+
         else:
             return (
-                self == ground_truth
-                if isinstance(ground_truth, SequenceStep)
-                else self in ground_truth.output
+                self.name == ground_truth.name
+                and gt_arguments == self_arguments
             )
 
     @model_validator(mode="after")
@@ -120,11 +162,26 @@ class SequenceStep(BaseModel):
 
         return "\n".join(pretty_strings)
 
+    def remove_reference(self, label: str) -> SequenceStep:
+        new_step = deepcopy(self)
+        new_step.arguments = dict()
+
+        for arg, value in self.arguments.items():
+            l, m = extract_label(str(value))
+
+            if l == label:
+                continue
+
+            new_step.arguments[arg] = value
+
+        return new_step
+
 
 class SequencingData(BaseModel):
     input: str = ""
     output: List[SequenceStep] = []
     var_result: Dict[str, str] = {}
+    errors: List[ErrorTag] = []
 
     @model_validator(mode="after")
     def remove_final_step(self) -> SequencingData:
@@ -139,18 +196,99 @@ class SequencingData(BaseModel):
         string_form = ",\n".join(list_of_str)
         return f"[\n{string_form}\n]"
 
+    def generate_dummy_output(
+        self,
+        catalog: Catalog,
+        index: Optional[int] = None,
+    ) -> Dict[str, Any]:
+        assert index is None or index < len(self.output)
+        index = len(self.output) if index is None else index
+
+        memory: Dict[str, Any] = {}
+
+        for i in range(index):
+            step_memory = self.output[i].generate_dummy_output(catalog)
+            memory = {**memory, **step_memory}
+
+        return memory
+
+    def get_tool_specs(self, catalog: Catalog) -> List[API]:
+        list_of_apis: List[API] = []
+
+        for step in self.output:
+            tool_spec = step.get_tool_spec(catalog)
+
+            if isinstance(tool_spec, API) and tool_spec not in list_of_apis:
+                list_of_apis.append(tool_spec)
+
+        return list_of_apis
+
+    def contains(
+        self,
+        step: SequenceStep,
+        catalog: Catalog,
+        required_schema_only: bool = False,
+        check_values: bool = False,
+    ) -> bool:
+        return any(
+            [
+                item.is_same_as(
+                    step, catalog, required_schema_only, check_values
+                )
+                for item in self.output
+            ]
+        )
+
     def is_same_as(
         self,
         ground_truth: SequencingData,
         catalog: Catalog,
         required_schema_only: bool = False,
+        check_values: bool = False,
     ) -> bool:
         return all(
             [
-                step.is_same_as(ground_truth, catalog, required_schema_only)
+                ground_truth.contains(
+                    step, catalog, required_schema_only, check_values
+                )
                 for step in self.output
             ]
-        ) and len(self.output) == len(ground_truth.output)
+        ) and all(
+            [
+                self.contains(step, catalog, required_schema_only, check_values)
+                for step in ground_truth.output
+            ]
+        )
+
+    def remove_reference(self, label: str) -> SequencingData:
+        new_sequence = deepcopy(self)
+        cached_index = 0
+
+        for index, step in enumerate(new_sequence.output):
+            new_sequence.output[index] = step.remove_reference(label)
+
+            if step.label == label:
+                cached_index = index
+
+        new_sequence.output = (
+            new_sequence.output[:cached_index]
+            + new_sequence.output[cached_index + 1 :]
+        )
+
+        return new_sequence
+
+    def who_used(self, label: str) -> List[int]:
+        indices = []
+
+        for index, step in enumerate(self.output):
+            for arg, value in step.arguments.items():
+                l, m = extract_label(str(value))
+
+                if l == label:
+                    indices.append(index)
+                    break
+
+        return indices
 
     def who_produced(self, var: str) -> Tuple[Optional[str], int]:
         index_map: Dict[str, int] = {}
@@ -204,3 +342,8 @@ class SequencingData(BaseModel):
 
 class SequencingDataset(BaseModel):
     data: List[SequencingData]
+
+
+class ErrorTag(BaseModel):
+    error_type: ErrorType = ErrorType.UNKNOWN
+    info: str | Dict[str, Any] | None
