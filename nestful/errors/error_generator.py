@@ -172,6 +172,8 @@ def batch_generate_error_steps(
                         )
                     )
 
+                    break
+
             if num_collisions == MAX_COLLISIONS:
                 total_collisions += 1
 

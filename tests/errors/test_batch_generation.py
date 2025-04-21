@@ -1,11 +1,25 @@
 from nestful.data_handlers import get_nestful_data
 from nestful.errors import batch_generate_error_steps
 from nestful.schemas.errors import ErrorType
+from random import randint
 
 
 class TestBatchGeneration:
     def setup_method(self) -> None:
         self.sequence_data, self.catalog = get_nestful_data(executable=True)
+
+    def test_batch_gen_sample_test(self) -> None:
+        for i in range(10):
+            request_size = randint(1, i + 5)
+
+            dataset = batch_generate_error_steps(
+                dataset=self.sequence_data,
+                catalog=self.catalog,
+                num_samples=request_size,
+                num_error_per_sample=1,
+            )
+
+            assert len(dataset) <= request_size
 
     def test_batch_gen_step(self) -> None:
         dataset = batch_generate_error_steps(
