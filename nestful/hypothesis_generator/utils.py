@@ -2,8 +2,9 @@ from typing import List, Any
 from random import randint
 
 
-def merge_in_order(l1: List[Any], l2: List[Any], allow_duplicates: bool = True) -> List[Any]:
-
+def merge_in_order(
+    l1: List[Any], l2: List[Any], allow_duplicates: bool = True
+) -> List[Any]:
     merged_list = []
     l1_index, l2_index = 0, 0
 
