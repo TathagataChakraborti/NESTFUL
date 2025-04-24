@@ -166,9 +166,14 @@ def batch_generate_error_steps(
 
                     current_samples.append(
                         AtomicCall(
+                            input=random_sequence.input,
                             call=error_step,
                             memory=new_memory,
-                            ground_truth=AtomicCall(call=step, memory=memory),
+                            ground_truth=AtomicCall(
+                                input=random_sequence.input,
+                                call=step,
+                                memory=memory,
+                            ),
                         )
                     )
 
