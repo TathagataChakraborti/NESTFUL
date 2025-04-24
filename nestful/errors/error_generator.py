@@ -1,6 +1,6 @@
 from nestful.utils import extract_label, TOKEN
 from nestful.schemas.errors import ErrorType
-from random import sample, randint
+from random import sample, randint, seed
 from typing import Optional, Dict, Any, Tuple, List, Set
 from copy import deepcopy
 from nestful.errors.error_tagger import tag_sequence_step, tag_sequence
@@ -22,7 +22,11 @@ def induce_error_in_step(
     error_type: ErrorType = ErrorType.UNKNOWN,
     num_errors: int = 1,
     referred_only: bool = True,
+    random_seed: Optional[int] = None,
 ) -> Tuple[Optional[SequenceStep], Dict[str, Any]]:
+    if random_seed:
+        seed(random_seed)
+
     if error_type == ErrorType.UNKNOWN:
         error_type = ErrorType.get_random_error()
 
@@ -61,9 +65,13 @@ def induce_error_in_sequence(
     error_type: ErrorType = ErrorType.UNKNOWN,
     num_errors: int = 1,
     referred_only: bool = True,
+    random_seed: Optional[int] = None,
 ) -> SequencingData:
     error_count = 0
     new_sequence = deepcopy(sequence)
+
+    if random_seed:
+        seed(random_seed)
 
     if error_type in [ErrorType.NEW_CALL, ErrorType.MADE_UP_API]:
         raise NotImplementedError(f"Error type {error_type} not supported yet.")
@@ -118,10 +126,14 @@ def batch_generate_error_steps(
     num_error_per_sample: int = 1,
     referred_only: bool = True,
     forbidden_indices: Optional[List[int]] = None,
+    random_seed: Optional[int] = None,
 ) -> List[AtomicCall]:
     current_samples: List[AtomicCall] = []
     stored_hashes = set()
     total_collisions = 0
+
+    if random_seed:
+        seed(random_seed)
 
     new_dataset = SequencingDataset(data=[])
 
