@@ -9,9 +9,24 @@ from copy import deepcopy
 DUMMY_VALUE = "INIT"
 
 
+class Question(BaseModel):
+    user_said: str
+    argument: str
+    assignment: str
+    resolved: Any
+
+    def __str__(self) -> str:
+        return f"What value should be assigned to {self.argument}?"
+
+    def __repr__(self) -> str:
+        return f"What is the value of {self.assignment}?"
+
+
 class AtomicCall(BaseModel):
     call: SequenceStep
     memory: Dict[str, Any]
+    question: Optional[Question] = None
+    backing_steps: List[AtomicCall] = []
     ground_truth: Optional[AtomicCall] = None
 
 
