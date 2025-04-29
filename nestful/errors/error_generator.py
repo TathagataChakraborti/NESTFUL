@@ -14,7 +14,7 @@ from nestful import (
 )
 
 MAX_COLLISIONS = 100
-MAX_ATTEMPTS = 3
+MAX_ATTEMPTS = 10
 
 
 def induce_error_in_step(
@@ -88,7 +88,7 @@ def induce_error_in_sequence(
         if error_type == ErrorType.MISSING_CALL:
             who_used = new_sequence.who_used(step.label or "")
 
-            if who_used:
+            if referred_only is False or len(who_used) > 0:
                 new_sequence = new_sequence.remove_reference(step.label or "")
                 error_count += 1
             else:

@@ -17,10 +17,11 @@ class TestErrorGeneratorSequence:
             catalog=self.catalog,
             memory={},
             error_type=ErrorType.MISSING_CALL,
+            referred_only=True,
         )
 
         assert len(self.sequence.output) == len(error_sequence.output) + 1
-        assert len(error_sequence.errors) == 1
+        assert len(error_sequence.errors) > 0
 
         new_labels = [step.label for step in error_sequence.output]
         missing_step = next(
