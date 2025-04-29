@@ -1,5 +1,8 @@
 from nestful.data_handlers import get_nestful_data
-from nestful.errors import batch_generate_error_steps
+from nestful.errors import (
+    batch_generate_error_steps,
+    batch_generate_error_sequences,
+)
 from nestful.schemas.errors import ErrorType
 from nestful import AtomicCall
 from random import randint
@@ -48,3 +51,16 @@ class TestBatchGeneration:
         for data in dataset:
             assert len(data.call.errors) == 1
             assert data.call.errors[0].error_type == ErrorType.MISSING_PARAMETER
+
+    def test_batch_gen_sequence(self) -> None:
+        dataset = batch_generate_error_sequences(
+            dataset=self.sequence_data,
+            catalog=self.catalog,
+            num_samples=100,
+            num_error_per_sample=2,
+        )
+
+        assert len(dataset) <= 100
+
+        for data in dataset:
+            assert data.sequence.num_errors >= 2

@@ -10,9 +10,11 @@ from nestful import (
     SequencingDataset,
     Catalog,
     AtomicCall,
+    AtomicSequence,
 )
 
 MAX_COLLISIONS = 100
+MAX_ATTEMPTS = 3
 
 
 def induce_error_in_step(
@@ -68,6 +70,7 @@ def induce_error_in_sequence(
     random_seed: Optional[int] = None,
 ) -> SequencingData:
     error_count = 0
+    num_attempts = 0
     new_sequence = deepcopy(sequence)
 
     if random_seed:
@@ -76,9 +79,11 @@ def induce_error_in_sequence(
     if error_type in [ErrorType.NEW_CALL, ErrorType.MADE_UP_API]:
         raise NotImplementedError(f"Error type {error_type} not supported yet.")
 
-    while error_count < num_errors:
+    while error_count < num_errors and num_attempts < MAX_ATTEMPTS:
         index = randint(a=0, b=len(new_sequence.output) - 1)
         step = new_sequence.output[index]
+
+        num_attempts += 1
 
         if error_type == ErrorType.MISSING_CALL:
             who_used = new_sequence.who_used(step.label or "")
@@ -186,6 +191,78 @@ def batch_generate_error_steps(
                                 call=step,
                                 memory=memory,
                             ),
+                        )
+                    )
+
+                    break
+
+            if num_collisions == MAX_COLLISIONS:
+                total_collisions += 1
+
+                if total_collisions == MAX_COLLISIONS:
+                    return current_samples
+
+    return current_samples
+
+
+def batch_generate_error_sequences(
+    dataset: SequencingDataset,
+    catalog: Catalog,
+    num_samples: int,
+    error_type: ErrorType = ErrorType.UNKNOWN,
+    num_error_per_sample: int = 1,
+    referred_only: bool = True,
+    forbidden_indices: Optional[List[int]] = None,
+    random_seed: Optional[int] = None,
+) -> List[AtomicSequence]:
+    current_samples: List[AtomicSequence] = []
+    stored_hashes = set()
+    total_collisions = 0
+
+    if random_seed:
+        seed(random_seed)
+
+    new_dataset = SequencingDataset(data=[])
+
+    if forbidden_indices:
+        for index, data in enumerate(dataset.data):
+            if index not in forbidden_indices:
+                new_dataset.data.append(data)
+    else:
+        new_dataset.data = dataset.data
+
+    while len(current_samples) < num_samples:
+        num_collisions = 0
+
+        while num_collisions < MAX_COLLISIONS:
+            random_index = randint(a=0, b=len(new_dataset.data) - 1)
+            random_sequence = new_dataset.data[random_index]
+            memory: Dict[str, Any] = {}
+
+            error_sequence = induce_error_in_sequence(
+                random_sequence,
+                catalog,
+                memory,
+                error_type,
+                num_error_per_sample,
+                referred_only,
+            )
+
+            if error_sequence.num_errors > 0:
+                call_str = error_sequence.pretty_print(
+                    mapper_tag="=", collapse_maps=True
+                )
+                new_hash = hash(call_str)
+
+                if new_hash in stored_hashes:
+                    num_collisions += 1
+                else:
+                    stored_hashes.add(new_hash)
+
+                    current_samples.append(
+                        AtomicSequence(
+                            sequence=error_sequence,
+                            ground_truth=random_sequence,
                         )
                     )
 
