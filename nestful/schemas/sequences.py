@@ -10,9 +10,14 @@ DUMMY_VALUE = "INIT"
 
 
 class AtomicCall(BaseModel):
+    input: str = ""
     call: SequenceStep
     memory: Dict[str, Any]
     ground_truth: Optional[AtomicCall] = None
+
+    @property
+    def sequence_form(self) -> SequencingData:
+        return SequencingData(input=self.input, output=[self.call])
 
 
 class SequenceStep(BaseModel):
