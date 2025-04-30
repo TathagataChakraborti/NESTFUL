@@ -1,12 +1,13 @@
 from random import randint, choice
 from typing import Optional, List
+from nestful import SequencingDataset, SequencingData, Catalog
 from nestful.schemas.sequences import AtomicCall, Question
 from nestful.memory import resolve_item_in_memory
 from nestful.errors.error_generator import get_args_with_labeled_assignments
+from nestful.hypothesis_generator.utils import merge_in_order
 from nestful.hypothesis_generator.random_hypothesis import (
     generate_dummy_output_sequence,
 )
-from nestful import SequencingDataset, Catalog
 
 MAX_COLLISIONS = 100
 
@@ -17,9 +18,15 @@ def generate_atomic_calls(
     num_samples: int,
     min_string_length: int = 3,
     min_array_length: int = 3,
+    min_backing_steps: int = 1,
+    split_merge: bool = False,
     forbidden_indices: Optional[List[int]] = None,
     max_collisions: int = MAX_COLLISIONS,
 ) -> List[AtomicCall]:
+    def get_random_sequence() -> SequencingData:
+        random_id = randint(a=0, b=len(new_dataset.data) - 1)
+        return new_dataset.data[random_id]
+
     current_samples: List[AtomicCall] = []
     stored_hashes = set()
     total_collisions = 0
@@ -37,10 +44,8 @@ def generate_atomic_calls(
         num_collisions = 0
 
         while num_collisions < max_collisions:
-            random_index = randint(a=0, b=len(new_dataset.data) - 1)
-            random_sequence = new_dataset.data[random_index]
-
             indices_of_interest: List[int] = []
+            random_sequence = get_random_sequence()
 
             for index, step in enumerate(random_sequence.output):
                 args_of_interest = get_args_with_labeled_assignments(
@@ -50,49 +55,78 @@ def generate_atomic_calls(
                 if args_of_interest:
                     indices_of_interest.append(index)
 
-            random_index = choice(indices_of_interest)
-            step = random_sequence.output[random_index]
+            if indices_of_interest:
+                random_index = choice(indices_of_interest)
+                step = random_sequence.output[random_index]
 
-            args_of_interest = get_args_with_labeled_assignments(step.arguments)
-            arg_of_interest = choice(list(args_of_interest))
+                args_of_interest = get_args_with_labeled_assignments(
+                    step.arguments
+                )
+                arg_of_interest = choice(list(args_of_interest))
 
-            memory = generate_dummy_output_sequence(
-                random_sequence,
-                catalog,
-                index=random_index,
-                min_string_length=min_string_length,
-                min_array_length=min_array_length,
-            )
-
-            call_str = step.pretty_print(collapse_maps=True)
-            new_hash = hash(f"{call_str} + {arg_of_interest}")
-
-            if new_hash in stored_hashes:
-                num_collisions += 1
-            else:
-                stored_hashes.add(new_hash)
-                assignment = step.arguments[arg_of_interest]
-
-                current_samples.append(
-                    AtomicCall(
-                        call=step,
-                        memory=memory,
-                        question=Question(
-                            user_said=random_sequence.input,
-                            argument=arg_of_interest,
-                            assignment=assignment,
-                            resolved=resolve_item_in_memory(assignment, memory),
-                        ),
-                        backing_steps=random_sequence.output[:random_index],
-                    )
+                memory = generate_dummy_output_sequence(
+                    random_sequence,
+                    catalog,
+                    index=random_index,
+                    min_string_length=min_string_length,
+                    min_array_length=min_array_length,
                 )
 
-                break
+                call_str = step.pretty_print(collapse_maps=True)
+                new_hash = hash(f"{call_str} + {arg_of_interest}")
 
-            if num_collisions == max_collisions:
-                total_collisions += 1
+                if new_hash in stored_hashes:
+                    num_collisions += 1
+                else:
+                    stored_hashes.add(new_hash)
 
-                if total_collisions == max_collisions:
-                    return current_samples
+                    assignment = step.arguments[arg_of_interest]
+                    backing_steps = random_sequence.output[:random_index]
+
+                    while len(backing_steps) < min_backing_steps:
+                        random_backing_sequence = get_random_sequence()
+                        backing_memory = generate_dummy_output_sequence(
+                            random_sequence,
+                            catalog,
+                            index=len(random_backing_sequence.output),
+                            min_string_length=min_string_length,
+                            min_array_length=min_array_length,
+                        )
+
+                        memory = {**backing_memory, **memory}
+
+                        if split_merge:
+                            backing_steps = merge_in_order(
+                                random_backing_sequence.output, backing_steps
+                            )
+
+                        else:
+                            backing_steps = (
+                                random_backing_sequence.output + backing_steps
+                            )
+
+                    current_samples.append(
+                        AtomicCall(
+                            call=step,
+                            memory=memory,
+                            question=Question(
+                                user_said=random_sequence.input,
+                                argument=arg_of_interest,
+                                assignment=assignment,
+                                resolved=resolve_item_in_memory(
+                                    assignment, memory
+                                ),
+                            ),
+                            backing_steps=backing_steps,
+                        )
+                    )
+
+                    break
+
+                if num_collisions == max_collisions:
+                    total_collisions += 1
+
+                    if total_collisions == max_collisions:
+                        return current_samples
 
     return current_samples

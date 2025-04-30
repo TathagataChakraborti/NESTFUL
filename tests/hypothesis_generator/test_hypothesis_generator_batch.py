@@ -14,3 +14,14 @@ class TestHypothesisGeneratorBatch:
         )
 
         assert len(dataset) <= 3
+
+    def test_extended_backing_step(self) -> None:
+        dataset = generate_atomic_calls(
+            dataset=self.sequence_data,
+            catalog=self.catalog,
+            num_samples=1,
+            min_backing_steps=10,
+            split_merge=True,
+        )
+
+        assert len(dataset[0].backing_steps) >= 10
