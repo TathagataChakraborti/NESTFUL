@@ -13,7 +13,6 @@ class Question(BaseModel):
     user_said: str
     argument: str
     assignment: str
-    resolved: Any
 
     def __str__(self) -> str:
         return f"What value should be assigned to {self.argument}?"
@@ -26,7 +25,7 @@ class AtomicCall(BaseModel):
     call: SequenceStep
     memory: Dict[str, Any]
     question: Optional[Question] = None
-    backing_steps: List[AtomicCall] = []
+    backing_steps: List[SequenceStep] = []
     ground_truth: Optional[AtomicCall] = None
 
 
@@ -41,7 +40,10 @@ class SequenceStep(BaseModel):
     def __str__(self) -> str:
         return str(self.model_dump(exclude={"errors"}))
 
-    def generate_dummy_output(self, catalog: Catalog) -> Dict[str, Any]:
+    def generate_dummy_output(
+        self,
+        catalog: Catalog,
+    ) -> Dict[str, Any]:
         new_memory: Dict[str, Any] = dict()
         api_spec = next(
             filter(lambda api: api.name == self.name, catalog.apis), None
@@ -223,6 +225,7 @@ class SequencingData(BaseModel):
 
         for i in range(index):
             step_memory = self.output[i].generate_dummy_output(catalog)
+
             memory = {**memory, **step_memory}
 
         return memory

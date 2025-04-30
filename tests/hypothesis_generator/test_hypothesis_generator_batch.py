@@ -10,7 +10,7 @@ class TestHypothesisGeneratorBatch:
         dataset = generate_atomic_calls(
             dataset=self.sequence_data,
             catalog=self.catalog,
-            num_samples=10,
+            num_samples=5,
         )
 
-        assert len(dataset) <= 10
+        assert len(dataset) <= 5

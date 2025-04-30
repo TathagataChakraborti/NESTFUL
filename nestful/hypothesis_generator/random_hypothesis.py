@@ -1,4 +1,4 @@
-from nestful import Catalog, API
+from nestful import Catalog, API, SequenceStep, SequencingData
 from nestful.schemas.openapi import Component, ResponseSelection
 from typing import Dict, Any, Optional
 from hypothesis_jsonschema import from_schema
@@ -9,13 +9,17 @@ from hypothesis import given, settings, HealthCheck
 class Hypothesis:
     def __init__(self, name: str, catalog: Catalog) -> None:
         self.api = catalog.get_api(name)
+
+        if self.api is None:
+            raise ValueError(f"No API with name: {name}")
+
         self.strategy: Optional[SearchStrategy] = None
         self.random_value: Dict[str, Any] = {}
 
     def generate_sample(
         self,
         min_string_length: int = 3,
-        min_array_length: int = 10,
+        min_array_length: int = 3,
         pattern: str = "^[a-zA-Z0-9_.-]*$",
     ) -> None:
         assert isinstance(self.api, API)
@@ -149,3 +153,36 @@ def get_output_in_json_form(
             )
 
     return json_form
+
+
+def generate_dummy_output_sequence(
+    sequence: SequencingData,
+    catalog: Catalog,
+    index: int,
+    min_string_length: int = 3,
+    min_array_length: int = 3,
+) -> Dict[str, Any]:
+    memory: Dict[str, Any] = {}
+
+    for i in range(index):
+        label = sequence.output[i].label
+
+        if label is not None:
+            step_memory = generate_dummy_output_step(
+                sequence.output[i], catalog, min_string_length, min_array_length
+            )
+            memory[label] = step_memory
+
+    return memory
+
+
+def generate_dummy_output_step(
+    step: SequenceStep,
+    catalog: Catalog,
+    min_string_length: int = 3,
+    min_array_length: int = 3,
+) -> Dict[str, Any]:
+    hypothesis = Hypothesis(name=step.name or "", catalog=catalog)
+
+    hypothesis.generate_sample(min_string_length, min_array_length)
+    return hypothesis.random_value

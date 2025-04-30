@@ -1,6 +1,10 @@
-from random import randint
+from random import randint, choice
 from typing import Optional, List
 from nestful.schemas.sequences import AtomicCall, Question
+from nestful.errors.error_generator import get_args_with_labeled_assignments
+from nestful.hypothesis_generator.random_hypothesis import (
+    generate_dummy_output_sequence,
+)
 from nestful import SequencingDataset, Catalog
 
 MAX_COLLISIONS = 100
@@ -11,8 +15,7 @@ def generate_atomic_calls(
     catalog: Catalog,
     num_samples: int,
     min_string_length: int = 3,
-    min_array_length: int = 10,
-    min_backing_length: Optional[int] = 1,
+    min_array_length: int = 3,
     forbidden_indices: Optional[List[int]] = None,
     max_collisions: int = MAX_COLLISIONS,
 ) -> List[AtomicCall]:
@@ -36,18 +39,32 @@ def generate_atomic_calls(
             random_index = randint(a=0, b=len(new_dataset.data) - 1)
             random_sequence = new_dataset.data[random_index]
 
-            random_index = randint(a=1, b=len(random_sequence.output) - 1)
+            indices_of_interest: List[int] = []
+
+            for index, step in enumerate(random_sequence.output):
+                args_of_interest = get_args_with_labeled_assignments(
+                    step.arguments
+                )
+
+                if args_of_interest:
+                    indices_of_interest.append(index)
+
+            random_index = choice(indices_of_interest)
             step = random_sequence.output[random_index]
 
-            # add to backing length
-            # add to backing length
+            args_of_interest = get_args_with_labeled_assignments(step.arguments)
+            arg_of_interest = choice(list(args_of_interest))
 
-            memory, backing_steps = random_sequence.generate_dummy_output(
-                catalog, index=random_index
+            memory = generate_dummy_output_sequence(
+                random_sequence,
+                catalog,
+                index=random_index,
+                min_string_length=min_string_length,
+                min_array_length=min_array_length,
             )
 
             call_str = step.pretty_print(collapse_maps=True)
-            new_hash = hash(call_str)
+            new_hash = hash(f"{call_str} + {arg_of_interest}")
 
             if new_hash in stored_hashes:
                 num_collisions += 1
@@ -60,10 +77,10 @@ def generate_atomic_calls(
                         memory=memory,
                         question=Question(
                             user_said=random_sequence.input,
-                            argument=,
-                            assignment=,
-                            resolved=,
-                        )
+                            argument=arg_of_interest,
+                            assignment=step.arguments[arg_of_interest],
+                        ),
+                        backing_steps=random_sequence.output[:random_index],
                     )
                 )
 
