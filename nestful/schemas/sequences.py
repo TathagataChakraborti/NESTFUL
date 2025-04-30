@@ -13,6 +13,7 @@ class Question(BaseModel):
     user_said: str
     argument: str
     assignment: str
+    resolved: Any
 
     def __str__(self) -> str:
         return f"What value should be assigned to {self.argument}?"

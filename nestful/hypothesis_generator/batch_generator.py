@@ -1,6 +1,7 @@
 from random import randint, choice
 from typing import Optional, List
 from nestful.schemas.sequences import AtomicCall, Question
+from nestful.memory import resolve_item_in_memory
 from nestful.errors.error_generator import get_args_with_labeled_assignments
 from nestful.hypothesis_generator.random_hypothesis import (
     generate_dummy_output_sequence,
@@ -70,6 +71,7 @@ def generate_atomic_calls(
                 num_collisions += 1
             else:
                 stored_hashes.add(new_hash)
+                assignment = step.arguments[arg_of_interest]
 
                 current_samples.append(
                     AtomicCall(
@@ -78,7 +80,8 @@ def generate_atomic_calls(
                         question=Question(
                             user_said=random_sequence.input,
                             argument=arg_of_interest,
-                            assignment=step.arguments[arg_of_interest],
+                            assignment=assignment,
+                            resolved=resolve_item_in_memory(assignment, memory),
                         ),
                         backing_steps=random_sequence.output[:random_index],
                     )
