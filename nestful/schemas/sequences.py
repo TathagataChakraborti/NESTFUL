@@ -9,6 +9,11 @@ from copy import deepcopy
 DUMMY_VALUE = "INIT"
 
 
+class AtomicSequence(BaseModel):
+    sequence: SequencingData
+    ground_truth: SequencingData
+
+
 class AtomicCall(BaseModel):
     input: str = ""
     call: SequenceStep
@@ -195,6 +200,15 @@ class SequencingData(BaseModel):
             self.output = self.output[:-1]
 
         return self
+
+    @property
+    def num_errors(self) -> int:
+        all_errors = self.errors
+
+        for step in self.output:
+            all_errors.extend(step.errors)
+
+        return len(all_errors)
 
     def __str__(self) -> str:
         list_of_str = [str(item) for item in self.output]
