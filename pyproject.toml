@@ -37,6 +37,7 @@ classifiers = [
 dependencies = [
     "pydantic",
     "jsonref",
+    "hypothesis-jsonschema",
 ]
 
 [project.optional-dependencies]
