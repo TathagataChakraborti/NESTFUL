@@ -4,6 +4,7 @@ from nestful.schemas.sequences import (
     SequencingData,
     SequenceStep,
     AtomicCall,
+    AtomicSequence,
 )
 
 from nestful.schemas.openapi import OpenAPI

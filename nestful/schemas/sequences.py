@@ -22,12 +22,22 @@ class Question(BaseModel):
         return f"What is the value of {self.assignment}?"
 
 
+class AtomicSequence(BaseModel):
+    sequence: SequencingData
+    ground_truth: SequencingData
+
+
 class AtomicCall(BaseModel):
+    input: str = ""
     call: SequenceStep
     memory: Dict[str, Any]
     question: Optional[Question] = None
     backing_steps: List[SequenceStep] = []
     ground_truth: Optional[AtomicCall] = None
+
+    @property
+    def sequence_form(self) -> SequencingData:
+        return SequencingData(input=self.input, output=[self.call])
 
 
 class SequenceStep(BaseModel):
@@ -41,10 +51,7 @@ class SequenceStep(BaseModel):
     def __str__(self) -> str:
         return str(self.model_dump(exclude={"errors"}))
 
-    def generate_dummy_output(
-        self,
-        catalog: Catalog,
-    ) -> Dict[str, Any]:
+    def generate_dummy_output(self, catalog: Catalog) -> Dict[str, Any]:
         new_memory: Dict[str, Any] = dict()
         api_spec = next(
             filter(lambda api: api.name == self.name, catalog.apis), None
@@ -209,6 +216,15 @@ class SequencingData(BaseModel):
 
         return self
 
+    @property
+    def num_errors(self) -> int:
+        all_errors = self.errors
+
+        for step in self.output:
+            all_errors.extend(step.errors)
+
+        return len(all_errors)
+
     def __str__(self) -> str:
         list_of_str = [str(item) for item in self.output]
         string_form = ",\n".join(list_of_str)
@@ -226,7 +242,6 @@ class SequencingData(BaseModel):
 
         for i in range(index):
             step_memory = self.output[i].generate_dummy_output(catalog)
-
             memory = {**memory, **step_memory}
 
         return memory
