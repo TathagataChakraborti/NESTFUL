@@ -24,6 +24,7 @@ def induce_error_in_step(
     error_type: ErrorType = ErrorType.UNKNOWN,
     num_errors: int = 1,
     referred_only: bool = True,
+    random_seed: Optional[int] = None,
 ) -> Tuple[Optional[SequenceStep], Dict[str, Any]]:
     if random_seed:
         seed(random_seed)
