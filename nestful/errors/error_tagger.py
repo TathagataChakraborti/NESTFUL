@@ -86,17 +86,11 @@ def tag_sequence(
     catalog: Catalog,
 ) -> SequencingData:
     for index, step in enumerate(sequence.output):
-        indices_of_interest = [
-            i for i, x in enumerate(sequence.output) if x.name == step.name
-        ]
+        target_indices, gt_step = sequence.get_ground_truth_step(
+            index, ground_truth
+        )
 
-        repeat_index = indices_of_interest.index(index)
-        target_indices = [
-            i for i, x in enumerate(ground_truth.output) if x.name == step.name
-        ]
-
-        if repeat_index < len(target_indices):
-            target_index = target_indices[repeat_index]
+        if gt_step is not None:
             tmp_memory = sequence.generate_dummy_output(
                 catalog=catalog, index=index
             )
@@ -105,7 +99,7 @@ def tag_sequence(
 
             sequence.output[index] = tag_sequence_step(
                 step,
-                ground_truth=ground_truth.output[target_index],
+                ground_truth=gt_step,
                 memory=tmp_memory,
             )
 
