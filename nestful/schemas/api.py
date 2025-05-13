@@ -28,16 +28,25 @@ class API(BaseModel):
     output_parameters: Dict[str, Component] = dict()
 
     def __str__(self) -> str:
-        return str(
-            self.dict(
-                include={
-                    "name",
-                    "description",
-                    "query_parameters",
-                    "output_parameters",
-                }
-            )
+        self_dict = self.dict(
+            include={
+                "name",
+                "description",
+                "query_parameters",
+                "output_parameters",
+            }
         )
+
+        name_transform = {
+            "query_parameters": "parameters",
+            "output_parameters": "output_schema",
+        }
+
+        for item, transform in name_transform.items():
+            self_dict[transform] = self_dict[item]
+            del self_dict[item]
+
+        return str(self_dict)
 
     def get_arguments(self, required: Optional[bool] = True) -> List[str]:
         if required is None:
