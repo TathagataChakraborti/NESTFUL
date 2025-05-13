@@ -295,7 +295,10 @@ class TestEquality:
         )
 
         assert step_obj.is_same_as(
-            self.sequence.output[4], catalog=self.catalog, memory=memory, check_values=True
+            self.sequence.output[4],
+            catalog=self.catalog,
+            memory=memory,
+            check_values=True,
         )
 
         resolved_step_str = (
@@ -310,7 +313,10 @@ class TestEquality:
         )
 
         assert step_obj.is_same_as(
-            self.sequence.output[4], catalog=self.catalog, memory=memory, check_values=True
+            self.sequence.output[4],
+            catalog=self.catalog,
+            memory=memory,
+            check_values=True,
         )
 
     def test_sequence_equality_with_resolved_memory(self) -> None:
@@ -318,14 +324,14 @@ class TestEquality:
             'var1 = SkyScrapperSearchAirport(query="New York")',
             'var2 = SkyScrapperSearchAirport(query="London")',
             (
-                'var3 = SkyScrapperFlightSearch(originSkyId=1,'
-                ' destinationSkyId=3, originEntityId=2,'
+                "var3 = SkyScrapperFlightSearch(originSkyId=1,"
+                " destinationSkyId=3, originEntityId=2,"
                 ' destinationEntityId=4, date="2024-08-15",'
                 ' returnDate="2024-08-18")'
             ),
             'var4 = TripadvisorSearchLocation(query="London")',
             (
-                'var5 = TripadvisorSearchHotels(geoId=123,'
+                "var5 = TripadvisorSearchHotels(geoId=123,"
                 ' checkIn="2024-08-15", checkOut="2024-08-18")'
             ),
         ]
@@ -343,14 +349,17 @@ class TestEquality:
         )
 
         assert sequence_object.is_same_as(
-            self.sequence, catalog=self.catalog, memory=memory, check_values=True
+            self.sequence,
+            catalog=self.catalog,
+            memory=memory,
+            check_values=True,
         )
 
     def test_step_equality_with_resolved_memory_nested(self) -> None:
         memory = {"var4": {"geoId": {"value": 123}}}
 
         step_str = (
-            'var5 = TripadvisorSearchHotels(geoId=123,'
+            "var5 = TripadvisorSearchHotels(geoId=123,"
             ' checkOut="2024-08-18", checkIn="2024-08-15")'
         )
 
@@ -361,22 +370,27 @@ class TestEquality:
             ' checkOut="2024-08-18", checkIn="2024-08-15")'
         )
 
-        reference_step_object = SequenceStep.parse_pretty_print(reference_step_str)
+        reference_step_object = SequenceStep.parse_pretty_print(
+            reference_step_str
+        )
 
         assert not step_object.is_same_as(
             reference_step_object, catalog=self.catalog, check_values=True
         )
 
         assert step_object.is_same_as(
-            reference_step_object, catalog=self.catalog, check_values=True, memory=memory
+            reference_step_object,
+            catalog=self.catalog,
+            check_values=True,
+            memory=memory,
         )
 
-    @pytest.mark.skip(reason="ISS84")
+    @pytest.mark.skip(reason="ISS36")
     def test_step_equality_with_resolved_memory_non_string(self) -> None:
         memory = {"var4": {"geoId": {"value": 123}}}
 
         step_str = (
-            'var5 = TripadvisorSearchHotels(geoId="{\"value\": 123}\",'
+            'var5 = TripadvisorSearchHotels(geoId="{"value": 123}",'
             ' checkOut="2024-08-18", checkIn="2024-08-15")'
         )
 
@@ -387,5 +401,8 @@ class TestEquality:
         )
 
         assert step_object.is_same_as(
-            self.sequence.output[4], catalog=self.catalog, check_values=True, memory=memory
+            self.sequence.output[4],
+            catalog=self.catalog,
+            check_values=True,
+            memory=memory,
         )

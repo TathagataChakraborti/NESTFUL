@@ -102,8 +102,10 @@ class SequenceStep(BaseModel):
         check_values: bool = False,
         memory: Optional[Dict[str, Any]] = None,
     ) -> bool:
-        def __tmp_transform(args: Dict[str, Any], keys: Set[str]) -> Dict[str, Any]:
-            # TODO: ISS84 typed resolution
+        def __tmp_transform(
+            args: Dict[str, Any], keys: Set[str]
+        ) -> Dict[str, Any]:
+            # TODO: ISS36 typed resolution
             return {k: str(v) for k, v in args.items() if k in keys}
 
         gt_arguments = (
@@ -119,9 +121,17 @@ class SequenceStep(BaseModel):
         )
 
         if check_values:
-            resolved_ground_truth = ground_truth.arguments if memory is None else resolve_in_memory(ground_truth.arguments, memory)
+            resolved_ground_truth = (
+                ground_truth.arguments
+                if memory is None
+                else resolve_in_memory(ground_truth.arguments, memory)
+            )
 
-            resolved_arguments = self.arguments if memory is None else resolve_in_memory(self.arguments, memory)
+            resolved_arguments = (
+                self.arguments
+                if memory is None
+                else resolve_in_memory(self.arguments, memory)
+            )
 
             tmp_1 = __tmp_transform(resolved_ground_truth, gt_arguments)
             tmp_2 = __tmp_transform(resolved_arguments, self_arguments)
@@ -295,7 +305,9 @@ class SequencingData(BaseModel):
             ]
         ) and all(
             [
-                self.contains(step, catalog, required_schema_only, check_values, memory)
+                self.contains(
+                    step, catalog, required_schema_only, check_values, memory
+                )
                 for step in ground_truth.output
             ]
         )
