@@ -4,6 +4,7 @@ from pydantic import BaseModel, ConfigDict, model_validator
 from nestful.utils import parse_parameters, extract_label
 from nestful.schemas.api import Catalog, API, MinifiedAPI
 from nestful.schemas.errors import ErrorType
+from nestful.memory import resolve_in_memory
 from copy import deepcopy
 
 DUMMY_VALUE = "INIT"
@@ -99,7 +100,12 @@ class SequenceStep(BaseModel):
         catalog: Catalog,
         required_schema_only: bool = False,
         check_values: bool = False,
+        memory: Optional[Dict[str, Any]] = None,
     ) -> bool:
+        def __tmp_transform(args: Dict[str, Any], keys: Set[str]) -> Dict[str, Any]:
+            # TODO: ISS84 typed resolution
+            return {k: str(v) for k, v in args.items() if k in keys}
+
         gt_arguments = (
             ground_truth.get_required_args(catalog)
             if required_schema_only
@@ -113,14 +119,12 @@ class SequenceStep(BaseModel):
         )
 
         if check_values:
-            tmp_1 = {
-                k: v
-                for k, v in ground_truth.arguments.items()
-                if k in gt_arguments
-            }
-            tmp_2 = {
-                k: v for k, v in self.arguments.items() if k in self_arguments
-            }
+            resolved_ground_truth = ground_truth.arguments if memory is None else resolve_in_memory(ground_truth.arguments, memory)
+
+            resolved_arguments = self.arguments if memory is None else resolve_in_memory(self.arguments, memory)
+
+            tmp_1 = __tmp_transform(resolved_ground_truth, gt_arguments)
+            tmp_2 = __tmp_transform(resolved_arguments, self_arguments)
 
             return self.name == ground_truth.name and tmp_1 == tmp_2
 
@@ -263,11 +267,12 @@ class SequencingData(BaseModel):
         catalog: Catalog,
         required_schema_only: bool = False,
         check_values: bool = False,
+        memory: Optional[Dict[str, Any]] = None,
     ) -> bool:
         return any(
             [
                 item.is_same_as(
-                    step, catalog, required_schema_only, check_values
+                    step, catalog, required_schema_only, check_values, memory
                 )
                 for item in self.output
             ]
@@ -279,17 +284,18 @@ class SequencingData(BaseModel):
         catalog: Catalog,
         required_schema_only: bool = False,
         check_values: bool = False,
+        memory: Optional[Dict[str, Any]] = None,
     ) -> bool:
         return all(
             [
                 ground_truth.contains(
-                    step, catalog, required_schema_only, check_values
+                    step, catalog, required_schema_only, check_values, memory
                 )
                 for step in self.output
             ]
         ) and all(
             [
-                self.contains(step, catalog, required_schema_only, check_values)
+                self.contains(step, catalog, required_schema_only, check_values, memory)
                 for step in ground_truth.output
             ]
         )
