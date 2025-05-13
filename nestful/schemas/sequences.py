@@ -368,6 +368,28 @@ class SequencingData(BaseModel):
 
         return None
 
+    def get_ground_truth_step(
+        self, index: int, ground_truth: SequencingData
+    ) -> Tuple[List[int], Optional[SequenceStep]]:
+        step = self.output[index]
+
+        indices_of_interest = [
+            i for i, x in enumerate(self.output) if x.name == step.name
+        ]
+
+        repeat_index = indices_of_interest.index(index)
+
+        target_indices = [
+            i for i, x in enumerate(ground_truth.output) if x.name == step.name
+        ]
+
+        if repeat_index < len(target_indices):
+            target_index = target_indices[repeat_index]
+            return [target_index], ground_truth.output[target_index]
+
+        else:
+            return target_indices, None
+
     @staticmethod
     def parse_pretty_print(
         pretty_print: Union[str, List[str]]
