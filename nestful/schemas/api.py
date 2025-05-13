@@ -1,6 +1,6 @@
 from __future__ import annotations
 from nestful.schemas.openapi import Component
-from pydantic import BaseModel, ConfigDict, model_validator
+from pydantic import BaseModel, ConfigDict
 from typing import List, Dict, Optional, Union
 
 
@@ -9,11 +9,8 @@ class QueryParameter(BaseModel):
     description: Optional[str] = None
     required: bool = False
     enum: List[str] = []
-    # TODO: https://github.com/TathagataChakraborti/NESTFUL/issues/2
     allowed_values: Union[str, List[str]] = []
-    possible_values: Union[str, List[str]] = []
     default_value: Optional[str] = None
-    ################################################################
 
 
 class MinifiedAPI(BaseModel):
@@ -27,26 +24,8 @@ class API(BaseModel):
 
     name: str
     description: str
-    # TODO: https://github.com/TathagataChakraborti/NESTFUL/issues/2
-    parameters: Dict[str, QueryParameter] = dict()
     query_parameters: Dict[str, QueryParameter] = dict()
-    path_parameters: Dict[str, QueryParameter] = dict()
-    arguments: Dict[str, QueryParameter] = dict()
-    ################################################################
     output_parameters: Dict[str, Component] = dict()
-
-    @model_validator(mode="after")
-    def temporary_field_jarl(self) -> API:
-        if self.path_parameters:
-            self.query_parameters = self.path_parameters
-
-        if self.parameters:
-            self.query_parameters = self.parameters
-
-        if self.arguments:
-            self.query_parameters = self.arguments
-
-        return self
 
     def __str__(self) -> str:
         return str(

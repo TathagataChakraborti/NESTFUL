@@ -762,7 +762,7 @@
             "time": {
                 "type": "String",
                 "description": "The time period for which to fetch top posts.",
-                "possible_values": [
+                "allowed_values": [
                     "hour",
                     "day",
                     "week",
@@ -2607,7 +2607,7 @@
         "endpoint": "/news/v1/",
         "host": "coronavirus-smartable.p.rapidapi.com",
         "url": "https://rapidapi.com/SmartableAI/api/coronavirus-smartable/playground/apiendpoint_f638b6c0-b9f2-4204-bffa-1bd0107c4cc0",
-        "path_parameters": {
+        "query_parameters": {
             "location": {
                 "type": "String",
                 "description": "ISO 3166-2 location code. For example, use 'FR' for coronavirus news in France; use 'US' for coronavirus news in US; use 'US-CA' for coronavirus news in the US California state. Use 'global' to retrieve global news.",
@@ -2768,7 +2768,7 @@
         "endpoint": "/stats/v1/",
         "host": "coronavirus-smartable.p.rapidapi.com",
         "url": "https://rapidapi.com/SmartableAI/api/coronavirus-smartable/playground/apiendpoint_622cafbb-ff83-42a5-9fa0-dc8113eea716",
-        "path_parameters": {
+        "query_parameters": {
             "location": {
                 "type": "String",
                 "description": "ISO 3166-2 location code. For example, use 'FR' for coronavirus stats in France; use 'US' for coronavirus stats in US; use 'US-CA' for coronavirus stats in the US California state. Use 'global' to retrieve global stats.",
