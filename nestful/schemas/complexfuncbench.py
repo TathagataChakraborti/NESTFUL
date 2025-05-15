@@ -1,9 +1,13 @@
-from typing import List, Dict, Union, Any
+from typing import List, Dict, Union, Any, Tuple
 from enum import StrEnum, auto
 from pydantic import BaseModel
 from nestful.schemas.openapi import Component
-from nestful.schemas.api import API
-from nestful.schemas.sequences import SequenceStep
+from nestful.schemas.api import API, Catalog
+from nestful.schemas.sequences import (
+    SequenceStep,
+    SequencingData,
+    SequencingDataset,
+)
 
 
 class Role(StrEnum):
@@ -51,14 +55,15 @@ class Conversation(BaseModel):
 class ComplexFuncBench(BaseModel):
     data: List[Conversation]
 
-    # def convert_to_nestful(self) -> List[Tuple[SequencingData, Catalog]]:
-    #     list_of_nestful_samples = []
-    #
-    #     for sample in self.data:
-    #         new_catalog = Catalog(
-    #             apis=[
-    #                 func.convert_to_nestful_api() for func in sample.functions
-    #             ]
-    #         )
-    #
-    #     return list_of_nestful_samples
+    def convert_to_nestful(self) -> Tuple[SequencingDataset, Catalog]:
+        new_catalog = Catalog()
+        sequences: List[SequencingData] = []
+
+        for sample in self.data:
+            new_catalog = Catalog(
+                apis=[
+                    func.convert_to_nestful_api() for func in sample.functions
+                ]
+            )
+
+        return SequencingDataset(data=sequences), new_catalog

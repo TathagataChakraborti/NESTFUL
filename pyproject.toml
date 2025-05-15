@@ -39,6 +39,7 @@ dependencies = [
     "jsonref",
     "hypothesis-jsonschema",
     "Faker",
+    "genson",
 ]
 
 [project.optional-dependencies]
