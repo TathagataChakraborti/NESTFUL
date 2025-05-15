@@ -84,6 +84,7 @@ def tag_sequence(
     ground_truth: SequencingData,
     memory: Dict[str, Any],
     catalog: Catalog,
+    fill_in_memory: bool = True,
 ) -> SequencingData:
     for index, step in enumerate(sequence.output):
         indices_of_interest = [
@@ -97,8 +98,8 @@ def tag_sequence(
 
         if repeat_index < len(target_indices):
             target_index = target_indices[repeat_index]
-            tmp_memory = sequence.generate_dummy_output(
-                catalog=catalog, index=index
+            tmp_memory = sequence.get_memory(
+                catalog=catalog, index=index, fill_in_memory=fill_in_memory
             )
 
             tmp_memory = {**memory, **tmp_memory}
