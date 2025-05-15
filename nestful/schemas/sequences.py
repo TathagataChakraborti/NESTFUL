@@ -1,9 +1,10 @@
 from __future__ import annotations
 from typing import List, Dict, Optional, Any, Union, Tuple, Set
-from pydantic import BaseModel, ConfigDict, model_validator
-from nestful.utils import parse_parameters, extract_label
+from pydantic import BaseModel, ConfigDict, model_validator, computed_field
+from nestful.utils import parse_parameters, extract_label, get_token
 from nestful.schemas.api import Catalog, API, MinifiedAPI
 from nestful.schemas.errors import ErrorType
+from json import JSONDecodeError, loads as json_loads
 from copy import deepcopy
 
 DUMMY_VALUE = "INIT"
@@ -47,29 +48,61 @@ class SequenceStep(BaseModel):
     arguments: Dict[str, Any] = dict()
     label: Optional[str] = None
     errors: List[ErrorTag] = []
+    response: Optional[Dict[str, Any] | List[Dict[str, Any]] | str] = None
 
     def __str__(self) -> str:
-        return str(self.model_dump(exclude={"errors"}))
+        return str(self.model_dump(exclude={"errors", "response"}))
 
-    def generate_dummy_output(self, catalog: Catalog) -> Dict[str, Any]:
+    def get_memory(
+        self, catalog: Catalog, fill_in_memory: bool = False
+    ) -> Dict[str, Any]:
         new_memory: Dict[str, Any] = dict()
         api_spec = next(
             filter(lambda api: api.name == self.name, catalog.apis), None
         )
 
         if api_spec is None or self.label is None:
-            return new_memory
+            return {}
 
         else:
-            for k, item in api_spec.output_parameters.items():
-                new_memory[k] = (
-                    {key: DUMMY_VALUE for key in item.properties}
-                    if item.properties
-                    else DUMMY_VALUE
-                )
+            if fill_in_memory:
+                for k, item in api_spec.output_parameters.items():
+                    new_memory[k] = (
+                        {key: DUMMY_VALUE for key in item.properties}
+                        if item.properties
+                        else DUMMY_VALUE
+                    )
 
-            memory = {self.label: new_memory}
-            return memory
+                memory = {self.label: new_memory}
+                return memory
+
+            else:
+                if self.response:
+                    if self.response:
+                        if isinstance(self.response, str):
+                            try:
+                                new_memory = json_loads(self.response)
+                            except JSONDecodeError as e:
+                                print(f"{e}, tried to read {self.response}")
+
+                        elif isinstance(self.response, List):
+                            new_memory = (
+                                self.response[0] if self.response else {}
+                            )
+                        else:
+                            new_memory = self.response.get(
+                                "data", self.response
+                            )
+
+                            new_memory = (
+                                new_memory[0]  # type: ignore
+                                if isinstance(new_memory, List)
+                                and len(new_memory) > 0
+                                else new_memory
+                            )
+
+                memory = {self.label: new_memory}
+                return memory
 
     def get_tool_spec(self, catalog: Catalog) -> Optional[API]:
         tool_spec = catalog.get_api(name=self.name or "")
@@ -216,6 +249,11 @@ class SequencingData(BaseModel):
 
         return self
 
+    @computed_field  # type: ignore
+    @property
+    def num_successful_calls(self) -> int:
+        return len([step for step in self.output if step.response is not None])
+
     @property
     def num_errors(self) -> int:
         all_errors = self.errors
@@ -230,10 +268,11 @@ class SequencingData(BaseModel):
         string_form = ",\n".join(list_of_str)
         return f"[\n{string_form}\n]"
 
-    def generate_dummy_output(
+    def get_memory(
         self,
         catalog: Catalog,
         index: Optional[int] = None,
+        fill_in_memory: bool = False,
     ) -> Dict[str, Any]:
         assert index is None or index < len(self.output)
         index = len(self.output) if index is None else index
@@ -241,7 +280,8 @@ class SequencingData(BaseModel):
         memory: Dict[str, Any] = {}
 
         for i in range(index):
-            step_memory = self.output[i].generate_dummy_output(catalog)
+            step_memory = self.output[i].get_memory(catalog, fill_in_memory)
+
             memory = {**memory, **step_memory}
 
         return memory
@@ -349,6 +389,71 @@ class SequencingData(BaseModel):
                     return step.label
 
         return None
+
+    def prepare_sequence(
+        self,
+        catalog: Catalog,
+        index: int = 0,
+        fill_in_memory: bool = False,
+    ) -> Tuple[SequencingData, Dict[str, Any]]:
+        memory = self.get_memory(catalog, index, fill_in_memory)
+        sequence = SequencingData(output=[self.output[index]])
+
+        return sequence, memory
+
+    def goal_check(
+        self,
+        catalog: Catalog,
+        ground_truth: SequencingData,
+        memory: Optional[Dict[str, Any]] = None,
+        var_result: Optional[Dict[str, Any]] = None,
+        fill_in_memory: bool = False,
+    ) -> bool:
+        if memory is None:
+            memory = self.get_memory(
+                catalog=catalog, fill_in_memory=fill_in_memory
+            )
+
+        else:
+            assert fill_in_memory is False, (
+                "Cannot request memory be filled in while providing non-empty"
+                " memory!"
+            )
+
+        var_result = var_result or ground_truth.var_result
+        vars_to_check = list(var_result.values())
+
+        vars_to_check = (
+            vars_to_check
+            if vars_to_check
+            else [f"${step.label}$" for step in ground_truth.output]
+        )
+
+        check_results: List[bool] = []
+
+        for item in vars_to_check:
+            gt_label, var_id = extract_label(item)
+
+            if gt_label == get_token(index=0):
+                gt_label = var_id or ""
+                var_id = None
+
+            name, index = ground_truth.who_produced(gt_label)
+            target_label = "" if name is None else self.get_label(name, index)
+
+            memory_item = memory.get(target_label or "", {})
+
+            if memory_item:
+                if var_id is None or not isinstance(memory_item, Dict):
+                    check_results.append(memory_item != {})
+                else:
+                    check_results.append(
+                        memory_item.get(var_id, None) is not None
+                    )
+            else:
+                return False
+
+        return all(check_results)
 
     @staticmethod
     def parse_pretty_print(

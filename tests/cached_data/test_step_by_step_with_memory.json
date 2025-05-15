@@ -1,0 +1,170 @@
+[
+    {
+        "input": "Find flights from New York to London that depart on August 15, 2024, and return on August 18, 2024 and find hotels in London.",
+        "output": [
+            {
+                "name": "SkyScrapperSearchAirport",
+                "arguments": {
+                    "query": "New York"
+                },
+                "response": {
+                    "status": true,
+                    "timestamp": 1723231241358,
+                    "data": [
+                         {
+                            "skyId": "NYCA",
+                            "entityId": "27537542"
+                        }
+                    ]
+                },
+                "label": "var1",
+                "plan": "Find the SkyScrapper IDs for New York and London airports."
+            },
+            {
+                "name": "SkyScrapperSearchAirport",
+                "arguments": {
+                    "query": "London"
+                },
+                "response": {
+                    "status": true,
+                    "timestamp": 1723485512800,
+                    "data": [
+                        {
+                            "skyId": "LOND",
+                            "entityId": "27544008"
+                        }
+                    ]
+                },
+                "label": "var2",
+                "plan": "Find the SkyScrapper ID for London airport."
+            },
+            {
+                "name": "SkyScrapperFlightSearch",
+                "arguments": {
+                    "originSkyId": "$var1.skyId$",
+                    "destinationSkyId": "$var2.skyId$",
+                    "date": "2024-08-15",
+                    "returnDate": "2024-08-18",
+                    "adults": 1
+                },
+                "response": null,
+                "label": "var3",
+                "plan": "Find flights from New York to London that depart on August 15, 2024, and return on August 18, 2024."
+            },
+            {
+                "name": "TripadvisorSearchLocation",
+                "arguments": {
+                    "query": "London"
+                },
+                "response": {
+                    "status": true,
+                    "message": "Success",
+                    "timestamp": 1723489654014,
+                    "data": [
+                        {
+                            "title": "<b>London</b>",
+                            "geoId": 186338
+                        }
+                    ]
+                },
+                "label": "var4",
+                "plan": "Find the geoId of London."
+            },
+            {
+                "name": "TripadvisorSearchHotels",
+                "arguments": {
+                    "geoId": "$var4.geoId$",
+                    "checkIn": "2024-08-15",
+                    "checkOut": "2024-08-18",
+                    "adults": 1
+                },
+                "response": null,
+                "label": "var5",
+                "plan": "Find hotels in London."
+            }
+        ]
+    },
+    {
+        "input": "What are the top-rated restaurants in Rome?",
+        "output": [
+            {
+                "name": "TripadvisorSearchLocation",
+                "arguments": {
+                    "query": "Rome"
+                },
+                "response": {
+                    "status": true,
+                    "message": "Success",
+                    "timestamp": 1723496341585,
+                    "data": [
+                        {
+                            "geoId": 187791,
+                            "documentId": "loc;187791;g187791"
+                        }
+                    ]
+                },
+                "label": "var1",
+                "plan": "Search for Rome's location ID on Tripadvisor."
+            },
+            {
+                "name": "TripadvisorSearchRestaurants",
+                "arguments": {
+                    "locationId": "$var1.geoId$"
+                },
+                "response": null,
+                "label": "var2",
+                "plan": "Search for top-rated restaurants in Rome."
+            }
+        ]
+    },
+    {
+        "input": "Retrieve an overview of Beyonce as an artist and list her albums.",
+        "output": [
+            {
+                "name": "Spotify_Scraper_Get_Artist_ID_By_Name",
+                "arguments": {
+                    "name": "Beyonce"
+                },
+                "response": {
+                    "status": true,
+                    "errorId": "Success",
+                    "type": "artist",
+                    "id": "6vWDO969PvNqNYHIOW5v0m",
+                    "name": "Beyonce",
+                    "shareUrl": "https://open.spotify.com/artist/6vWDO969PvNqNYHIOW5v0m",
+                    "verified": true,
+                    "visuals": {
+                        "avatar": [
+                            {
+                                "url": "https://i.scdn.co/image/ab6761610000f178247f44069c0bd1781df2f785",
+                                "width": 160,
+                                "height": 160
+                            }
+                        ]
+                    }
+                },
+                "label": "var1",
+                "plan": "Get Beyonce's Spotify artist ID."
+            },
+            {
+                "name": "Spotify_Scraper_Get_Artist_Overview",
+                "arguments": {
+                    "artistId": "E1.artist_id"
+                },
+                "response": null,
+                "label": "var2",
+                "plan": "Get an overview of Beyonce as an artist."
+            },
+            {
+                "name": "Spotify_Scraper_List_Artist_Albums_Singles",
+                "arguments": {
+                    "artistId": "E1.artist_id",
+                    "type": "album"
+                },
+                "response": null,
+                "label": "var3",
+                "plan": "List Beyonce's albums."
+            }
+        ]
+    }
+]

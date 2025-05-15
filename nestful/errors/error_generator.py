@@ -132,6 +132,7 @@ def batch_generate_error_steps(
     referred_only: bool = True,
     forbidden_indices: Optional[List[int]] = None,
     random_seed: Optional[int] = None,
+    fill_in_memory: bool = True,
 ) -> List[AtomicCall]:
     current_samples: List[AtomicCall] = []
     stored_hashes = set()
@@ -159,8 +160,8 @@ def batch_generate_error_steps(
             random_index = randint(a=0, b=len(random_sequence.output) - 1)
             step = random_sequence.output[random_index]
 
-            memory = random_sequence.generate_dummy_output(
-                catalog, index=random_index
+            memory = random_sequence.get_memory(
+                catalog, index=random_index, fill_in_memory=fill_in_memory
             )
 
             error_step, new_memory = induce_error_in_step(

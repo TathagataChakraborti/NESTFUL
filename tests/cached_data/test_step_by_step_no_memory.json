@@ -1,0 +1,148 @@
+[
+    {
+        "input": "Find flights from New York to London that depart on August 15, 2024, and return on August 18, 2024 and find hotels in London.",
+        "output": [
+            {
+                "name": "SkyScrapperSearchAirport",
+                "arguments": {
+                    "query": "New York"
+                },
+                "label": "var1"
+            },
+            {
+                "name": "SkyScrapperSearchAirport",
+                "arguments": {
+                    "query": "London"
+                },
+                "label": "var2"
+            },
+            {
+                "name": "SkyScrapperFlightSearch",
+                "arguments": {
+                    "originSkyId": "$var1.skyId$",
+                    "destinationSkyId": "$var2.skyId$",
+                    "originEntityId": "$var1.entityId$",
+                    "destinationEntityId": "$var2.entityId$",
+                    "date": "2024-08-15",
+                    "returnDate": "2024-08-18",
+                    "cabinClass": "economy",
+                    "adults": 1,
+                    "children": 0,
+                    "infants": 0,
+                    "sortBy": "best"
+                },
+                "label": "var3"
+            },
+            {
+                "name": "SkyScrapperFlightSearch",
+                "arguments": {
+                    "originSkyId": "$var1.skyId$",
+                    "destinationSkyId": "$var2.skyId$",
+                    "originEntityId": "$var1.entityId$",
+                    "destinationEntityId": "$var2.entityId$",
+                    "date": "2024-08-15",
+                    "returnDate": "2024-08-18",
+                    "cabinClass": "economy",
+                    "adults": 1,
+                    "children": "$var3.status$",
+                    "infants": "$var3.status$",
+                    "sortBy": "best"
+                },
+                "label": "var4"
+            },
+            {
+                "name": "TripadvisorSearchLocation",
+                "arguments": {
+                    "query": "London"
+                },
+                "label": "var5"
+            },
+            {
+                "name": "TripadvisorSearchHotels",
+                "arguments": {
+                    "geoId": "$var5.geoId$",
+                    "checkIn": "2024-08-15",
+                    "checkOut": "2024-08-18",
+                    "pageNumber": 1,
+                    "sort": "price",
+                    "adults": 1,
+                    "rooms": 1,
+                    "currencyCode": "USD"
+                },
+                "label": "var6"
+            },
+            {
+                "name": "TripadvisorSearchHotels",
+                "arguments": {
+                    "geoId": "$var5.geoId$",
+                    "checkIn": "2025-08-15",
+                    "checkOut": "2025-08-18",
+                    "pageNumber": 1,
+                    "sort": "price",
+                    "adults": 1,
+                    "rooms": 1,
+                    "currencyCode": "USD"
+                },
+                "label": "var7"
+            },
+            {
+                "name": "No API selected.",
+                "arguments": {},
+                "label": "var8"
+            }
+        ]
+    },
+    {
+        "input": "Could you provide the current weather conditions for Miami? I will be staying there for a couple of days. I need some hotel options for a check in on August 1, 2024 and check out August 6, 2024. What is the weather forecast for these dates?",
+        "output": [
+            {
+                "name": "WeatherAPI.com_Realtime_Weather_Api",
+                "arguments": {
+                    "q": "Miami"
+                },
+                "label": "var1"
+            },
+            {
+                "name": "TripadvisorSearchLocation",
+                "arguments": {
+                    "query": "Miami"
+                },
+                "label": "var2"
+            },
+            {
+                "name": "TripadvisorSearchHotels",
+                "arguments": {
+                    "geoId": "$var2.geoId$",
+                    "checkIn": "2024-08-01",
+                    "checkOut": "2024-08-06",
+                    "pageNumber": "$var1.status$"
+                },
+                "label": "var3"
+            },
+            {
+                "name": "TripadvisorSearchHotels",
+                "arguments": {
+                    "geoId": "$var2.geoId$",
+                    "checkIn": "2025-08-01",
+                    "checkOut": "2025-08-06",
+                    "pageNumber": "$var1.status$"
+                },
+                "label": "var4"
+            },
+            {
+                "name": "WeatherAPI.com_Forecast_Weather_API",
+                "arguments": {
+                    "q": "$var1.location.name$",
+                    "days": 5,
+                    "dt": "2025-08-01"
+                },
+                "label": "var5"
+            },
+            {
+                "name": "No API selected.",
+                "arguments": {},
+                "label": "var6"
+            }
+        ]
+    }
+]
