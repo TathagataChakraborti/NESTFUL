@@ -1,7 +1,7 @@
 from __future__ import annotations
 from nestful.schemas.openapi import Component
 from pydantic import BaseModel, ConfigDict, model_validator
-from typing import List, Dict, Optional, Union
+from typing import List, Dict, Optional, Union, Any
 
 
 class QueryParameter(BaseModel):
@@ -34,6 +34,7 @@ class API(BaseModel):
     arguments: Dict[str, QueryParameter] = dict()
     ################################################################
     output_parameters: Dict[str, Component] = dict()
+    sample_responses: List[Any] = []
 
     @model_validator(mode="after")
     def temporary_field_jarl(self) -> API:

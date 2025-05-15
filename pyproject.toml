@@ -38,6 +38,7 @@ dependencies = [
     "pydantic",
     "jsonref",
     "hypothesis-jsonschema",
+    "Faker",
 ]
 
 [project.optional-dependencies]
