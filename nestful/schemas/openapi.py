@@ -14,13 +14,13 @@ class Parameter(BaseModel):
     name: str
     description: Optional[str] = ""
     required: Optional[bool] = False
-    type: Optional[str] = None
+    type: Optional[str | List[str]] = None
     parameter_schema: Optional[Component] = Field(alias="schema", default=None)
 
 
 class Component(BaseModel):
     title: Optional[str] = ""
-    type: Optional[str] = None
+    type: Optional[str | List[str]] = None
     description: Optional[str] = ""
     enum: List[Union[str, Any]] = []
     required: List[str] = []
@@ -29,7 +29,7 @@ class Component(BaseModel):
 
     @model_validator(mode="after")
     def lowercase_type(self) -> Component:
-        if self.type is not None:
+        if self.type is not None and not isinstance(self.type, List):
             self.type = self.type.lower()
 
         return self

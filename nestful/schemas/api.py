@@ -34,7 +34,7 @@ class API(BaseModel):
     arguments: Dict[str, QueryParameter] = dict()
     ################################################################
     output_parameters: Dict[str, Component] = dict()
-    sample_responses: List[Any] = []
+    sample_responses: List[Dict[str, Any] | List[Dict[str, Any]]] = []
 
     @model_validator(mode="after")
     def temporary_field_jarl(self) -> API:

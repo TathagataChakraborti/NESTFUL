@@ -25,4 +25,7 @@ class TestReader:
         assert len(self.dataset.data) == 1000
 
     def test_transform_catalog(self) -> None:
-        pass
+        sequence_data, catalog = self.dataset.convert_to_nestful()
+
+        assert len(catalog.apis) == 40
+        # assert len(sequence_data.data) == 1000
