@@ -25,3 +25,14 @@ class TestHypothesisGeneratorBatch:
         )
 
         assert len(dataset[0].backing_steps) >= 10
+
+    # def test_complexfuncbench(self) -> None:
+    #     sequence_data, catalog = get_nestful_data(name="complexfuncbench")
+    #
+    #     dataset = generate_atomic_calls(
+    #         dataset=sequence_data,
+    #         catalog=catalog,
+    #         num_samples=1,
+    #     )
+    #
+    #     assert len(dataset) == 1

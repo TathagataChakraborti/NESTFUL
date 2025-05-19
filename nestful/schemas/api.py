@@ -27,6 +27,7 @@ class API(BaseModel):
 
     name: str
     description: str
+    endpoint: Optional[str] = None
     # TODO: https://github.com/TathagataChakraborti/NESTFUL/issues/2
     parameters: Dict[str, QueryParameter] = dict()
     query_parameters: Dict[str, QueryParameter] = dict()

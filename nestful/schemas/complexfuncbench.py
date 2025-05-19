@@ -1,4 +1,4 @@
-from typing import List, Dict, Union, Any, Tuple
+from typing import List, Dict, Union, Any, Tuple, Optional
 from enum import StrEnum, auto
 from pydantic import BaseModel
 from genson import SchemaBuilder
@@ -83,9 +83,19 @@ class Function(BaseModel):
             k: Component.model_validate(v) for k, v in output_schema.items()
         }
 
+        if "EndPoint" in self.description:
+            description_split = self.description.split("EndPoint:")
+            description = description_split[0].strip()
+            endpoint = description_split[1].strip()
+
+        else:
+            description = self.description
+            endpoint = None
+
         return API(
             name=self.name,
-            description=self.description,
+            description=description,
+            endpoint=endpoint,
             parameters=parameters,
             output_parameters=output_parameters,
             sample_responses=cached_responses,
@@ -109,28 +119,41 @@ class ComplexFuncBench(BaseModel):
         )
 
         for sample in self.data:
+            new_sequence = SequencingData()
+
             for index, step in enumerate(sample.conversations):
+                if isinstance(step, Content) and step.role == Role.USER:
+                    new_sequence.input = f"{new_sequence.input} {step.content}"
+
                 if isinstance(step, FunctionCall):
                     for pos, func_call in enumerate(step.function_call):
                         if func_call.name:
                             current_cache = response_map.get(func_call.name, [])
+                            new_response_inner: Optional[
+                                Dict[str, Any] | List[Dict[str, Any]]
+                            ] = None
 
                             for lookahead_step in sample.conversations[
                                 index + 1 :
                             ]:
                                 if isinstance(lookahead_step, Observation):
                                     new_response = lookahead_step.content[pos]
+                                    new_response_inner = (
+                                        new_response.data
+                                        if isinstance(new_response, Data)
+                                        else new_response
+                                    )
 
-                                    if isinstance(new_response, Data):
-                                        current_cache.append(new_response.data)
-                                    else:
-                                        current_cache.append(new_response)
-
+                                    current_cache.append(new_response_inner)
                                     break
+
+                            func_call.response = new_response_inner
+                            new_sequence.output.append(func_call)
 
                             response_map[func_call.name] = current_cache
 
-        for sample in self.data:
+            sequences.append(new_sequence)
+
             for func in sample.functions:
                 existing_api = new_catalog.get_api(name=func.name or "")
 

@@ -1,4 +1,5 @@
 from nestful.schemas.complexfuncbench import ComplexFuncBench, Conversation
+from nestful.data_handlers import DataType
 from pathlib import Path
 
 import json
@@ -8,11 +9,12 @@ class TestReader:
     def setup_method(self) -> None:
         path_to_file = Path(__file__).parent.resolve()
 
-        relative_path_to_data = (
-            "../../data_v1/complexfuncbench/ComplexFuncBench.jsonl"
-        )
+        self.name = "complexfuncbench"
+        self.relative_path_to_data = f"../../data_v1/{self.name}/"
 
-        abs_path = Path.joinpath(path_to_file, relative_path_to_data).resolve()
+        abs_path = Path.joinpath(
+            path_to_file, f"{self.relative_path_to_data}/ComplexFuncBench.jsonl"
+        ).resolve()
 
         with open(abs_path) as f:
             data = [json.loads(line) for line in f]
@@ -28,4 +30,16 @@ class TestReader:
         sequence_data, catalog = self.dataset.convert_to_nestful()
 
         assert len(catalog.apis) == 40
-        # assert len(sequence_data.data) == 1000
+        assert len(sequence_data.data) == 1000
+
+        with open(
+            f"{self.relative_path_to_data}/{self.name}-{DataType.SPEC}.json",
+            "w",
+        ) as f:
+            json.dump([api.dict() for api in catalog.apis], f)
+
+        with open(
+            f"{self.relative_path_to_data}/{self.name}-{DataType.DATA}.json",
+            "w",
+        ) as f:
+            json.dump([sample.dict() for sample in sequence_data.data], f)

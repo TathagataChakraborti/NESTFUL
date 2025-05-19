@@ -62,6 +62,7 @@ def generate_atomic_calls(
                 args_of_interest = get_args_with_labeled_assignments(
                     step.arguments
                 )
+
                 arg_of_interest = choice(list(args_of_interest))
 
                 memory = generate_dummy_output_sequence(

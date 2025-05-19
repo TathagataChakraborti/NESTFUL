@@ -1,4 +1,4 @@
-from nestful.data_handlers import get_nestful_catalog
+from nestful.data_handlers import get_nestful_catalog, get_nestful_data
 from nestful import API, MinifiedAPI
 
 
@@ -40,3 +40,9 @@ class TestAPISchema:
         )
 
         assert len(catalog.apis) == 30
+
+    def test_parse_api_data_complexfuncbench(self) -> None:
+        sequence_data, catalog = get_nestful_data(name="complexfuncbench")
+
+        assert len(catalog.apis) == 30
+        assert len(sequence_data.data) == 1000

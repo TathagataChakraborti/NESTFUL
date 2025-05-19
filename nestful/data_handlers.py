@@ -29,12 +29,16 @@ def data_path_constructor(
 
     path_to_file = Path(__file__).parent.resolve()
 
-    exe_string = f"{'non-' if not executable else ''}executable"
-    name = f"-{name}" if name else ""
+    if name == "complexfuncbench":
+        relative_path_to_data = (
+            f"../data_{version}/{name}/{name}-{data_type}.json"
+        )
 
-    relative_path_to_data = (
-        f"../data_{version}/{exe_string}/{exe_string}{name}-{data_type}.json"
-    )
+    else:
+        exe_string = f"{'non-' if not executable else ''}executable"
+        name = f"-{name}" if name else ""
+
+        relative_path_to_data = f"../data_{version}/{exe_string}/{exe_string}{name}-{data_type}.json"
 
     return Path.joinpath(path_to_file, relative_path_to_data).resolve()
 
