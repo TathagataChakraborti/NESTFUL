@@ -87,7 +87,7 @@ def generate_atomic_calls(
                     while len(backing_steps) < min_backing_steps:
                         random_backing_sequence = get_random_sequence()
                         backing_memory = generate_dummy_output_sequence(
-                            random_sequence,
+                            random_backing_sequence,
                             catalog,
                             index=len(random_backing_sequence.output),
                             min_string_length=min_string_length,

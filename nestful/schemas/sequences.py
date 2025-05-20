@@ -4,6 +4,7 @@ from pydantic import BaseModel, ConfigDict, model_validator, computed_field
 from nestful.utils import parse_parameters, extract_label, get_token
 from nestful.schemas.api import Catalog, API, MinifiedAPI
 from nestful.schemas.errors import ErrorType
+from nestful.memory import extract_references_from_memory
 from json import JSONDecodeError, loads as json_loads
 from copy import deepcopy
 
@@ -54,55 +55,55 @@ class SequenceStep(BaseModel):
         return str(self.model_dump(exclude={"errors", "response"}))
 
     def get_memory(
-        self, catalog: Catalog, fill_in_memory: bool = False
+        self, catalog: Optional[Catalog] = None, fill_in_memory: bool = False
     ) -> Dict[str, Any]:
         new_memory: Dict[str, Any] = dict()
+        new_catalog = catalog if catalog is not None else Catalog()
         api_spec = next(
-            filter(lambda api: api.name == self.name, catalog.apis), None
+            filter(lambda api: api.name == self.name, new_catalog.apis), None
         )
 
-        if api_spec is None or self.label is None:
+        if (catalog is not None and api_spec is None) or self.label is None:
             return {}
 
+        elif (
+            api_spec is not None
+            and self.label is not None
+            and fill_in_memory is True
+        ):
+            for k, item in api_spec.output_parameters.items():
+                new_memory[k] = (
+                    {key: DUMMY_VALUE for key in item.properties}
+                    if item.properties
+                    else DUMMY_VALUE
+                )
+
+            memory = {self.label: new_memory}
+            return memory
+
         else:
-            if fill_in_memory:
-                for k, item in api_spec.output_parameters.items():
-                    new_memory[k] = (
-                        {key: DUMMY_VALUE for key in item.properties}
-                        if item.properties
-                        else DUMMY_VALUE
-                    )
-
-                memory = {self.label: new_memory}
-                return memory
-
-            else:
+            if self.response:
                 if self.response:
-                    if self.response:
-                        if isinstance(self.response, str):
-                            try:
-                                new_memory = json_loads(self.response)
-                            except JSONDecodeError as e:
-                                print(f"{e}, tried to read {self.response}")
+                    if isinstance(self.response, str):
+                        try:
+                            new_memory = json_loads(self.response)
+                        except JSONDecodeError as e:
+                            print(f"{e}, tried to read {self.response}")
 
-                        elif isinstance(self.response, List):
-                            new_memory = (
-                                self.response[0] if self.response else {}
-                            )
-                        else:
-                            new_memory = self.response.get(
-                                "data", self.response
-                            )
+                    elif isinstance(self.response, List):
+                        new_memory = self.response[0] if self.response else {}
+                    else:
+                        new_memory = self.response.get("data", self.response)
 
-                            new_memory = (
-                                new_memory[0]  # type: ignore
-                                if isinstance(new_memory, List)
-                                and len(new_memory) > 0
-                                else new_memory
-                            )
+                        new_memory = (
+                            new_memory[0]  # type: ignore
+                            if isinstance(new_memory, List)
+                            and len(new_memory) > 0
+                            else new_memory
+                        )
 
-                memory = {self.label: new_memory}
-                return memory
+            memory = {self.label: new_memory}
+            return memory
 
     def get_tool_spec(self, catalog: Catalog) -> Optional[API]:
         tool_spec = catalog.get_api(name=self.name or "")
@@ -163,13 +164,13 @@ class SequenceStep(BaseModel):
                 and gt_arguments == self_arguments
             )
 
-    @model_validator(mode="after")
-    def non_string_assignments(self) -> SequenceStep:
-        self.arguments = {
-            key: str(item) for key, item in self.arguments.items()
-        }
-
-        return self
+    # @model_validator(mode="after")
+    # def non_string_assignments(self) -> SequenceStep:
+    #     self.arguments = {
+    #         key: str(item) for key, item in self.arguments.items()
+    #     }
+    #
+    #     return self
 
     @staticmethod
     def parse_pretty_print(pretty_print: str) -> SequenceStep:
@@ -219,6 +220,13 @@ class SequenceStep(BaseModel):
         pretty_strings.append(action_string)
 
         return "\n".join(pretty_strings)
+
+    def add_references(
+        self, memory: Dict[str, Any], stringify: bool = False
+    ) -> None:
+        self.arguments = extract_references_from_memory(
+            self.arguments, memory, stringify
+        )
 
     def remove_reference(self, label: str) -> SequenceStep:
         new_step = deepcopy(self)
@@ -270,7 +278,7 @@ class SequencingData(BaseModel):
 
     def get_memory(
         self,
-        catalog: Catalog,
+        catalog: Optional[Catalog] = None,
         index: Optional[int] = None,
         fill_in_memory: bool = False,
     ) -> Dict[str, Any]:
@@ -281,7 +289,6 @@ class SequencingData(BaseModel):
 
         for i in range(index):
             step_memory = self.output[i].get_memory(catalog, fill_in_memory)
-
             memory = {**memory, **step_memory}
 
         return memory
@@ -350,6 +357,26 @@ class SequencingData(BaseModel):
         )
 
         return new_sequence
+
+    def add_references(
+        self,
+        catalog: Optional[Catalog] = None,
+        fill_in_memory: bool = False,
+        stringify: bool = False,
+    ) -> None:
+        new_output: List[SequenceStep] = []
+
+        for index, step in enumerate(self.output):
+            memory = self.get_memory(
+                index=index, catalog=catalog, fill_in_memory=fill_in_memory
+            )
+
+            step.arguments = extract_references_from_memory(
+                step.arguments, memory, stringify
+            )
+            new_output.append(step)
+
+        self.output = new_output
 
     def who_used(self, label: str) -> List[int]:
         indices = []

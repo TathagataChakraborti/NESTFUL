@@ -44,5 +44,5 @@ class TestAPISchema:
     def test_parse_api_data_complexfuncbench(self) -> None:
         sequence_data, catalog = get_nestful_data(name="complexfuncbench")
 
-        assert len(catalog.apis) == 30
+        assert len(catalog.apis) == 40
         assert len(sequence_data.data) == 1000

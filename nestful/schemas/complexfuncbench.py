@@ -3,6 +3,7 @@ from enum import StrEnum, auto
 from pydantic import BaseModel
 from genson import SchemaBuilder
 from nestful.schemas.openapi import Component
+from nestful.utils import get_token
 from nestful.schemas.api import API, Catalog, QueryParameter
 from nestful.schemas.sequences import (
     SequenceStep,
@@ -118,7 +119,7 @@ class ComplexFuncBench(BaseModel):
             dict()
         )
 
-        for sample in self.data:
+        for _, sample in enumerate(self.data):
             new_sequence = SequencingData()
 
             for index, step in enumerate(sample.conversations):
@@ -148,10 +149,15 @@ class ComplexFuncBench(BaseModel):
                                     break
 
                             func_call.response = new_response_inner
+                            func_call.label = get_token(
+                                index=len(new_sequence.output) + 1
+                            )
+
                             new_sequence.output.append(func_call)
 
                             response_map[func_call.name] = current_cache
 
+            new_sequence.add_references()
             sequences.append(new_sequence)
 
             for func in sample.functions:
