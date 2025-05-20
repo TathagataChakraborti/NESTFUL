@@ -40,6 +40,10 @@ dependencies = [
     "hypothesis-jsonschema",
     "Faker",
     "genson",
+    "sentence-transformers",
+    "nltk",
+    "scipy",
+    "jsonschema",
 ]
 
 [project.optional-dependencies]

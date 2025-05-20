@@ -1,5 +1,6 @@
 from nestful import Catalog, API, SequenceStep, SequencingData
 from nestful.schemas.openapi import Component, ResponseSelection
+from nestful.hypothesis_generator.faker_generator import FakerGenerator
 from typing import Dict, Any, Optional
 from hypothesis_jsonschema import from_schema
 from hypothesis.strategies import SearchStrategy
@@ -9,6 +10,7 @@ from hypothesis import given, settings, HealthCheck
 class Hypothesis:
     def __init__(self, name: str, catalog: Catalog) -> None:
         self.api = catalog.get_api(name)
+        self.faker = FakerGenerator()
 
         if self.api is None:
             raise ValueError(f"No API with name: {name}")

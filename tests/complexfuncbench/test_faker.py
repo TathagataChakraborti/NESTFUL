@@ -1,42 +1,18 @@
-from faker import Faker
+from nestful.hypothesis_generator.faker_generator import FakerGenerator
 
 
 class TestFaker:
     def setup_method(self) -> None:
-        self.faker = Faker()
+        self.faker = FakerGenerator()
 
     def test_basic(self) -> None:
-        forbidden_methods = [
-            "add_provider",
-            "seed",
-            "binary",
-            "get_providers",
-            "cache_pattern",
-            "set_arguments",
-            "del_arguments",
-            "xml",
-            "enum",
-            "factories",
-            "format",
-            "generator_attrs",
-            "get_arguments",
-            "set_formatter",
-            "get_formatter",
-            "image",
-            "parse",
-            "provider",
-            "seed_locale",
-        ]
-
-        faker_methods = [
-            getattr(self.faker, item)
-            for item in dir(self.faker)
-            if not item.startswith("_") and item not in forbidden_methods
-        ]
-        callable_faker_methods = [
-            item for item in faker_methods if callable(item)
-        ]
-
-        for index, func in enumerate(callable_faker_methods):
+        for index, func in enumerate(self.faker.methods):
             tmp = f"{func.__name__}: {func()}"
             print(f"\n--------------------\n{tmp}\n----------------------")
+
+    def test_match(self) -> None:
+        func = self.faker.get_closest_method(name="surname")
+
+        assert func is not None
+        assert func.__name__ == "last_name"
+        print(func())
