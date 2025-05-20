@@ -222,7 +222,7 @@
             "diet": {
                 "type": "string",
                 "required": false,
-                "enum": [
+                "allowed_values": [
                     "vegetarian",
                     "vegan",
                     "gluten-free",

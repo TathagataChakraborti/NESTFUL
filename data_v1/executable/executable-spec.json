@@ -40,6 +40,7 @@
             "cabinClass": {
                 "type": "string",
                 "description": "Cabin class. Default value: economy",
+                "default": "economy",
                 "enum": [
                     "economy",
                     "premium_economy",
@@ -51,22 +52,26 @@
             "adults": {
                 "type": "number",
                 "description": "Adults: 12+ years. Default value: 1",
+                "default": 1,
                 "required": false
             },
             "children": {
                 "type": "number",
                 "description": "Children: 2-12 years. Default value: 0",
+                "default": 0,
                 "required": false
             },
             "infants": {
                 "type": "number",
                 "description": "Infants: Under 2 years. Default value: 0",
+                "default": 0,
                 "required": false
             },
             "sortBy": {
                 "type": "string",
                 "description": "Sort By. Default value: best",
-                "allowed_values": [
+                "default": "best",
+                "enum": [
                     "best",
                     "price_high",
                     "cheapest",
@@ -91,16 +96,19 @@
             "currency": {
                 "type": "string",
                 "description": "Currency code. Default value: USD",
+                "default": "USD",
                 "required": false
             },
             "market": {
                 "type": "string",
                 "description": "Market code. Default value: en-US",
+                "default": "en-US",
                 "required": false
             },
             "countryCode": {
                 "type": "string",
                 "description": "Country code. Default value: US",
+                "default": "US",
                 "required": false
             }
         },
@@ -362,6 +370,7 @@
             "pageNumber": {
                 "type": "number",
                 "description": "Page number. The default page number is 1.",
+                "default": 1,
                 "required": false
             },
             "sort": {
@@ -755,14 +764,14 @@
         "url": "https://rapidapi.com/socialminer/api/reddit34/playground/apiendpoint_6c1d3bb9-e10b-455f-813d-befec97d0797",
         "query_parameters": {
             "subreddit": {
-                "type": "String",
+                "type": "string",
                 "description": "The subreddit for which to fetch top posts.",
                 "required": true
             },
             "time": {
-                "type": "String",
+                "type": "string",
                 "description": "The time period for which to fetch top posts.",
-                "allowed_values": [
+                "enum": [
                     "hour",
                     "day",
                     "week",
@@ -773,7 +782,7 @@
                 "required": true
             },
             "cursor": {
-                "type": "String",
+                "type": "string",
                 "description": "A cursor for pagination.",
                 "required": false
             }
@@ -1249,7 +1258,7 @@
             "sortBy": {
                 "type": "string",
                 "description": "How to sort the reviews in the results.",
-                "allowed_values": [
+                "enum": [
                     "most_relevant",
                     "newest",
                     "highest_ranking",
@@ -1395,17 +1404,17 @@
         "url": "https://rapidapi.com/alphavantage/api/alpha-vantage/playground/apiendpoint_3a360da0-5746-47c7-abfd-3fb595035efb",
         "query_parameters": {
             "from_currency": {
-                "type": "String",
+                "type": "string",
                 "required": true,
                 "description": "The cryptocurrency you want to convert from"
             },
             "function": {
-                "type": "String",
+                "type": "string",
                 "required": true,
                 "description": "The function of your choice. (In this case CURRENCY_EXCHANGE_RATE)"
             },
             "to_currency": {
-                "type": "String",
+                "type": "string",
                 "required": true,
                 "description": "The currency you want to convert to"
             }
@@ -1413,39 +1422,39 @@
         "output_parser": "result.Realtime Currency Exchange Rate.{param}",
         "output_parameters": {
             "From_Currency Code": {
-                "type": "String",
+                "type": "string",
                 "description": "The code of the currency you are converting from"
             },
             "From_Currency Name": {
-                "type": "String",
+                "type": "string",
                 "description": "The name of the currency you are converting from"
             },
             "To_Currency Code": {
-                "type": "String",
+                "type": "string",
                 "description": "The code of the currency you are converting to"
             },
             "To_Currency Name": {
-                "type": "String",
+                "type": "string",
                 "description": "The name of the currency you are converting to"
             },
             "Exchange Rate": {
-                "type": "String",
+                "type": "string",
                 "description": "The exchange rate between the two currencies"
             },
             "Last Refreshed": {
-                "type": "String",
+                "type": "string",
                 "description": "The last time the data was refreshed"
             },
             "Time Zone": {
-                "type": "String",
+                "type": "string",
                 "description": "The time zone of the data"
             },
             "Bid Price": {
-                "type": "String",
+                "type": "string",
                 "description": "The bid price for the currency exchange"
             },
             "Ask Price": {
-                "type": "String",
+                "type": "string",
                 "description": "The ask price for the currency exchange"
             }
         }
@@ -1459,12 +1468,12 @@
         "url": "https://rapidapi.com/hakitofficial24/api/ciphercircuit-math-assistant/playground/apiendpoint_f3f802c3-1aca-455b-8744-9e46a049f747",
         "query_parameters": {
             "numbers": {
-                "type": "String",
+                "type": "string",
                 "description": "A string containing the numbers and arithmetic operations to be calculated.",
                 "required": true
             },
             "decimalPlaces": {
-                "type": "Number",
+                "type": "number",
                 "description": "The number of decimal places to round the result to.",
                 "required": false
             }
@@ -1486,15 +1495,15 @@
         "url": "https://rapidapi.com/letscrape-6bRBa3QguO5/api/real-time-product-search/playground/endpoint_22971080-bb99-4bea-b069-5b2c11c8cb14",
         "query_parameters": {
             "q": {
-                "type": "String",
+                "type": "string",
                 "description": "Search query or keyword.",
                 "required": true
             },
             "country": {
-                "type": "String",
+                "type": "string",
                 "description": "Country code of the region/country to return results for.",
                 "default": "us",
-                "allowed_values": [
+                "enum": [
                     "us",
                     "gb",
                     "ca",
@@ -1504,10 +1513,10 @@
                 "required": false
             },
             "language": {
-                "type": "String",
+                "type": "string",
                 "description": "Language of the results.",
                 "default": "en",
-                "allowed_values": [
+                "enum": [
                     "en",
                     "fr",
                     "de",
@@ -1517,24 +1526,26 @@
                 "required": false
             },
             "page": {
-                "type": "Number",
+                "type": "number",
                 "description": "Results page to return.",
                 "default": 1,
-                "allowed_values": "1-100",
+                "minimum": 1,
+                "maximum": 100,
                 "required": false
             },
             "limit": {
-                "type": "Number",
+                "type": "number",
                 "description": "Maximum number of products to return.",
                 "default": 30,
-                "allowed_values": "1-100",
+                "minimum": 1,
+                "maximum": 100,
                 "required": false
             },
             "sort_by": {
-                "type": "Enum",
+                "type": "string",
                 "description": "Sort product offers by best match, top rated, lowest price, or highest price.",
                 "default": "BEST_MATCH",
-                "allowed_values": [
+                "enum": [
                     "BEST_MATCH",
                     "TOP_RATED",
                     "LOWEST_PRICE",
@@ -1543,20 +1554,20 @@
                 "required": false
             },
             "min_price": {
-                "type": "Number",
+                "type": "number",
                 "description": "Minimum price filter for product offers.",
                 "required": false
             },
             "max_price": {
-                "type": "Number",
+                "type": "number",
                 "description": "Maximum price filter for product offers.",
                 "required": false
             },
             "product_condition": {
-                "type": "Enum",
+                "type": "string",
                 "description": "Filter products by condition (ANY, NEW, USED, REFURBISHED).",
                 "default": "ANY",
-                "allowed_values": [
+                "enum": [
                     "ANY",
                     "NEW",
                     "USED",
@@ -1565,40 +1576,40 @@
                 "required": false
             },
             "free_returns": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Filter product offers that offer free returns.",
                 "required": false
             },
             "free_shipping": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Filter product offers that offer free shipping/delivery.",
                 "required": false
             },
             "max_shipping_days": {
-                "type": "Number",
+                "type": "number",
                 "description": "Maximum shipping days filter for product offers.",
                 "required": false
             },
             "on_sale": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Filter product offers that are currently on sale.",
                 "required": false
             },
             "store_id": {
-                "type": "String",
+                "type": "string",
                 "description": "Filter product offers from specific stores (comma-separated list of store IDs).",
                 "required": false
             },
             "other_filters": {
-                "type": "String",
+                "type": "string",
                 "description": "Other dynamic filters (e.g., by Size, Color) separated by commas.",
                 "required": false
             },
             "min_rating": {
-                "type": "Enum",
+                "type": "string",
                 "description": "Filter products by minimum rating.",
                 "default": "ANY",
-                "allowed_values": [
+                "enum": [
                     "ANY",
                     "1",
                     "2",
@@ -1611,51 +1622,51 @@
         "output_parser": "result.data[0].{param}",
         "output_parameters": {
             "product_id": {
-                "type": "Number",
+                "type": "number",
                 "description": "The unique identifier of the product."
             },
             "product_title": {
-                "type": "String",
+                "type": "string",
                 "description": "The title of the product."
             },
             "product_description": {
-                "type": "String",
+                "type": "string",
                 "description": "The description of the product."
             },
             "product_photos": {
-                "type": "String",
+                "type": "string",
                 "description": "The URLs of the product photos."
             },
             "product_attributes": {
-                "type": "String",
+                "type": "string",
                 "description": "The attributes of the product (e.g., size, color, brand)."
             },
             "product_rating": {
-                "type": "Number",
+                "type": "number",
                 "description": "The rating of the product (out of 5)."
             },
             "product_page_url": {
-                "type": "String",
+                "type": "string",
                 "description": "The URL of the product page on Amazon."
             },
             "product_offers_page_url": {
-                "type": "String",
+                "type": "string",
                 "description": "The URL of the product offers page on Amazon."
             },
             "product_specs_page_url": {
-                "type": "String",
+                "type": "string",
                 "description": "The URL of the product specifications page on Amazon."
             },
             "product_reviews_page_url": {
-                "type": "String",
+                "type": "string",
                 "description": "The URL of the product reviews page on Amazon."
             },
             "product_num_reviews": {
-                "type": "Number",
+                "type": "number",
                 "description": "The number of reviews for the product."
             },
             "product_num_offers": {
-                "type": "String",
+                "type": "string",
                 "description": "The number of offers for the product."
             }
         }
@@ -1669,12 +1680,12 @@
         "url": "https://rapidapi.com/letscrape-6bRBa3QguO5/api/real-time-product-search/playground/endpoint_776509db-ca16-4cba-a320-f83900eef25b",
         "query_parameters": {
             "product_id": {
-                "type": "String",
+                "type": "string",
                 "description": "Product ID of the product for which to fetch offers.",
                 "required": true
             },
             "limit": {
-                "type": "Number",
+                "type": "number",
                 "description": "Maximum number of product reviews to return.",
                 "default": 10,
                 "required": false
@@ -1751,24 +1762,24 @@
         "url": "https://rapidapi.com/letscrape-6bRBa3QguO5/api/real-time-product-search/playground/endpoint_72f10b45-1a4a-4d9c-990c-87053745c318",
         "query_parameters": {
             "product_id": {
-                "type": "String",
+                "type": "string",
                 "description": "Product ID of the product for which to fetch offers.",
                 "required": true
             },
             "page": {
-                "type": "Number",
+                "type": "number",
                 "description": "The page to return. Each page contains offers from 10 different stores (potentially resulting in more than 10 offers).",
                 "default": 1,
                 "required": false
             },
             "country": {
-                "type": "String",
+                "type": "string",
                 "description": "Country code of the region/country to return offers for.",
                 "default": "us",
                 "required": false
             },
             "language": {
-                "type": "String",
+                "type": "string",
                 "description": "The language of the results.",
                 "default": "en",
                 "required": false
@@ -1777,51 +1788,51 @@
         "output_parser": "result.data.offers[0].{param}",
         "output_parameters": {
             "product_id": {
-                "type": "Number",
+                "type": "number",
                 "description": "The ID of the product for which offers are being fetched."
             },
             "product_title": {
-                "type": "String",
+                "type": "string",
                 "description": "The title of the product for which offers are being fetched."
             },
             "product_description": {
-                "type": "String",
+                "type": "string",
                 "description": "The description of the product for which offers are being fetched."
             },
             "product_photos": {
-                "type": "String",
+                "type": "string",
                 "description": "The photos of the product for which offers are being fetched."
             },
             "product_attributes": {
-                "type": "String",
+                "type": "string",
                 "description": "The attributes of the product for which offers are being fetched."
             },
             "product_rating": {
-                "type": "Number",
+                "type": "number",
                 "description": "The rating of the product for which offers are being fetched."
             },
             "product_page_url": {
-                "type": "String",
+                "type": "string",
                 "description": "The URL of the product page for which offers are being fetched."
             },
             "product_offers_page_url": {
-                "type": "String",
+                "type": "string",
                 "description": "The URL of the product offers page for which offers are being fetched."
             },
             "product_specs_page_url": {
-                "type": "String",
+                "type": "string",
                 "description": "The URL of the product specs page for which offers are being fetched."
             },
             "product_reviews_page_url": {
-                "type": "String",
+                "type": "string",
                 "description": "The URL of the product reviews page for which offers are being fetched."
             },
             "product_num_reviews": {
-                "type": "Number",
+                "type": "number",
                 "description": "The number of reviews of the product for which offers are being fetched."
             },
             "product_num_offers": {
-                "type": "String",
+                "type": "string",
                 "description": "The number of offers of the product for which offers are being fetched."
             }
         }
@@ -1835,14 +1846,14 @@
         "url": "https://rapidapi.com/letscrape-6bRBa3QguO5/api/real-time-product-search/playground/endpoint_c542ccd5-2a31-4be8-bda9-bc87d6359200",
         "query_parameters": {
             "q": {
-                "type": "String",
+                "type": "string",
                 "description": "Search query or keyword."
             },
             "country": {
-                "type": "String",
+                "type": "string",
                 "description": "Country code of the region/country to return results for.",
                 "default": "us",
-                "allowed_values": [
+                "enum": [
                     "us",
                     "gb",
                     "ca",
@@ -1851,10 +1862,10 @@
                 ]
             },
             "language": {
-                "type": "String",
+                "type": "string",
                 "description": "Language of the results.",
                 "default": "en",
-                "allowed_values": [
+                "enum": [
                     "en",
                     "fr",
                     "de",
@@ -1863,22 +1874,24 @@
                 ]
             },
             "page": {
-                "type": "Number",
+                "type": "number",
                 "description": "Results page to return.",
                 "default": 1,
-                "allowed_values": "1-100"
+                "minimum": 1,
+                "maximum": 100
             },
             "limit": {
-                "type": "Number",
+                "type": "number",
                 "description": "Maximum number of products to return.",
                 "default": 30,
-                "allowed_values": "1-100"
+                "minimum": 1,
+                "maximum": 100
             },
             "sort_by": {
-                "type": "Enum",
+                "type": "string",
                 "description": "Sort product offers by best match, top rated, lowest price, or highest price.",
                 "default": "BEST_MATCH",
-                "allowed_values": [
+                "enum": [
                     "BEST_MATCH",
                     "TOP_RATED",
                     "LOWEST_PRICE",
@@ -1886,18 +1899,18 @@
                 ]
             },
             "min_price": {
-                "type": "Number",
+                "type": "number",
                 "description": "Minimum price filter for product offers."
             },
             "max_price": {
-                "type": "Number",
+                "type": "number",
                 "description": "Maximum price filter for product offers."
             },
             "product_condition": {
-                "type": "Enum",
+                "type": "string",
                 "description": "Filter products by condition (ANY, NEW, USED, REFURBISHED).",
                 "default": "ANY",
-                "allowed_values": [
+                "enum": [
                     "ANY",
                     "NEW",
                     "USED",
@@ -1905,37 +1918,37 @@
                 ]
             },
             "free_returns": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Filter product offers that offer free returns.",
                 "default": false
             },
             "free_shipping": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Filter product offers that offer free shipping/delivery.",
                 "default": false
             },
             "max_shipping_days": {
-                "type": "Number",
+                "type": "number",
                 "description": "Maximum shipping days filter for product offers."
             },
             "on_sale": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Filter product offers that are currently on sale.",
                 "default": false
             },
             "store_id": {
-                "type": "String",
+                "type": "string",
                 "description": "Filter product offers from specific stores (comma-separated list of store IDs)."
             },
             "other_filters": {
-                "type": "String",
+                "type": "string",
                 "description": "Other dynamic filters (e.g., by Size, Color) separated by commas."
             },
             "min_rating": {
-                "type": "Enum",
+                "type": "string",
                 "description": "Filter products by minimum rating.",
                 "default": "ANY",
-                "allowed_values": [
+                "enum": [
                     "ANY",
                     "1",
                     "2",
@@ -1947,51 +1960,51 @@
         "output_parser": "result.data.product.{param}",
         "output_parameters": {
             "product_id": {
-                "type": "Number",
+                "type": "number",
                 "description": "The unique identifier of the product."
             },
             "product_title": {
-                "type": "String",
+                "type": "string",
                 "description": "The title of the product."
             },
             "product_description": {
-                "type": "String",
+                "type": "string",
                 "description": "The description of the product."
             },
             "product_photos": {
-                "type": "String",
+                "type": "string",
                 "description": "The URLs of the product photos."
             },
             "product_attributes": {
-                "type": "String",
+                "type": "string",
                 "description": "The attributes of the product (e.g., size, color, brand)."
             },
             "product_rating": {
-                "type": "Number",
+                "type": "number",
                 "description": "The rating of the product (out of 5)."
             },
             "product_page_url": {
-                "type": "String",
+                "type": "string",
                 "description": "The URL of the product page."
             },
             "product_offers_page_url": {
-                "type": "String",
+                "type": "string",
                 "description": "The URL of the product offers page."
             },
             "product_specs_page_url": {
-                "type": "String",
+                "type": "string",
                 "description": "The URL of the product specifications page."
             },
             "product_reviews_page_url": {
-                "type": "String",
+                "type": "string",
                 "description": "The URL of the product reviews page."
             },
             "product_num_reviews": {
-                "type": "Number",
+                "type": "number",
                 "description": "The number of reviews for the product."
             },
             "product_num_offers": {
-                "type": "String",
+                "type": "string",
                 "description": "The number of offers for the product."
             }
         }
@@ -2005,12 +2018,12 @@
         "url": "https://rapidapi.com/UnitedAPI/api/goodreads12/playground/apiendpoint_38cdfb0f-9eef-4051-810f-c433e42fb43f",
         "query_parameters": {
             "keyword": {
-                "type": "String",
+                "type": "string",
                 "description": "Search term or keyword to look up books.",
                 "required": true
             },
             "page": {
-                "type": "String",
+                "type": "string",
                 "description": "Optional. Page number for paginated results.",
                 "required": false
             }
@@ -2018,23 +2031,23 @@
         "output_parser": "result[0].{param}",
         "output_parameters": {
             "imageUrl": {
-                "type": "String",
+                "type": "string",
                 "description": "URL of the book cover image."
             },
             "bookId": {
-                "type": "String",
+                "type": "string",
                 "description": "ID of the book."
             },
             "workId": {
-                "type": "String",
+                "type": "string",
                 "description": "ID of the work associated with the book."
             },
             "bookUrl": {
-                "type": "String",
+                "type": "string",
                 "description": "URL of the book's page on the website."
             },
             "title": {
-                "type": "String",
+                "type": "string",
                 "description": "Title of the book."
             },
             "author": {
@@ -2054,23 +2067,23 @@
                 }
             },
             "rank": {
-                "type": "String",
+                "type": "string",
                 "description": "Ranking of the book."
             },
             "rating": {
-                "type": "String",
+                "type": "string",
                 "description": "Average rating of the book."
             },
             "totalRatings": {
-                "type": "String",
+                "type": "string",
                 "description": "Total number of ratings the book has received."
             },
             "publishedYear": {
-                "type": "String",
+                "type": "string",
                 "description": "Year the book was published."
             },
             "totalEditions": {
-                "type": "String",
+                "type": "string",
                 "description": "Total number of editions available."
             }
         }
@@ -2084,12 +2097,12 @@
         "url": "https://rapidapi.com/UnitedAPI/api/goodreads12/playground/apiendpoint_0112ad97-8076-4e1e-ac1a-65e9e9deb0a5",
         "query_parameters": {
             "keyword": {
-                "type": "String",
+                "type": "string",
                 "description": "Search term or keyword to look up quotes.",
                 "required": true
             },
             "page": {
-                "type": "String",
+                "type": "string",
                 "description": "Optional. Page number for paginated results.",
                 "required": false
             }
@@ -2097,11 +2110,11 @@
         "output_parser": "result[0].{param}",
         "output_parameters": {
             "imageUrl": {
-                "type": "String",
+                "type": "string",
                 "description": "URL of the author's image."
             },
             "quoteText": {
-                "type": "String",
+                "type": "string",
                 "description": "Text of the quote."
             },
             "urls": {
@@ -2112,7 +2125,7 @@
                 }
             },
             "likes": {
-                "type": "String",
+                "type": "string",
                 "description": "Number of likes the quote has received."
             }
         }
@@ -2126,7 +2139,7 @@
         "url": "https://rapidapi.com/UnitedAPI/api/goodreads12/playground/apiendpoint_050a9bd2-8e14-40b1-b7e8-fd8cd1a48fb1",
         "query_parameters": {
             "authorID": {
-                "type": "String",
+                "type": "string",
                 "description": "ID of the author whose books are to be retrieved. Can be obtained through other endpoints.",
                 "required": true
             }
@@ -2134,23 +2147,23 @@
         "output_parser": "result[0].{param}",
         "output_parameters": {
             "imageUrl": {
-                "type": "String",
+                "type": "string",
                 "description": "URL of the book cover image."
             },
             "bookId": {
-                "type": "String",
+                "type": "string",
                 "description": "ID of the book."
             },
             "workId": {
-                "type": "String",
+                "type": "string",
                 "description": "ID of the work associated with the book."
             },
             "bookUrl": {
-                "type": "String",
+                "type": "string",
                 "description": "URL of the book's page on the website."
             },
             "title": {
-                "type": "String",
+                "type": "string",
                 "description": "Title of the book."
             },
             "author": {
@@ -2170,23 +2183,23 @@
                 }
             },
             "rank": {
-                "type": "String",
+                "type": "string",
                 "description": "Ranking of the book."
             },
             "rating": {
-                "type": "String",
+                "type": "string",
                 "description": "Average rating of the book."
             },
             "totalRatings": {
-                "type": "String",
+                "type": "string",
                 "description": "Total number of ratings the book has received."
             },
             "publishedYear": {
-                "type": "String",
+                "type": "string",
                 "description": "Year the book was published."
             },
             "totalEditions": {
-                "type": "String",
+                "type": "string",
                 "description": "Total number of editions available."
             }
         }
@@ -2200,7 +2213,7 @@
         "url": "https://rapidapi.com/weatherapi/api/weatherapi-com/playground/apiendpoint_bef542ef-a177-4633-aacc-ee9703945037",
         "query_parameters": {
             "q": {
-                "type": "String",
+                "type": "string",
                 "description": "Query parameter based on which data is sent back. It could be one of the following: Latitude and Longitude (Decimal degree) e.g: q=48.8567,2.3508, city name e.g.: q=Paris, US zip e.g: q=10001, UK postcode e.g: q=SW1, Canada postal code e.g: q=G2J, metar:<metar_code> e.g: q=metar:EGLL, iata:<3 digit airport code> e.g: q=iata:DXB, auto:ip for IP lookup, IP address (IPv4 and IPv6 supported) e.g: q=100.0.0.1",
                 "required": true
             }
@@ -2211,35 +2224,35 @@
                 "type": "object",
                 "properties": {
                     "name": {
-                        "type": "String",
+                        "type": "string",
                         "description": "Name of the location"
                     },
                     "region": {
-                        "type": "String",
+                        "type": "string",
                         "description": "Region of the location"
                     },
                     "country": {
-                        "type": "String",
+                        "type": "string",
                         "description": "Country of the location"
                     },
                     "lat": {
-                        "type": "Number",
+                        "type": "number",
                         "description": "Latitude of the location"
                     },
                     "lon": {
-                        "type": "Number",
+                        "type": "number",
                         "description": "Longitude of the location"
                     },
                     "tz_id": {
-                        "type": "String",
+                        "type": "string",
                         "description": "Time zone ID"
                     },
                     "localtime_epoch": {
-                        "type": "Number",
+                        "type": "number",
                         "description": "Local time in epoch format"
                     },
                     "localtime": {
-                        "type": "String",
+                        "type": "string",
                         "description": "Local time"
                     }
                 }
@@ -2259,7 +2272,7 @@
         "url": "https://rapidapi.com/weatherapi/api/weatherapi-com/playground/apiendpoint_e163d1c6-f2e1-4809-b433-4438da245f5e",
         "query_parameters": {
             "q": {
-                "type": "String",
+                "type": "string",
                 "description": "Query parameter based on which data is sent back. It could be one of the following: Latitude and Longitude (Decimal degree) e.g: q=48.8567,2.3508, city name e.g.: q=Paris, US zip e.g: q=10001, UK postcode e.g: q=SW1, Canada postal code e.g: q=G2J, metar:<metar_code> e.g: q=metar:EGLL, iata:<3 digit airport code> e.g: q=iata:DXB, auto:ip for IP lookup, IP address (IPv4 and IPv6 supported) e.g: q=100.0.0.1",
                 "required": true
             }
@@ -2270,35 +2283,35 @@
                 "type": "object",
                 "properties": {
                     "name": {
-                        "type": "String",
+                        "type": "string",
                         "description": "Name of the location"
                     },
                     "region": {
-                        "type": "String",
+                        "type": "string",
                         "description": "Region of the location"
                     },
                     "country": {
-                        "type": "String",
+                        "type": "string",
                         "description": "Country of the location"
                     },
                     "lat": {
-                        "type": "Number",
+                        "type": "number",
                         "description": "Latitude of the location"
                     },
                     "lon": {
-                        "type": "Number",
+                        "type": "number",
                         "description": "Longitude of the location"
                     },
                     "tz_id": {
-                        "type": "String",
+                        "type": "string",
                         "description": "Time zone ID"
                     },
                     "localtime_epoch": {
-                        "type": "Number",
+                        "type": "number",
                         "description": "Local time in epoch format"
                     },
                     "localtime": {
-                        "type": "String",
+                        "type": "string",
                         "description": "Local time"
                     }
                 }
@@ -2314,17 +2327,17 @@
         "url": "https://rapidapi.com/weatherapi/api/weatherapi-com/playground/apiendpoint_02481648-7c41-48cc-9b9f-e53596d38bab",
         "query_parameters": {
             "q": {
-                "type": "String",
+                "type": "string",
                 "description": "Query parameter based on which data is sent back. It could be one of the following: Latitude and Longitude (Decimal degree) e.g: q=48.8567,2.3508, city name e.g.: q=Paris, US zip e.g: q=10001, UK postcode e.g: q=SW1, Canada postal code e.g: q=G2J, metar:<metar_code> e.g: q=metar:EGLL, iata:<3 digit airport code> e.g: q=iata:DXB, auto:ip for IP lookup, IP address (IPv4 and IPv6 supported) e.g: q=100.0.0.1",
                 "required": true
             },
             "days": {
-                "type": "Number",
+                "type": "number",
                 "description": "Number of days of forecast required (optional)",
                 "required": false
             },
             "lang": {
-                "type": "String",
+                "type": "string",
                 "description": "Returns 'condition:text' field in API in the desired language (optional)",
                 "required": false
             },
@@ -2340,35 +2353,35 @@
                 "type": "object",
                 "properties": {
                     "name": {
-                        "type": "String",
+                        "type": "string",
                         "description": "Name of the location"
                     },
                     "region": {
-                        "type": "String",
+                        "type": "string",
                         "description": "Region of the location"
                     },
                     "country": {
-                        "type": "String",
+                        "type": "string",
                         "description": "Country of the location"
                     },
                     "lat": {
-                        "type": "Number",
+                        "type": "number",
                         "description": "Latitude of the location"
                     },
                     "lon": {
-                        "type": "Number",
+                        "type": "number",
                         "description": "Longitude of the location"
                     },
                     "tz_id": {
-                        "type": "String",
+                        "type": "string",
                         "description": "Time zone ID"
                     },
                     "localtime_epoch": {
-                        "type": "Number",
+                        "type": "number",
                         "description": "Local time in epoch format"
                     },
                     "localtime": {
-                        "type": "String",
+                        "type": "string",
                         "description": "Local time"
                     }
                 }
@@ -2388,7 +2401,7 @@
         "url": "https://rapidapi.com/DataCrawler/api/tripadvisor16/playground/apiendpoint_b0128f2a-67c5-4bbd-9369-721cc7170f9c",
         "query_parameters": {
             "query": {
-                "type": "String",
+                "type": "string",
                 "description": "Name of the location where the restaurant is situated.",
                 "required": true
             }
@@ -2396,50 +2409,50 @@
         "output_parser": "result.data[0].{param}",
         "output_parameters": {
             "status": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Indicates the success or failure of the request."
             },
             "message": {
-                "type": "String",
+                "type": "string",
                 "description": "Message providing additional information about the request."
             },
             "timestamp": {
-                "type": "Number",
+                "type": "number",
                 "description": "Timestamp indicating when the response was generated."
             },
             "location": {
-                "type": "Object",
+                "type": "object",
                 "properties": {
                     "locationId": {
-                        "type": "Number",
+                        "type": "number",
                         "description": "Unique identifier for the location."
                     },
                     "documentId": {
-                        "type": "String",
+                        "type": "string",
                         "description": "Document ID associated with the location."
                     },
                     "propertyId": {
-                        "type": "Number",
+                        "type": "number",
                         "description": "Property ID associated with the location."
                     },
                     "localizedName": {
-                        "type": "String",
+                        "type": "string",
                         "description": "Localized name of the location."
                     },
                     "placeType": {
-                        "type": "String",
+                        "type": "string",
                         "description": "Type of place (e.g., CITY, TOWN)."
                     },
                     "latitude": {
-                        "type": "Number",
+                        "type": "number",
                         "description": "Latitude coordinates of the location."
                     },
                     "longitude": {
-                        "type": "Number",
+                        "type": "number",
                         "description": "Longitude coordinates of the location."
                     },
                     "isGeo": {
-                        "type": "Boolean",
+                        "type": "boolean",
                         "description": "Indicates if the location is geographically defined."
                     }
                 }
@@ -2455,104 +2468,105 @@
         "url": "https://rapidapi.com/DataCrawler/api/tripadvisor16/playground/apiendpoint_6c187918-f989-4c63-bf1e-b2e38efe3152",
         "query_parameters": {
             "locationId": {
-                "type": "String",
+                "type": "string",
                 "description": "Location ID obtained from Tripadvisor's Search Restaurant Location API.",
                 "required": true
             },
             "page": {
-                "type": "Number",
+                "type": "number",
                 "description": "Optional. Page number for paginated results. Defaults to 1 if not specified.",
+                "default": 1,
                 "required": false
             }
         },
         "output_parser": "result.data.data[0].{param}",
         "output_parameters": {
             "restaurantsId": {
-                "type": "String",
+                "type": "string",
                 "description": "Unique identifier for the restaurant."
             },
             "locationId": {
-                "type": "Number",
+                "type": "number",
                 "description": "Location ID associated with the restaurant."
             },
             "name": {
-                "type": "String",
+                "type": "string",
                 "description": "Name of the restaurant."
             },
             "averageRating": {
-                "type": "Number",
+                "type": "number",
                 "description": "Average rating of the restaurant."
             },
             "userReviewCount": {
-                "type": "Number",
+                "type": "number",
                 "description": "Number of user reviews for the restaurant."
             },
             "currentOpenStatusCategory": {
-                "type": "String",
+                "type": "string",
                 "description": "Category indicating the current open status (e.g., OPEN, CLOSED)."
             },
             "currentOpenStatusText": {
-                "type": "String",
+                "type": "string",
                 "description": "Text description of the current open status."
             },
             "priceTag": {
-                "type": "String",
+                "type": "string",
                 "description": "Price category of the restaurant (e.g., $$, $$$)."
             },
             "hasMenu": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Indicates if the restaurant has an available menu."
             },
             "menuUrl": {
-                "type": "String",
+                "type": "string",
                 "description": "URL link to the restaurant's menu, if available."
             },
             "isDifferentGeo": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Indicates if the restaurant is in a different geographical location."
             },
             "parentGeoName": {
-                "type": "String",
+                "type": "string",
                 "description": "Name of the parent geographical location (e.g., city name)."
             },
             "distanceTo": {
-                "type": "Number",
+                "type": "number",
                 "description": "Distance to the restaurant from the specified location, if available."
             },
             "awardInfo": {
-                "type": "String",
+                "type": "string",
                 "description": "Information about any awards received by the restaurant."
             },
             "isLocalChefItem": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Indicates if the restaurant offers local chef specialty items."
             },
             "isPremium": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Indicates if the restaurant is a premium listing."
             },
             "isStoryboardPublished": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Indicates if the restaurant has a published storyboard."
             },
             "heroImgUrl": {
-                "type": "String",
+                "type": "string",
                 "description": "URL link to the hero image of the restaurant."
             },
             "heroImgRawHeight": {
-                "type": "Number",
+                "type": "number",
                 "description": "Raw height of the hero image in pixels."
             },
             "heroImgRawWidth": {
-                "type": "Number",
+                "type": "number",
                 "description": "Raw width of the hero image in pixels."
             },
             "squareImgUrl": {
-                "type": "String",
+                "type": "string",
                 "description": "URL link to the square image of the restaurant."
             },
             "squareImgRawLength": {
-                "type": "Number",
+                "type": "number",
                 "description": "Raw length of the square image in pixels."
             }
         }
@@ -2566,12 +2580,12 @@
         "url": "https://rapidapi.com/DataCrawler/api/tripadvisor16/playground/apiendpoint_ab413135-dbc1-41b2-95ab-2470fed079c1",
         "query_parameters": {
             "restaurantsId": {
-                "type": "String",
+                "type": "string",
                 "description": "restaurantsId obtained from Tripadvisor's Search Restaurants API.",
                 "required": true
             },
             "currencyCode": {
-                "type": "String",
+                "type": "string",
                 "description": "Currency code obtained from Get Currency API in Configs collection.",
                 "required": false
             }
@@ -2579,23 +2593,23 @@
         "output_parser": "result.data.{param}",
         "output_parameters": {
             "location": {
-                "type": "Object",
+                "type": "object",
                 "description": "Location of the restaurant."
             },
             "hours": {
-                "type": "Object",
+                "type": "object",
                 "description": "Working hours of the restaurant."
             },
             "ownerStatus": {
-                "type": "Object",
+                "type": "object",
                 "description": "Status of the business (e.g., OPEN, CLOSED)."
             },
             "ownerLikelihood": {
-                "type": "Object",
+                "type": "object",
                 "description": "Likelihood of the restaurant."
             },
             "overview": {
-                "type": "Object",
+                "type": "object",
                 "description": "Overview of the restaurant."
             }
         }
@@ -2609,7 +2623,7 @@
         "url": "https://rapidapi.com/SmartableAI/api/coronavirus-smartable/playground/apiendpoint_f638b6c0-b9f2-4204-bffa-1bd0107c4cc0",
         "query_parameters": {
             "location": {
-                "type": "String",
+                "type": "string",
                 "description": "ISO 3166-2 location code. For example, use 'FR' for coronavirus news in France; use 'US' for coronavirus news in US; use 'US-CA' for coronavirus news in the US California state. Use 'global' to retrieve global news.",
                 "required": true
             }
@@ -2617,34 +2631,34 @@
         "output_parser": "result.{}.{param}",
         "output_parameters": {
             "location": {
-                "type": "Object",
+                "type": "object",
                 "properties": {
                     "long": {
-                        "type": "Number",
+                        "type": "number",
                         "description": "Longitude of the location."
                     },
                     "countryOrRegion": {
-                        "type": "String",
+                        "type": "string",
                         "description": "Name of the country or region."
                     },
                     "provinceOrState": {
-                        "type": "String",
+                        "type": "string",
                         "description": "Name of the province or state, if applicable."
                     },
                     "county": {
-                        "type": "String",
+                        "type": "string",
                         "description": "Name of the county, if applicable."
                     },
                     "isoCode": {
-                        "type": "String",
+                        "type": "string",
                         "description": "ISO code of the location."
                     },
                     "lat": {
-                        "type": "Number",
+                        "type": "number",
                         "description": "Latitude of the location."
                     },
                     "updatedDateTime": {
-                        "type": "String",
+                        "type": "string",
                         "description": "Date and time when the news was last updated."
                     }
                 }
@@ -2654,72 +2668,72 @@
                 "description": "Date and time when the news was last updated."
             },
             "news": {
-                "type": "Array",
+                "type": "array",
                 "items": {
-                    "type": "Object",
+                    "type": "object",
                     "properties": {
                         "path": {
-                            "type": "String",
+                            "type": "string",
                             "description": "Path to the news article."
                         },
                         "title": {
-                            "type": "String",
+                            "type": "string",
                             "description": "Title of the news article."
                         },
                         "excerpt": {
-                            "type": "String",
+                            "type": "string",
                             "description": "Excerpt from the news article."
                         },
                         "sourceUrl": {
-                            "type": "String",
+                            "type": "string",
                             "description": "Source URL of the news article, if available."
                         },
                         "webUrl": {
-                            "type": "String",
+                            "type": "string",
                             "description": "Web URL of the news article."
                         },
                         "originalUrl": {
-                            "type": "String",
+                            "type": "string",
                             "description": "Original URL of the news article."
                         },
                         "featuredContent": {
-                            "type": "String",
+                            "type": "string",
                             "description": "Featured content, if available."
                         },
                         "highlight": {
-                            "type": "String",
+                            "type": "string",
                             "description": "Highlighted content, if available."
                         },
                         "heat": {
-                            "type": "Number",
+                            "type": "number",
                             "description": "Heat score of the news article."
                         },
                         "content": {
-                            "type": "String",
+                            "type": "string",
                             "description": "Content of the news article."
                         },
                         "type": {
-                            "type": "String",
+                            "type": "string",
                             "description": "Type of the news article."
                         },
                         "ampWebUrl": {
-                            "type": "String",
+                            "type": "string",
                             "description": "AMP web URL of the news article."
                         },
                         "cdnAmpWebUrl": {
-                            "type": "String",
+                            "type": "string",
                             "description": "CDN AMP web URL of the news article."
                         },
                         "publishedDateTime": {
-                            "type": "String",
+                            "type": "string",
                             "description": "Date and time when the news article was published."
                         },
                         "updatedDateTime": {
-                            "type": "String",
+                            "type": "string",
                             "description": "Date and time when the news article was last updated."
                         },
                         "locale": {
-                            "type": "String",
+                            "type": "string",
                             "description": "Locale of the news article."
                         }
                     }
@@ -2736,7 +2750,7 @@
         "url": "https://rapidapi.com/samiddha99/api/country-codes3/playground/apiendpoint_e688da37-3691-4bbd-8976-1cc96b4fd05c",
         "query_parameters": {
             "name": {
-                "type": "String",
+                "type": "string",
                 "description": "Country Name",
                 "required": true
             }
@@ -2744,19 +2758,19 @@
         "output_parser": "result.countries[0].{param}",
         "output_parameters": {
             "name": {
-                "type": "String",
+                "type": "string",
                 "description": "Name of the country"
             },
             "short_name": {
-                "type": "String",
+                "type": "string",
                 "description": "Short-name of the country"
             },
             "dial_code": {
-                "type": "String",
+                "type": "string",
                 "description": "dial-code of the country"
             },
             "flag": {
-                "type": "String",
+                "type": "string",
                 "description": "Flag of the counrty"
             }
         }
@@ -2770,7 +2784,7 @@
         "url": "https://rapidapi.com/SmartableAI/api/coronavirus-smartable/playground/apiendpoint_622cafbb-ff83-42a5-9fa0-dc8113eea716",
         "query_parameters": {
             "location": {
-                "type": "String",
+                "type": "string",
                 "description": "ISO 3166-2 location code. For example, use 'FR' for coronavirus stats in France; use 'US' for coronavirus stats in US; use 'US-CA' for coronavirus stats in the US California state. Use 'global' to retrieve global stats.",
                 "required": true
             }
@@ -2778,34 +2792,34 @@
         "output_parser": "result.{}.{param}",
         "output_parameters": {
             "location": {
-                "type": "Object",
+                "type": "object",
                 "properties": {
                     "long": {
-                        "type": "Number",
+                        "type": "number",
                         "description": "Longitude of the location."
                     },
                     "countryOrRegion": {
-                        "type": "String",
+                        "type": "string",
                         "description": "Name of the country or region."
                     },
                     "provinceOrState": {
-                        "type": "String",
+                        "type": "string",
                         "description": "Name of the province or state, if applicable."
                     },
                     "county": {
-                        "type": "String",
+                        "type": "string",
                         "description": "Name of the county, if applicable."
                     },
                     "isoCode": {
-                        "type": "String",
+                        "type": "string",
                         "description": "ISO code of the location."
                     },
                     "lat": {
-                        "type": "Number",
+                        "type": "number",
                         "description": "Latitude of the location."
                     },
                     "updatedDateTime": {
-                        "type": "String",
+                        "type": "string",
                         "description": "Date and time when the statistics were last updated."
                     }
                 }
@@ -2815,34 +2829,34 @@
                 "description": "Date and time when the statistics were last updated."
             },
             "stats": {
-                "type": "Object",
+                "type": "object",
                 "properties": {
                     "totalConfirmedCases": {
-                        "type": "Number",
+                        "type": "number",
                         "description": "Total number of confirmed COVID-19 cases."
                     },
                     "newlyConfirmedCases": {
-                        "type": "Number",
+                        "type": "number",
                         "description": "Number of newly confirmed COVID-19 cases."
                     },
                     "totalDeaths": {
-                        "type": "Number",
+                        "type": "number",
                         "description": "Total number of deaths due to COVID-19."
                     },
                     "newDeaths": {
-                        "type": "Number",
+                        "type": "number",
                         "description": "Number of new deaths due to COVID-19."
                     },
                     "totalRecoveredCases": {
-                        "type": "Number",
+                        "type": "number",
                         "description": "Total number of recovered COVID-19 cases."
                     },
                     "newlyRecoveredCases": {
-                        "type": "Number",
+                        "type": "number",
                         "description": "Number of newly recovered COVID-19 cases."
                     },
                     "history": {
-                        "type": "Array",
+                        "type": "array",
                         "description": "Histroy of COVID-19 cases."
                     }
                 }
@@ -2858,7 +2872,7 @@
         "url": "https://rapidapi.com/DataFanatic/api/spotify-scraper/playground/apiendpoint_de1c5738-9aa9-4b37-b7f0-28d15d1b242c",
         "query_parameters": {
             "name": {
-                "type": "String",
+                "type": "string",
                 "description": "Artist name for which to retrieve the Spotify ID.",
                 "required": true
             }
@@ -2866,23 +2880,23 @@
         "output_parser": "result.{param}",
         "output_parameters": {
             "artist_id": {
-                "type": "String",
+                "type": "string",
                 "description": "Unique Spotify ID of the artist."
             },
             "name": {
-                "type": "String",
+                "type": "string",
                 "description": "Name of the artist."
             },
             "url": {
-                "type": "String",
+                "type": "string",
                 "description": "URL to the Spotify artist page."
             },
             "image_url": {
-                "type": "String",
+                "type": "string",
                 "description": "URL of the artist's image."
             },
             "verified": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Indicates if the artist is verified on Spotify."
             }
         }
@@ -2896,7 +2910,7 @@
         "url": "https://rapidapi.com/DataFanatic/api/spotify-scraper/playground/apiendpoint_fd33b4eb-d258-437e-af85-c244904acefc",
         "query_parameters": {
             "artistId": {
-                "type": "String",
+                "type": "string",
                 "description": "Unique Spotify ID of the artist for which to retrieve the overview.",
                 "required": true
             }
@@ -2904,63 +2918,63 @@
         "output_parser": "result.{param}",
         "output_parameters": {
             "status": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Indicates the success or failure of the request."
             },
             "errorId": {
-                "type": "String",
+                "type": "string",
                 "description": "String identifier for any error encountered, if applicable."
             },
             "type": {
-                "type": "String",
+                "type": "string",
                 "description": "Type of the artist."
             },
             "id": {
-                "type": "String",
+                "type": "string",
                 "description": "Unique Spotify ID of the artist."
             },
             "name": {
-                "type": "String",
+                "type": "string",
                 "description": "Name of the artist."
             },
             "shareUrl": {
-                "type": "String",
+                "type": "string",
                 "description": "URL to the Spotify artist page."
             },
             "verified": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Indicates if the artist is verified on Spotify."
             },
             "biography": {
-                "type": "String",
+                "type": "string",
                 "description": "Biography of the artist."
             },
             "stats": {
-                "type": "Object",
+                "type": "object",
                 "description": "Statistics of the Artist."
             },
             "externalLinks": {
-                "type": "Array",
+                "type": "array",
                 "description": "External URL liked to the artist."
             },
             "visuals": {
-                "type": "Object",
+                "type": "object",
                 "description": "Pictures, covers and avatars relaed to the artist."
             },
             "playlists": {
-                "type": "Object",
+                "type": "object",
                 "description": "Playlists containing the artist."
             },
             "discography": {
-                "type": "Object",
+                "type": "object",
                 "description": "Discography of the artist."
             },
             "relatedContent": {
-                "type": "Object",
+                "type": "object",
                 "description": "Other related content for this artist like the songs the artists features on, appears on etc."
             },
             "goods": {
-                "type": "Object",
+                "type": "object",
                 "description": "Any concerts and merch sold by the artist."
             }
         }
@@ -2974,50 +2988,54 @@
         "url": "https://rapidapi.com/DataFanatic/api/spotify-scraper/playground/apiendpoint_768e91c5-7f09-4321-84b4-29ddef6c931f",
         "query_parameters": {
             "artistId": {
-                "type": "String",
+                "type": "string",
                 "description": "Unique Spotify ID of the artist for which to retrieve albums or singles.",
                 "required": true
             },
             "type": {
-                "type": "Enum",
+                "type": "string",
                 "description": "Type of release to retrieve. Defaults to 'album'. Use 'album' or 'single'. Note: 'appearsOn' type does not support pagination scraping.",
+                "default": "album",
+                "enum": ["album", "single"],
                 "required": false
             },
             "offset": {
-                "type": "Number",
+                "type": "number",
                 "description": "Number of items to omit before returning results. Ignored if type is 'appearsOn'. Defaults to 0.",
+                "default": 0,
                 "required": false
             },
             "limit": {
-                "type": "Number",
+                "type": "number",
                 "description": "Max number of items to return per request. Ignored if type is 'appearsOn'. Defaults to 50.",
+                "default": 50,
                 "required": false
             }
         },
         "output_parser": "result.{param}",
         "output_parameters": {
             "id": {
-                "type": "String",
+                "type": "string",
                 "description": "Unique Spotify ID of the album or single."
             },
             "name": {
-                "type": "String",
+                "type": "string",
                 "description": "Name of the album or single."
             },
             "type": {
-                "type": "String",
+                "type": "string",
                 "description": "Type of release, e.g., 'album'."
             },
             "shareUrl": {
-                "type": "String",
+                "type": "string",
                 "description": "URL to the Spotify album or single."
             },
             "date": {
-                "type": "String",
+                "type": "string",
                 "description": "Release date of the album or single in ISO 8601 format."
             },
             "trackCount": {
-                "type": "Number",
+                "type": "number",
                 "description": "Number of tracks in the album. Null if type is 'single'."
             }
         }
@@ -3031,7 +3049,7 @@
         "url": "https://rapidapi.com/DataFanatic/api/spotify-scraper/playground/apiendpoint_2528a974-e5af-4269-a6ed-89d2bde4fdde",
         "query_parameters": {
             "artistId": {
-                "type": "String",
+                "type": "string",
                 "description": "Unique identifier of the artist.",
                 "required": true
             }
@@ -3039,19 +3057,19 @@
         "output_parser": "result.relatedArtists.items[0].{param}",
         "output_parameters": {
             "type": {
-                "type": "String",
+                "type": "string",
                 "description": "Type of the artist (e.g., 'artist')."
             },
             "id": {
-                "type": "String",
+                "type": "string",
                 "description": "Unique identifier of the artist."
             },
             "name": {
-                "type": "String",
+                "type": "string",
                 "description": "Name of the artist."
             },
             "shareUrl": {
-                "type": "String",
+                "type": "string",
                 "description": "URL to open the artist in Spotify."
             }
         }
@@ -3065,297 +3083,299 @@
         "url": "https://rapidapi.com/social-api1-instagram/api/instagram-scraper-api2/playground/apiendpoint_59cb4f4c-55c0-41b5-807d-e39967e66c1d",
         "query_parameters": {
             "username_or_id_or_url": {
-                "type": "String",
+                "type": "string",
                 "required": true,
                 "description": "Insert a username (e.g., mrbeast), user ID (e.g., 2278169415), or URL (e.g., instagram.com/mrbeast)."
             },
             "include_about": {
-                "type": "Boolean",
+                "type": "boolean",
                 "required": false,
-                "description": "Include 'About this account' information: country and date_joined (in about field). Default: false. Enabling this will cost one extra request."
+                "description": "Include 'About this account' information: country and date_joined (in about field). Default: false. Enabling this will cost one extra request.",
+                "default": false
             },
             "url_embed_safe": {
-                "type": "Boolean",
+                "type": "boolean",
                 "required": false,
-                "description": "If you need to embed images/videos on your website, set to 'true' to evade CORS restrictions. URLs are valid from 6 to 24 hours. Default: false."
+                "description": "If you need to embed images/videos on your website, set to 'true' to evade CORS restrictions. URLs are valid from 6 to 24 hours. Default: false.",
+                "default": false
             }
         },
         "output_parser": "result.{param}",
         "output_parameters": {
             "about": {
-                "type": "Object",
+                "type": "object",
                 "description": "Information about the account, including country and date_joined."
             },
             "account_badges": {
-                "type": "Array",
+                "type": "array",
                 "description": "List of badges associated with the account."
             },
             "account_type": {
-                "type": "Number",
+                "type": "number",
                 "description": "Type of the account (e.g., personal, business)."
             },
             "active_standalone_fundraisers": {
-                "type": "Object",
+                "type": "object",
                 "description": "All the currently active fundraisers associated with the account."
             },
             "ads_incentive_expiration_date": {
-                "type": "String",
+                "type": "string",
                 "description": "Expiration date of ads incentive."
             },
             "ads_page_id": {
-                "type": "String",
+                "type": "string",
                 "description": "ID of the ads page associated with the account."
             },
             "ads_page_name": {
-                "type": "String",
+                "type": "string",
                 "description": "Name of the ads page associated with the account."
             },
             "bio_links": {
-                "type": "Array",
+                "type": "array",
                 "description": "Links in the biography of the account."
             },
             "biography": {
-                "type": "String",
+                "type": "string",
                 "description": "Biography text of the account."
             },
             "biography_email": {
-                "type": "String",
+                "type": "string",
                 "description": "Email address mentioned in the biography, if any."
             },
             "biography_with_entities": {
-                "type": "Object",
+                "type": "object",
                 "description": "Entities mentioned in the biography if any."
             },
             "business_contact_method": {
-                "type": "String",
+                "type": "string",
                 "description": "Preferred method of contact for business inquiries."
             },
             "can_add_fb_group_link_on_profile": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Boolean indicating if a Facebook group link can be added to the profile."
             },
             "can_hide_category": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Boolean indicating if the account category can be hidden."
             },
             "can_hide_public_contacts": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Boolean indicating if public contact information can be hidden."
             },
             "category": {
-                "type": "String",
+                "type": "string",
                 "description": "Category of the account (e.g., Public figure, Blogger)."
             },
             "category_id": {
-                "type": "Number",
+                "type": "number",
                 "description": "ID of the account category."
             },
             "contact_phone_number": {
-                "type": "String",
+                "type": "string",
                 "description": "Contact phone number associated with the account."
             },
             "current_catalog_id": {
-                "type": "Number",
+                "type": "number",
                 "description": "ID of the current catalog associated with the account."
             },
             "direct_messaging": {
-                "type": "String",
+                "type": "string",
                 "description": "Direct messaging capabilities of the account."
             },
             "external_lynx_url": {
-                "type": "String",
+                "type": "string",
                 "description": "External URL linked to the account with tracking parameters."
             },
             "external_url": {
-                "type": "String",
+                "type": "string",
                 "description": "External URL linked to the account."
             },
             "fbid_v2": {
-                "type": "String",
+                "type": "string",
                 "description": "Facebook ID version 2 associated with the account."
             },
             "follower_count": {
-                "type": "Number",
+                "type": "number",
                 "description": "Number of followers of the account."
             },
             "following_count": {
-                "type": "Number",
+                "type": "number",
                 "description": "Number of accounts the user is following."
             },
             "full_name": {
-                "type": "String",
+                "type": "string",
                 "description": "Full name of the account holder."
             },
             "has_anonymous_profile_picture": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Boolean indicating if the profile picture is anonymous."
             },
             "has_chaining": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Boolean indicating if the account has chaining enabled."
             },
             "has_guides": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Boolean indicating if the account has guides enabled."
             },
             "has_igtv_series": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Boolean indicating if the account has IGTV series."
             },
             "id": {
-                "type": "String",
+                "type": "string",
                 "description": "ID of the Instagram account."
             },
             "is_business": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Boolean indicating if the account is a business account."
             },
             "is_call_to_action_enabled": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Boolean indicating if call-to-action is enabled for the account."
             },
             "is_category_tappable": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Boolean indicating if the category is tappable."
             },
             "is_eligible_for_request_message": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Boolean indicating if the account is eligible for request messages."
             },
             "is_favorite": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Boolean indicating if the account is marked as favorite."
             },
             "is_favorite_for_clips": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Boolean indicating if the account is marked as favorite for clips."
             },
             "is_favorite_for_igtv": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Boolean indicating if the account is marked as favorite for IGTV."
             },
             "is_favorite_for_stories": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Boolean indicating if the account is marked as favorite for stories."
             },
             "is_open_to_collab": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Boolean indicating if the account is open to collaborations."
             },
             "is_parenting_account": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Boolean indicating if the account is a parenting account."
             },
             "is_private": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Boolean indicating if the account is private."
             },
             "is_profile_audio_call_enabled": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Boolean indicating if audio call is enabled for the profile."
             },
             "is_verified": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Boolean indicating if the account is verified."
             },
             "latest_reel_media": {
-                "type": "Number",
+                "type": "number",
                 "description": "ID of the latest reel media posted by the account."
             },
             "live_subscription_status": {
-                "type": "String",
+                "type": "string",
                 "description": "Subscription status for live content."
             },
             "location_data": {
-                "type": "Object",
+                "type": "object",
                 "description": "Location data of the account."
             },
             "media_count": {
-                "type": "Number",
+                "type": "number",
                 "description": "Number of media items posted by the account."
             },
             "merchant_checkout_style": {
-                "type": "String",
+                "type": "string",
                 "description": "Checkout style of the merchant."
             },
             "page_id": {
-                "type": "Number",
+                "type": "number",
                 "description": "Page ID associated with the account."
             },
             "page_name": {
-                "type": "String",
+                "type": "string",
                 "description": "Page name associated with the account."
             },
             "pinned_channels_info": {
-                "type": "Object",
+                "type": "object",
                 "description": "Page name associated with the account."
             },
             "primary_profile_link_type": {
-                "type": "Number",
+                "type": "number",
                 "description": "Type of the primary profile link."
             },
             "professional_conversion_suggested_account_type": {
-                "type": "Number",
+                "type": "number",
                 "description": "Suggested account type for professional conversion."
             },
             "profile_context": {
-                "type": "String",
+                "type": "string",
                 "description": "Context information about the profile."
             },
             "profile_context_facepile_users": {
-                "type": "Array",
+                "type": "array",
                 "description": "Users who are part of the profile context facepile."
             },
             "profile_context_links_with_user_ids": {
-                "type": "Array",
+                "type": "array",
                 "description": "Links with user IDs in the profile context."
             },
             "profile_pic_id": {
-                "type": "String",
+                "type": "string",
                 "description": "ID of the profile picture."
             },
             "profile_pic_url": {
-                "type": "String",
+                "type": "string",
                 "description": "URL of the profile picture."
             },
             "profile_pic_url_hd": {
-                "type": "String",
+                "type": "string",
                 "description": "HD URL of the profile picture."
             },
             "public_email": {
-                "type": "String",
+                "type": "string",
                 "description": "Public email associated with the account."
             },
             "public_phone_country_code": {
-                "type": "String",
+                "type": "string",
                 "description": "Country code of the public phone number."
             },
             "public_phone_number": {
-                "type": "String",
+                "type": "string",
                 "description": "Public phone number associated with the account."
             },
             "seller_shoppable_feed_type": {
-                "type": "String",
+                "type": "string",
                 "description": "Type of the shoppable feed."
             },
             "show_shoppable_feed": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "If the shoppable posts in the feed are show."
             },
             "third_party_downloads_enabled": {
-                "type": "Number",
+                "type": "number",
                 "description": "Boolean indicating if third-party downloads are enabled."
             },
             "total_igtv_videos": {
-                "type": "Number",
+                "type": "number",
                 "description": "Total number of IGTV videos posted by the account."
             },
             "upcoming_events": {
-                "type": "Array",
+                "type": "array",
                 "description": "List of upcoming events associated with the account."
             },
             "username": {
-                "type": "String",
+                "type": "string",
                 "description": "List of upcoming events associated with the account."
             }
         }
@@ -3369,16 +3389,18 @@
         "url": "https://rapidapi.com/social-api1-instagram/api/instagram-scraper-api2/playground/apiendpoint_4f4c3199-f234-4978-8d94-ae3ca22aa64e",
         "query_parameters": {
             "username_or_id_or_url": {
-                "type": "String",
+                "type": "string",
                 "description": "Insert a username (e.g. mrbeast), user id (e.g. 2278169415) or URL (e.g. instagram.com/mrbeast)."
             },
             "amount": {
-                "type": "Number",
+                "type": "number",
                 "description": "Minimum number of followers to retrieve. Maximum: 1000. Default: 50. Note: costs one extra request for every 50 users requested (e.g. amount=100 costs 2 requests).",
+                "default": 50,
+                "maximum": 1000,
                 "optional": true
             },
             "pagination_token": {
-                "type": "String",
+                "type": "string",
                 "description": "Use the value from the previous request to retrieve the continuation of the list. Leave empty in the first request. For more help, check our tutorials.",
                 "optional": true
             }
@@ -3386,27 +3408,27 @@
         "output_parser": "result.data.items[0].{param}",
         "output_parameters": {
             "full_name": {
-                "type": "String",
+                "type": "string",
                 "description": "Full name if the follower."
             },
             "id": {
-                "type": "String",
+                "type": "string",
                 "description": "ID of the follower."
             },
             "is_private": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Boolean indicating if the follower's account is private."
             },
             "is_verified": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Boolean indicating if the follower's account is verified."
             },
             "profile_pic_url": {
-                "type": "String",
+                "type": "string",
                 "description": "URL link to the profile picture of the follower."
             },
             "username": {
-                "type": "String",
+                "type": "string",
                 "description": "Username of the follower."
             }
         }
@@ -3420,16 +3442,18 @@
         "url": "https://rapidapi.com/social-api1-instagram/api/instagram-scraper-api2/playground/apiendpoint_8d0da7e2-4689-4cdb-8182-1bd4650849ad",
         "query_parameters": {
             "username_or_id_or_url": {
-                "type": "String",
+                "type": "string",
                 "description": "Insert a username (e.g. mrbeast), user id (e.g. 2278169415) or URL (e.g. instagram.com/mrbeast)."
             },
             "amount": {
-                "type": "Number",
+                "type": "number",
                 "description": "Minimum number of accounts to retrieve. Maximum: 1000. Default: 50. Note: costs one extra request for every 50 users requested (e.g. amount=100 costs 2 requests).",
+                "default": 50,
+                "maximum": 1000,
                 "optional": true
             },
             "pagination_token": {
-                "type": "String",
+                "type": "string",
                 "description": "Use the value from the previous request to retrieve the continuation of the list. Leave empty in the first request. For more help, check our tutorials.",
                 "optional": true
             }
@@ -3437,63 +3461,63 @@
         "output_parser": "result.data.items[0].{param}",
         "output_parameters": {
             "account_badges": {
-                "type": "Array",
+                "type": "array",
                 "description": "List of badges associated with the account."
             },
             "fbid_v2": {
-                "type": "String",
+                "type": "string",
                 "description": "Facebook ID of the followed account."
             },
             "full_name": {
-                "type": "String",
+                "type": "string",
                 "description": "Name of the followed account."
             },
             "has_anonymous_profile_picture": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Indicates if the followed account has anonymous profile picture."
             },
             "id": {
-                "type": "String",
+                "type": "string",
                 "description": "ID of the followed account."
             },
             "is_favorite": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Indicates if the followed account is favorite."
             },
             "is_possible_bad_actor": {
-                "type": "Object",
+                "type": "object",
                 "description": "If the followed account is a possible bad actor."
             },
             "is_possible_scammer": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Indicates if the followed account is a possible scammer."
             },
             "is_private": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Indicates if the followed account is private"
             },
             "is_verified": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Indicates if the followed account is verified"
             },
             "latest_reel_media": {
-                "type": "Number",
+                "type": "number",
                 "description": "Number of latest reel media."
             },
             "profile_pic_id": {
-                "type": "String",
+                "type": "string",
                 "description": "ID of the profile picture of the followed account."
             },
             "profile_pic_url": {
-                "type": "String",
+                "type": "string",
                 "description": "URL link to the profile picture of the followed account."
             },
             "third_party_downloads_enabled": {
-                "type": "Number",
+                "type": "number",
                 "description": "Number of third party downloads enabled."
             },
             "username": {
-                "type": "String",
+                "type": "string",
                 "description": "Username of the followed account."
             }
         }
@@ -3507,348 +3531,349 @@
         "url": "https://rapidapi.com/social-api1-instagram/api/instagram-scraper-api2/playground/apiendpoint_b1301387-dc09-4b1f-ba39-b7b51d186b40",
         "query_parameters": {
             "username_or_id_or_url": {
-                "type": "String",
+                "type": "string",
                 "description": "Insert a username (e.g. mrbeast), user id (e.g. 2278169415) or URL (e.g. instagram.com/mrbeast)."
             },
             "pagination_token": {
-                "type": "String",
+                "type": "string",
                 "description": "Use the value from the previous request to retrieve the continuation of the list. Leave empty in the first request. For more help, check our tutorials.",
                 "optional": true
             },
             "url_embed_safe": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "If you need to embed images/videos on your website, set to 'true' to evade CORS restrictions. URLs are valid from 6 to 24 hours. Default: false.",
+                "default": false,
                 "optional": true
             }
         },
         "output_parser": "result.data.items[0].{param}",
         "output_parameters": {
             "can_reshare": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Indicates if the post can be reshared."
             },
             "can_save": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Indicates if the post can be saved."
             },
             "caption": {
-                "type": "Object",
+                "type": "object",
                 "description": "Caption of the post."
             },
             "caption_is_edited": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Indicates if the caption has been edited."
             },
             "clips_metadata": {
-                "type": "Object",
+                "type": "object",
                 "description": "Metadata of the clips."
             },
             "clips_tab_pinned_user_ids": {
-                "type": "String",
+                "type": "string",
                 "description": "IDs of users pinned in the clips tab."
             },
             "code": {
-                "type": "String",
+                "type": "string",
                 "description": "Unique code for the post."
             },
             "comment_count": {
-                "type": "Number",
+                "type": "number",
                 "description": "Number of comments on the post."
             },
             "comment_inform_treatment": {
-                "type": "Object",
+                "type": "object",
                 "description": "If the comment can inform treatment."
             },
             "comment_likes_enabled": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Indicates if likes on the comments are enabled."
             },
             "comment_threading_enabled": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Indicates if comment threading is enabled."
             },
             "commerciality_status": {
-                "type": "String",
+                "type": "string",
                 "description": "Commercial status of the post."
             },
             "deleted_reason": {
-                "type": "Number",
+                "type": "number",
                 "description": "Reason for post deletion."
             },
             "device_timestamp": {
-                "type": "Number",
+                "type": "number",
                 "description": "Timestamp from the device when the post was created."
             },
             "fb_like_count": {
-                "type": "Number",
+                "type": "number",
                 "description": "Facebook likes count of the post."
             },
             "fb_play_count": {
-                "type": "Number",
+                "type": "number",
                 "description": "Facebook play count of the post."
             },
             "fb_user_tags": {
-                "type": "Object",
+                "type": "object",
                 "description": "User tags on Facebook associated with the post."
             },
             "featured_products": {
-                "type": "Array",
+                "type": "array",
                 "description": "List of featured products in the post."
             },
             "filter_type": {
-                "type": "Number",
+                "type": "number",
                 "description": "Type of filter applied to the post."
             },
             "fundraiser_tag": {
-                "type": "Object",
+                "type": "object",
                 "description": "Fundraiser tag associated with the post."
             },
             "has_audio": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Indicates if the user has liked the post."
             },
             "has_liked": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Indicates if the user has liked the post."
             },
             "has_more_comments": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Indicates if there are more comments to load."
             },
             "has_privately_liked": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Indicates if the post has been liked privately."
             },
             "has_shared_to_fb": {
-                "type": "Number",
+                "type": "number",
                 "description": "Indicates if the post has been shared to Facebook."
             },
             "id": {
-                "type": "String",
+                "type": "string",
                 "description": "ID of the post."
             },
             "ig_media_sharing_disabled": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Indicates if Instagram media sharing is disabled."
             },
             "image_versions": {
-                "type": "Object",
+                "type": "object",
                 "description": "Versions of the image."
             },
             "inline_composer_display_condition": {
-                "type": "String",
+                "type": "string",
                 "description": "Condition for displaying the inline composer."
             },
             "inline_composer_imp_trigger_time": {
-                "type": "Number",
+                "type": "number",
                 "description": "Trigger time for inline composer impression."
             },
             "integrity_review_decision": {
-                "type": "String",
+                "type": "string",
                 "description": "Decision from integrity review."
             },
             "invited_coauthor_producers": {
-                "type": "Array",
+                "type": "array",
                 "description": "List of invited coauthor producers."
             },
             "is_artist_pick": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Indicates if the artist is picked."
             },
             "is_auto_created": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Indicates if the post was autocreated."
             },
             "is_comments_gif_composer_enabled": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Indicates if GIF composer is enabled for comments."
             },
             "is_cutout_sticker_allowed": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Indicates if cutout stickers are allowed."
             },
             "is_dash_eligible": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Indicates if dash is enabled."
             },
             "is_in_profile_grid": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Indicates if the post is in the profile grid."
             },
             "is_open_to_public_submission": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Indicates if the post is open to public submission."
             },
             "is_organic_product_tagging_eligible": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Indicates eligibility for organic product tagging."
             },
             "is_paid_partnership": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Indicates if the post is a paid partnership."
             },
             "is_post_live_clips_media": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Indicates if the post is live clips media."
             },
             "is_quiet_post": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Indicates if the post is a quiet post."
             },
             "is_reshare_of_text_post_app_media_in_ig": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Indicates if the post is a reshare of text post app media."
             },
             "is_third_party_downloads_eligible": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Indicates if third party downloads are eligible."
             },
             "is_unified_video": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Indicates if the post is a unified video."
             },
             "is_video": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Indicates if the post is a video."
             },
             "lat": {
-                "type": "Number",
+                "type": "number",
                 "description": "Latitude coordinates of the location."
             },
             "like_and_view_counts_disabled": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Indicates if like and view counts are disabled."
             },
             "like_count": {
-                "type": "Number",
+                "type": "number",
                 "description": "Number of likes on the post."
             },
             "lng": {
-                "type": "Number",
+                "type": "number",
                 "description": "Longitude coordinates of the location."
             },
             "location": {
-                "type": "Object",
+                "type": "object",
                 "description": "Location information of the post."
             },
             "max_num_visible_preview_comments": {
-                "type": "Number",
+                "type": "number",
                 "description": "Maximum number of visible preview comments."
             },
             "media_appreciation_settings": {
-                "type": "Object",
+                "type": "object",
                 "description": "Appreciation settings of the media item."
             },
             "media_cropping_info": {
-                "type": "Object",
+                "type": "object",
                 "description": "Cropping information of the media item."
             },
             "media_name": {
-                "type": "String",
+                "type": "string",
                 "description": "Name of the media item."
             },
             "media_type": {
-                "type": "Number",
+                "type": "number",
                 "description": "Type of media item."
             },
             "mezql_token": {
-                "type": "String",
+                "type": "string",
                 "description": "MEZQL token associated with the post."
             },
             "music_metadata": {
-                "type": "String",
+                "type": "string",
                 "description": "Metadata of the music."
             },
             "number_of_qualities": {
-                "type": "Number",
+                "type": "number",
                 "description": "Number of qualities."
             },
             "open_carousel_submission_state": {
-                "type": "String",
+                "type": "string",
                 "description": "Submission state of the open carousel."
             },
             "original_height": {
-                "type": "Number",
+                "type": "number",
                 "description": "Original height of the media item."
             },
             "original_width": {
-                "type": "Number",
+                "type": "number",
                 "description": "Original width of the media item."
             },
             "owner": {
-                "type": "Object",
+                "type": "object",
                 "description": "Owner of the media item."
             },
             "play_count": {
-                "type": "Number",
+                "type": "number",
                 "description": "Number of plays of the item."
             },
             "preview_comments": {
-                "type": "Array",
+                "type": "array",
                 "description": "List of preview comments."
             },
             "product_suggestions": {
-                "type": "Array",
+                "type": "array",
                 "description": "List of product suggestions."
             },
             "product_type": {
-                "type": "String",
+                "type": "string",
                 "description": "Type of product in the post."
             },
             "share_count": {
-                "type": "Number",
+                "type": "number",
                 "description": "Number of shares of the item."
             },
             "sharing_friction_info": {
-                "type": "Object",
+                "type": "object",
                 "description": "SHaring of friction info."
             },
             "shop_routing_user_id": {
-                "type": "String",
+                "type": "string",
                 "description": "User ID for shop routing."
             },
             "sponsor_tags": {
-                "type": "Array",
+                "type": "array",
                 "description": "List of sponsor tags."
             },
             "tagged_users": {
-                "type": "Array",
+                "type": "array",
                 "description": "List of tagged users."
             },
             "taken_at": {
-                "type": "Number",
+                "type": "number",
                 "description": "Timestamp when the post was taken."
             },
             "taken_at_ts": {
-                "type": "Number",
+                "type": "number",
                 "description": "Timestamp when the post was taken in Unix format."
             },
             "thumbnail_url": {
-                "type": "String",
+                "type": "string",
                 "description": "URL of the thumbnail image."
             },
             "top_likers": {
-                "type": "Array",
+                "type": "array",
                 "description": "List of top likers."
             },
             "user": {
-                "type": "Object",
+                "type": "object",
                 "description": "Username of item."
             },
             "video_codec": {
-                "type": "String",
+                "type": "string",
                 "description": "Video codec of video."
             },
             "video_duration": {
-                "type": "Number",
+                "type": "number",
                 "description": "Duration of the video."
             },
             "video_url": {
-                "type": "String",
+                "type": "string",
                 "description": "URL link to the video."
             },
             "video_versions": {
-                "type": "Array",
+                "type": "array",
                 "description": "Versions of the video."
             }
         }
@@ -3862,11 +3887,11 @@
         "url": "https://rapidapi.com/social-api1-instagram/api/instagram-scraper-api2/playground/apiendpoint_dcdb7a36-a7ed-4501-a65b-3200093e1135",
         "query_parameters": {
             "search_query": {
-                "type": "String",
+                "type": "string",
                 "description": "Insert the name of an Instagram user."
             },
             "url_embed_safe": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "If you need to embed images/videos on your website, set to 'true' to evade CORS restrictions.",
                 "optional": true
             }
@@ -3874,31 +3899,31 @@
         "output_parser": "result.data.items[0].{param}",
         "output_parameters": {
             "full_name": {
-                "type": "String",
+                "type": "string",
                 "description": "Full name of the user."
             },
             "id": {
-                "type": "String",
+                "type": "string",
                 "description": "ID of the user."
             },
             "is_private": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Indicates if the user is private."
             },
             "is_verified": {
-                "type": "Boolean",
+                "type": "boolean",
                 "description": "Indicates if the user is verified."
             },
             "profile_pic_url": {
-                "type": "String",
+                "type": "string",
                 "description": "URL link to the profile picture."
             },
             "profile_pic_url_hd": {
-                "type": "String",
+                "type": "string",
                 "description": "URL link to the profile picture in high definition."
             },
             "username": {
-                "type": "String",
+                "type": "string",
                 "description": "Username of the user."
             }
         }
@@ -3912,202 +3937,204 @@
         "url": "https://rapidapi.com/last10k/api/sec-filings/playground/5920a047e4b00fa921e13cec",
         "query_parameters": {
             "ticker": {
-                "type": "String",
+                "type": "string",
                 "description": "Publicly traded company's stock symbol",
                 "required": true
             },
             "formtype": {
-                "type": "String",
+                "type": "string",
                 "description": "10-K = Annual Report (default) | 10-Q = Quarterly Report",
+                "default": "10-K",
                 "required": false
             },
             "filingorder": {
-                "type": "Number",
+                "type": "number",
                 "description": "Retrieve an older financial statement by specifying number of filings to go back. By default, the most recent filing is returned (filingOrder = 0).",
+                "default": 0,
                 "required": false
             }
         },
         "output_parser": "result.data.attributes.{param}",
         "output_parameters": {
             "company": {
-                "type": "Object",
+                "type": "object",
                 "properties": {
                     "name": {
-                        "type": "String",
+                        "type": "string",
                         "description": "Name of the company"
                     },
                     "cik": {
-                        "type": "String",
+                        "type": "string",
                         "description": "Central Index Key (CIK)"
                     },
                     "ticker": {
-                        "type": "String",
+                        "type": "string",
                         "description": "Stock ticker symbol"
                     }
                 }
             },
             "filing": {
-                "type": "Object",
+                "type": "object",
                 "properties": {
                     "name": {
-                        "type": "String",
+                        "type": "string",
                         "description": "Name of the filing"
                     },
                     "accessionNumber": {
-                        "type": "String",
+                        "type": "string",
                         "description": "Accession number of the filing"
                     },
                     "filingDate": {
-                        "type": "String",
+                        "type": "string",
                         "description": "Date of the filing"
                     },
                     "period": {
-                        "type": "String",
+                        "type": "string",
                         "description": "Reporting period"
                     },
                     "formType": {
-                        "type": "String",
+                        "type": "string",
                         "description": "Type of form (10-K or 10-Q)"
                     },
                     "filingCount": {
-                        "type": "Number",
+                        "type": "number",
                         "description": "Number of filings"
                     }
                 }
             },
             "result": {
-                "type": "Object",
+                "type": "object",
                 "properties": {
                     "CashAndCashEquivalentsAtCarryingValue": {
-                        "type": "Number",
+                        "type": "number",
                         "description": "Value of cash and cash equivalents"
                     },
                     "ShortTermInvestments": {
-                        "type": "Number",
+                        "type": "number",
                         "description": "Value of short-term investments"
                     },
                     "CashCashEquivalentsAndShortTermInvestments": {
-                        "type": "Number",
+                        "type": "number",
                         "description": "Total value of cash, cash equivalents, and short-term investments"
                     },
                     "AccountsReceivableNetCurrent": {
-                        "type": "Number",
+                        "type": "number",
                         "description": "Net value of current accounts receivable"
                     },
                     "InventoryNet": {
-                        "type": "Number",
+                        "type": "number",
                         "description": "Net value of inventory"
                     },
                     "OtherAssetsCurrent": {
-                        "type": "Number",
+                        "type": "number",
                         "description": "Value of other current assets"
                     },
                     "AssetsCurrent": {
-                        "type": "Number",
+                        "type": "number",
                         "description": "Total value of current assets"
                     },
                     "PropertyPlantAndEquipmentNet": {
-                        "type": "Number",
+                        "type": "number",
                         "description": "Net value of property, plant, and equipment"
                     },
                     "OperatingLeaseRightOfUseAsset": {
-                        "type": "Number",
+                        "type": "number",
                         "description": "Value of operating lease right-of-use asset"
                     },
                     "LongTermInvestments": {
-                        "type": "Number",
+                        "type": "number",
                         "description": "Value of long-term investments"
                     },
                     "Goodwill": {
-                        "type": "Number",
+                        "type": "number",
                         "description": "Value of goodwill"
                     },
                     "FiniteLivedIntangibleAssetsNet": {
-                        "type": "Number",
+                        "type": "number",
                         "description": "Net value of finite-lived intangible assets"
                     },
                     "OtherAssetsNoncurrent": {
-                        "type": "Number",
+                        "type": "number",
                         "description": "Value of other non-current assets"
                     },
                     "Assets": {
-                        "type": "Number",
+                        "type": "number",
                         "description": "Total value of assets"
                     },
                     "AccountsPayableCurrent": {
-                        "type": "Number",
+                        "type": "number",
                         "description": "Value of current accounts payable"
                     },
                     "LongTermDebtCurrent": {
-                        "type": "Number",
+                        "type": "number",
                         "description": "Value of current long-term debt"
                     },
                     "EmployeeRelatedLiabilitiesCurrent": {
-                        "type": "Number",
+                        "type": "number",
                         "description": "Value of current employee-related liabilities"
                     },
                     "AccruedIncomeTaxesCurrent": {
-                        "type": "Number",
+                        "type": "number",
                         "description": "Value of current accrued income taxes"
                     },
                     "ContractWithCustomerLiabilityCurrent": {
-                        "type": "Number",
+                        "type": "number",
                         "description": "Value of current contract with customer liability"
                     },
                     "OtherLiabilitiesCurrent": {
-                        "type": "Number",
+                        "type": "number",
                         "description": "Value of other current liabilities"
                     },
                     "LiabilitiesCurrent": {
-                        "type": "Number",
+                        "type": "number",
                         "description": "Total value of current liabilities"
                     },
                     "LongTermDebtNoncurrent": {
-                        "type": "Number",
+                        "type": "number",
                         "description": "Value of non-current long-term debt"
                     },
                     "AccruedIncomeTaxesNoncurrent": {
-                        "type": "Number",
+                        "type": "number",
                         "description": "Value of non-current accrued income taxes"
                     },
                     "ContractWithCustomerLiabilityNoncurrent": {
-                        "type": "Number",
+                        "type": "number",
                         "description": "Value of non-current contract with customer liability"
                     },
                     "DeferredIncomeTaxLiabilitiesNet": {
-                        "type": "Number",
+                        "type": "number",
                         "description": "Net value of deferred income tax liabilities"
                     },
                     "OperatingLeaseLiabilityNoncurrent": {
-                        "type": "Number",
+                        "type": "number",
                         "description": "Value of non-current operating lease liability"
                     },
                     "OtherLiabilitiesNoncurrent": {
-                        "type": "Number",
+                        "type": "number",
                         "description": "Value of other non-current liabilities"
                     },
                     "Liabilities": {
-                        "type": "Number",
+                        "type": "number",
                         "description": "Total value of liabilities"
                     },
                     "CommonStocksIncludingAdditionalPaidInCapital": {
-                        "type": "Number",
+                        "type": "number",
                         "description": "Value of common stocks including additional paid-in capital"
                     },
                     "RetainedEarningsAccumulatedDeficit": {
-                        "type": "Number",
+                        "type": "number",
                         "description": "Value of retained earnings or accumulated deficit"
                     },
                     "AccumulatedOtherComprehensiveIncomeLossNetOfTax": {
-                        "type": "Number",
+                        "type": "number",
                         "description": "Net value of accumulated other comprehensive income or loss, net of tax"
                     },
                     "StockholdersEquity": {
-                        "type": "Number",
+                        "type": "number",
                         "description": "Total value of stockholders' equity"
                     },
                     "LiabilitiesAndStockholdersEquity": {
-                        "type": "Number",
+                        "type": "number",
                         "description": "Total value of liabilities and stockholders' equity"
                     }
                 }
@@ -4123,12 +4150,12 @@
         "url": "https://rapidapi.com/last10k/api/sec-filings/playground/apiendpoint_b2c2c761-dbec-43d4-8d70-6e7fa3228688",
         "query_parameters": {
             "cik": {
-                "type": "String",
+                "type": "string",
                 "description": "Central Index Key (CIK)",
                 "required": true
             },
             "accessionNumber": {
-                "type": "String",
+                "type": "string",
                 "description": "SEC Filing Identifier",
                 "required": true
             }
@@ -4136,66 +4163,66 @@
         "output_parser": "result.data.attributes.{param}",
         "output_parameters": {
             "company": {
-                "type": "Object",
+                "type": "object",
                 "properties": {
                     "name": {
-                        "type": "String",
+                        "type": "string",
                         "description": "Name of the company"
                     },
                     "cik": {
-                        "type": "String",
+                        "type": "string",
                         "description": "Central Index Key (CIK)"
                     },
                     "ticker": {
-                        "type": "String",
+                        "type": "string",
                         "description": "Stock ticker symbol"
                     }
                 }
             },
             "filing": {
-                "type": "Object",
+                "type": "object",
                 "properties": {
                     "accessionNumber": {
-                        "type": "String",
+                        "type": "string",
                         "description": "Accession number of the filing"
                     },
                     "filingDate": {
-                        "type": "String",
+                        "type": "string",
                         "description": "Date of the filing"
                     },
                     "formType": {
-                        "type": "String",
+                        "type": "string",
                         "description": "Type of form (e.g., 10-K, 10-Q)"
                     },
                     "count": {
-                        "type": "Number",
+                        "type": "number",
                         "description": "Number of sections in the filing"
                     }
                 }
             },
             "result": {
-                "type": "Array",
+                "type": "array",
                 "items": {
-                    "type": "Object",
+                    "type": "object",
                     "properties": {
                         "Id": {
-                            "type": "String",
+                            "type": "string",
                             "description": "Unique identifier for the section"
                         },
                         "HtmlFileName": {
-                            "type": "String",
+                            "type": "string",
                             "description": "HTML file name of the section"
                         },
                         "Url": {
-                            "type": "String",
+                            "type": "string",
                             "description": "URL to the section"
                         },
                         "Section": {
-                            "type": "String",
+                            "type": "string",
                             "description": "Type of section (e.g., Statement, Note)"
                         },
                         "Name": {
-                            "type": "String",
+                            "type": "string",
                             "description": "Name of the section (e.g., Consolidated Balance Sheets)"
                         }
                     }
@@ -4212,7 +4239,7 @@
         "url": "https://rapidapi.com/last10k/api/sec-filings/playground/apiendpoint_0b003612-5870-411e-a8a0-4086c6a8859d",
         "query_parameters": {
             "identifier": {
-                "type": "String",
+                "type": "string",
                 "description": "Publicly traded company's stock symbol or Central Index Key (CIK)",
                 "required": true
             }
@@ -4220,49 +4247,49 @@
         "output_parser": "result.data.attributes.{param}",
         "output_parameters": {
             "company": {
-                "type": "Object",
+                "type": "object",
                 "properties": {
                     "status": {
-                        "type": "Number",
+                        "type": "number",
                         "description": "Response status"
                     },
                     "count": {
-                        "type": "Number",
+                        "type": "number",
                         "description": "Number of filings returned"
                     }
                 }
             },
             "filings": {
-                "type": "Array",
+                "type": "array",
                 "items": {
-                    "type": "Object",
+                    "type": "object",
                     "properties": {
                         "name": {
-                            "type": "String",
+                            "type": "string",
                             "description": "Name of the report"
                         },
                         "accessionNumber": {
-                            "type": "String",
+                            "type": "string",
                             "description": "Accession number of the filing"
                         },
                         "filingDate": {
-                            "type": "String",
+                            "type": "string",
                             "description": "Date of the filing"
                         },
                         "formType": {
-                            "type": "String",
+                            "type": "string",
                             "description": "Type of form (e.g., 10-K, 10-Q, 144)"
                         },
                         "url": {
-                            "type": "String",
+                            "type": "string",
                             "description": "URL to the filing"
                         },
                         "type": {
-                            "type": "String",
+                            "type": "string",
                             "description": "Type of data (e.g., filings)"
                         },
                         "id": {
-                            "type": "String",
+                            "type": "string",
                             "description": "Unique identifier for the filing"
                         }
                     }

@@ -5,12 +5,13 @@ from typing import List, Dict, Optional, Union
 
 
 class QueryParameter(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+
     type: Optional[str] = None
     description: Optional[str] = None
     required: bool = False
     enum: List[str] = []
-    allowed_values: Union[str, List[str]] = []
-    default_value: Optional[str] = None
+    default: Optional[str | int | float] = None
 
 
 class MinifiedAPI(BaseModel):
