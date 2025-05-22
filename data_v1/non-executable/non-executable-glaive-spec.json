@@ -222,7 +222,7 @@
             "diet": {
                 "type": "string",
                 "required": false,
-                "enum": [
+                "allowed_values": [
                     "vegetarian",
                     "vegan",
                     "gluten-free",
@@ -1147,7 +1147,7 @@
     {
         "name": "generate_barcode",
         "description": "Generate a barcode for a given data",
-        "parameters": {
+        "query_parameters": {
             "data": {
                 "type": "string",
                 "required": true,
@@ -1169,7 +1169,7 @@
     {
         "name": "search_song",
         "description": "Search for a song by title or artist",
-        "parameters": {
+        "query_parameters": {
             "query": {
                 "type": "string",
                 "required": true,
@@ -1190,7 +1190,7 @@
     {
         "name": "get_song_lyrics",
         "description": "Get the lyrics of a song",
-        "parameters": {
+        "query_parameters": {
             "artist": {
                 "type": "string",
                 "required": true,
@@ -1212,7 +1212,7 @@
     {
         "name": "calculate_discount",
         "description": "Calculate the discount amount based on original price and discount percentage",
-        "parameters": {
+        "query_parameters": {
             "original_price": {
                 "type": "number",
                 "required": true,
@@ -1234,7 +1234,7 @@
     {
         "name": "calculate_BMI",
         "description": "Calculate the Body Mass Index (BMI) based on weight and height",
-        "parameters": {
+        "query_parameters": {
             "weight": {
                 "type": "number",
                 "required": true,
@@ -1256,7 +1256,7 @@
     {
         "name": "generate_qr_code",
         "description": "Generate a QR code for a URL",
-        "parameters": {
+        "query_parameters": {
             "url": {
                 "type": "string",
                 "required": true,
@@ -1278,7 +1278,7 @@
     {
         "name": "translate_text",
         "description": "Translate a text from one language to another",
-        "parameters": {
+        "query_parameters": {
             "text": {
                 "type": "string",
                 "required": true,
@@ -1305,7 +1305,7 @@
     {
         "name": "search_music",
         "description": "Search for music tracks or albums by artist or genre",
-        "parameters": {
+        "query_parameters": {
             "artist": {
                 "type": "string",
                 "required": true,
@@ -1327,7 +1327,7 @@
     {
         "name": "generate_invoice",
         "description": "Generate an invoice",
-        "parameters": {
+        "query_parameters": {
             "customer_name": {
                 "type": "string",
                 "required": true,
@@ -1356,7 +1356,7 @@
     {
         "name": "create_calendar_event",
         "description": "Create a new event in the calendar",
-        "parameters": {
+        "query_parameters": {
             "title": {
                 "type": "string",
                 "required": true,
@@ -1388,7 +1388,7 @@
     {
         "name": "schedule_meeting",
         "description": "Schedule a meeting with participants",
-        "parameters": {
+        "query_parameters": {
             "title": {
                 "type": "string",
                 "required": true,
@@ -1419,7 +1419,7 @@
     {
         "name": "calculate_loan_emi",
         "description": "Calculate the Equated Monthly Installment (EMI) for a loan",
-        "parameters": {
+        "query_parameters": {
             "loan_amount": {
                 "type": "number",
                 "required": true,
@@ -1446,7 +1446,7 @@
     {
         "name": "search_product",
         "description": "Search for a product on an e-commerce website",
-        "parameters": {
+        "query_parameters": {
             "query": {
                 "type": "string",
                 "required": true,
@@ -1499,7 +1499,7 @@
     {
         "name": "search_movie_reviews",
         "description": "Search for movie reviews based on keywords",
-        "parameters": {
+        "query_parameters": {
             "keywords": {
                 "type": "array",
                 "required": true,
@@ -1535,7 +1535,7 @@
     {
         "name": "calculate_route",
         "description": "Calculate the best route between multiple locations",
-        "parameters": {
+        "query_parameters": {
             "locations": {
                 "type": "array",
                 "required": true,
@@ -1576,7 +1576,7 @@
     {
         "name": "calculate_mortgage_payment",
         "description": "Calculate the monthly mortgage payment amount based on the loan amount, interest rate, and loan term",
-        "parameters": {
+        "query_parameters": {
             "loan_amount": {
                 "type": "number",
                 "required": true,
@@ -1603,7 +1603,7 @@
     {
         "name": "generate_password",
         "description": "Generate a random password",
-        "parameters": {
+        "query_parameters": {
             "length": {
                 "type": "integer",
                 "required": true,
@@ -1630,7 +1630,7 @@
     {
         "name": "analyze_website",
         "description": "Analyze the content and structure of a website",
-        "parameters": {
+        "query_parameters": {
             "url": {
                 "type": "string",
                 "required": true,
@@ -1651,7 +1651,7 @@
     {
         "name": "search_restaurants",
         "description": "Search for restaurants based on a location",
-        "parameters": {
+        "query_parameters": {
             "location": {
                 "type": "string",
                 "required": true,
@@ -1673,7 +1673,7 @@
     {
         "name": "validate_email",
         "description": "Validate an email address",
-        "parameters": {
+        "query_parameters": {
             "email": {
                 "type": "string",
                 "required": true,

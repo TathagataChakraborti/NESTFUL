@@ -1,19 +1,16 @@
 from __future__ import annotations
 from nestful.schemas.openapi import Component
-from pydantic import BaseModel, ConfigDict, model_validator
 from typing import List, Dict, Optional, Union, Any
 
 
 class QueryParameter(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+
     type: Optional[str] = None
     description: Optional[str] = None
     required: bool = False
     enum: List[str] = []
-    # TODO: https://github.com/TathagataChakraborti/NESTFUL/issues/2
-    allowed_values: Union[str, List[str]] = []
-    possible_values: Union[str, List[str]] = []
-    default_value: Optional[str] = None
-    ################################################################
+    default: Optional[str | int | float] = None
 
 
 class MinifiedAPI(BaseModel):
@@ -28,39 +25,30 @@ class API(BaseModel):
     name: str
     description: str
     endpoint: Optional[str] = None
-    # TODO: https://github.com/TathagataChakraborti/NESTFUL/issues/2
-    parameters: Dict[str, QueryParameter] = dict()
     query_parameters: Dict[str, QueryParameter] = dict()
-    path_parameters: Dict[str, QueryParameter] = dict()
-    arguments: Dict[str, QueryParameter] = dict()
-    ################################################################
     output_parameters: Dict[str, Component] = dict()
     sample_responses: List[Dict[str, Any] | List[Dict[str, Any]]] = []
 
-    @model_validator(mode="after")
-    def temporary_field_jarl(self) -> API:
-        if self.path_parameters:
-            self.query_parameters = self.path_parameters
-
-        if self.parameters:
-            self.query_parameters = self.parameters
-
-        if self.arguments:
-            self.query_parameters = self.arguments
-
-        return self
-
     def __str__(self) -> str:
-        return str(
-            self.dict(
-                include={
-                    "name",
-                    "description",
-                    "query_parameters",
-                    "output_parameters",
-                }
-            )
+        self_dict = self.dict(
+            include={
+                "name",
+                "description",
+                "query_parameters",
+                "output_parameters",
+            }
         )
+
+        name_transform = {
+            "query_parameters": "parameters",
+            "output_parameters": "output_schema",
+        }
+
+        for item, transform in name_transform.items():
+            self_dict[transform] = self_dict[item]
+            del self_dict[item]
+
+        return str(self_dict)
 
     def get_arguments(self, required: Optional[bool] = True) -> List[str]:
         if required is None:

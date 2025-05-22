@@ -27,13 +27,6 @@ class Component(BaseModel):
     properties: Dict[str, Union[ResponseSelection, Component, Any]] = {}
     items: Optional[Component] = None
 
-    @model_validator(mode="after")
-    def lowercase_type(self) -> Component:
-        if self.type is not None and not isinstance(self.type, List):
-            self.type = self.type.lower()
-
-        return self
-
     def transform_properties_to_parameter(
         self, is_required: Optional[bool] = None
     ) -> List[Parameter]:
