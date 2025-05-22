@@ -92,8 +92,8 @@ def tag_sequence(
         )
 
         if gt_step is not None:
-            tmp_memory = sequence.generate_dummy_output(
-                catalog=catalog, index=index
+            tmp_memory = sequence.get_memory(
+                catalog=catalog, index=index, fill_in_memory=fill_in_memory
             )
 
             tmp_memory = {**memory, **tmp_memory}

@@ -3,6 +3,14 @@ from nestful import API
 from sentence_transformers import SentenceTransformer, util
 
 import string
+import ssl
+
+try:
+    _create_unverified_https_context = ssl._create_unverified_context
+except AttributeError:
+    pass
+else:
+    ssl._create_default_https_context = _create_unverified_https_context
 
 
 def split_camel_case(text: str) -> List[str]:

@@ -83,24 +83,22 @@ class SequenceStep(BaseModel):
 
         else:
             if self.response:
-                if self.response:
-                    if isinstance(self.response, str):
-                        try:
-                            new_memory = json_loads(self.response)
-                        except JSONDecodeError as e:
-                            print(f"{e}, tried to read {self.response}")
+                if isinstance(self.response, str):
+                    try:
+                        new_memory = json_loads(self.response)
+                    except JSONDecodeError as e:
+                        print(f"{e}, tried to read {self.response}")
 
-                    elif isinstance(self.response, List):
-                        new_memory = self.response[0] if self.response else {}
-                    else:
-                        new_memory = self.response.get("data", self.response)
+                elif isinstance(self.response, List):
+                    new_memory = self.response[0] if self.response else {}
+                else:
+                    new_memory = self.response.get("data", self.response)
 
-                        new_memory = (
-                            new_memory[0]  # type: ignore
-                            if isinstance(new_memory, List)
-                            and len(new_memory) > 0
-                            else new_memory
-                        )
+                    new_memory = (
+                        new_memory[0]  # type: ignore
+                        if isinstance(new_memory, List) and len(new_memory) > 0
+                        else new_memory
+                    )
 
             memory = {self.label: new_memory}
             return memory
