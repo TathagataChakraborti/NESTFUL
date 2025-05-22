@@ -1,5 +1,6 @@
 from __future__ import annotations
 from nestful.schemas.openapi import Component
+from pydantic import BaseModel
 from typing import List, Dict, Optional, Union, Any
 
 
