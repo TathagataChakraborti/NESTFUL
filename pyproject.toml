@@ -1,6 +1,6 @@
 [project]
 name = "nestful-wrapper"
-version = "0.0.7"
+version = "0.0.8"
 license = {file = "LICENSE"}
 authors = [
     { name = "Tathagata Chakraborti", email = "tchakra2@ibm.com" },
@@ -38,6 +38,12 @@ dependencies = [
     "pydantic",
     "jsonref",
     "hypothesis-jsonschema",
+    "Faker",
+    "genson",
+    "sentence-transformers",
+    "nltk",
+    "scipy",
+    "jsonschema",
 ]
 
 [project.optional-dependencies]
