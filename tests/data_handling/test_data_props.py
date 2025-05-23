@@ -1,4 +1,4 @@
-from nestful.data_handlers import get_nestful_catalog, get_nestful_data
+from nestful.data_handlers import get_nestful_catalog, get_nestful_data, DataID
 from nestful import API, MinifiedAPI
 
 
@@ -29,20 +29,20 @@ class TestAPISchema:
 
     def test_parse_api_data_glaive(self) -> None:
         catalog = get_nestful_catalog(
-            version="v1", executable=False, name="glaive"
+            version="v1", executable=False, name=DataID.GLAIVE
         )
 
         assert len(catalog.apis) == 64
 
     def test_parse_api_data_sgd(self) -> None:
         catalog = get_nestful_catalog(
-            version="v1", executable=False, name="sgd"
+            version="v1", executable=False, name=DataID.SGD
         )
 
         assert len(catalog.apis) == 30
 
     def test_parse_api_data_complexfuncbench(self) -> None:
-        sequence_data, catalog = get_nestful_data(name="complexfuncbench")
+        sequence_data, catalog = get_nestful_data(name=DataID.COMPLEXFUNCBENCH)
 
         assert len(catalog.apis) == 40
         assert len(sequence_data.data) == 1000

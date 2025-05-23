@@ -17,10 +17,17 @@ class DataType(StrEnum):
     SPEC = auto()
 
 
+class DataID(StrEnum):
+    EXE = ""
+    GLAIVE = auto()
+    SGD = auto()
+    COMPLEXFUNCBENCH = auto()
+
+
 def data_path_constructor(
     data_type: DataType = DataType.DATA,
     executable: bool = True,
-    name: Optional[str] = None,
+    name: Optional[DataID | str] = None,
     version: Optional[str] = "v1",
 ) -> Path:
     assert (
@@ -29,7 +36,10 @@ def data_path_constructor(
 
     path_to_file = Path(__file__).parent.resolve()
 
-    if name == "complexfuncbench":
+    if name is not None:
+        name = name.value if isinstance(name, DataID) else DataID(name).value
+
+    if name == DataID.COMPLEXFUNCBENCH:
         relative_path_to_data = (
             f"../data_{version}/{name}/{name}-{data_type}.json"
         )
@@ -46,7 +56,7 @@ def data_path_constructor(
 def read_raw_data(
     data_type: DataType = DataType.DATA,
     executable: bool = True,
-    name: Optional[str] = None,
+    name: Optional[DataID | str] = None,
     version: Optional[str] = "v1",
 ) -> Any:
     path_to_data = data_path_constructor(data_type, executable, name, version)
@@ -59,7 +69,7 @@ def read_raw_data(
 
 def get_nestful_catalog(
     executable: bool = True,
-    name: Optional[str] = None,
+    name: Optional[DataID | str] = None,
     version: Optional[str] = "v1",
 ) -> Catalog:
     data = read_raw_data(DataType.SPEC, executable, name, version)
@@ -68,7 +78,7 @@ def get_nestful_catalog(
 
 def get_nestful_data(
     executable: bool = True,
-    name: Optional[str] = None,
+    name: Optional[DataID | str] = None,
     version: Optional[str] = "v1",
 ) -> Tuple[SequencingDataset, Catalog]:
     catalog = get_nestful_catalog(executable, name, version)
@@ -85,7 +95,7 @@ def get_nestful_data(
 def get_nestful_data_instance(
     index: int,
     executable: bool = True,
-    name: Optional[str] = None,
+    name: Optional[DataID | str] = None,
     version: Optional[str] = "v1",
 ) -> Tuple[SequencingData, Catalog]:
     sequence_data, catalog = get_nestful_data(executable, name, version)
