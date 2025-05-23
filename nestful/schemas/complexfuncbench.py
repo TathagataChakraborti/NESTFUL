@@ -53,7 +53,7 @@ class Function(BaseModel):
             if isinstance(value, Component):
                 parameters[item] = QueryParameter(
                     description=value.description,
-                    allowed_values=value.enum,
+                    enum=value.enum,
                     required=item in self.parameters.required,
                 )
 
@@ -97,7 +97,7 @@ class Function(BaseModel):
             name=self.name,
             description=description,
             endpoint=endpoint,
-            parameters=parameters,
+            query_parameters=parameters,
             output_parameters=output_parameters,
             sample_responses=cached_responses,
         )
@@ -160,6 +160,7 @@ class ComplexFuncBench(BaseModel):
             new_sequence.add_references()
             sequences.append(new_sequence)
 
+        for _, sample in enumerate(self.data):
             for func in sample.functions:
                 existing_api = new_catalog.get_api(name=func.name or "")
 

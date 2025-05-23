@@ -46,3 +46,17 @@ class TestAPISchema:
 
         assert len(catalog.apis) == 40
         assert len(sequence_data.data) == 1000
+
+        search_car_rentals = catalog.get_api(name="Search_Car_Rentals")
+
+        assert isinstance(search_car_rentals, API)
+        assert set(search_car_rentals.get_arguments(required=True)) == {
+            "drop_off_date",
+            "drop_off_latitude",
+            "drop_off_longitude",
+            "drop_off_time",
+            "pick_up_date",
+            "pick_up_latitude",
+            "pick_up_longitude",
+            "pick_up_time",
+        }
