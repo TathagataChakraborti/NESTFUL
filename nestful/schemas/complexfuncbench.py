@@ -45,7 +45,9 @@ class Function(BaseModel):
     parameters: Component
 
     def convert_to_nestful_api(
-        self, cached_responses: List[Dict[str, Any] | List[Dict[str, Any]]]
+        self,
+        cached_responses: List[Dict[str, Any] | List[Dict[str, Any]]],
+        store_responses: bool = True,
     ) -> API:
         parameters: Dict[str, QueryParameter] = {}
 
@@ -53,7 +55,7 @@ class Function(BaseModel):
             if isinstance(value, Component):
                 parameters[item] = QueryParameter(
                     description=value.description,
-                    allowed_values=value.enum,
+                    enum=value.enum,
                     required=item in self.parameters.required,
                 )
 
@@ -97,9 +99,9 @@ class Function(BaseModel):
             name=self.name,
             description=description,
             endpoint=endpoint,
-            parameters=parameters,
+            query_parameters=parameters,
             output_parameters=output_parameters,
-            sample_responses=cached_responses,
+            sample_responses=cached_responses if store_responses else [],
         )
 
 
@@ -112,14 +114,16 @@ class Conversation(BaseModel):
 class ComplexFuncBench(BaseModel):
     data: List[Conversation]
 
-    def convert_to_nestful(self) -> Tuple[SequencingDataset, Catalog]:
+    def convert_to_nestful(
+        self, store_responses: bool = True
+    ) -> Tuple[SequencingDataset, Catalog]:
         new_catalog = Catalog()
         sequences: List[SequencingData] = []
         response_map: Dict[str, List[Dict[str, Any] | List[Dict[str, Any]]]] = (
             dict()
         )
 
-        for _, sample in enumerate(self.data):
+        for sample in self.data:
             new_sequence = SequencingData()
 
             for index, step in enumerate(sample.conversations):
@@ -160,6 +164,7 @@ class ComplexFuncBench(BaseModel):
             new_sequence.add_references()
             sequences.append(new_sequence)
 
+        for sample in self.data:
             for func in sample.functions:
                 existing_api = new_catalog.get_api(name=func.name or "")
 
@@ -167,7 +172,8 @@ class ComplexFuncBench(BaseModel):
                     cached_responses = response_map.get(func.name, [])
 
                     api = func.convert_to_nestful_api(
-                        cached_responses=cached_responses
+                        cached_responses=cached_responses,
+                        store_responses=store_responses,
                     )
 
                     new_catalog.apis.append(api)
