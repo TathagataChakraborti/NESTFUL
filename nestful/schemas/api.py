@@ -1,7 +1,7 @@
 from __future__ import annotations
 from nestful.schemas.openapi import Component
 from pydantic import BaseModel, ConfigDict
-from typing import List, Dict, Optional, Union, Any
+from typing import List, Dict, Optional, Union, Any, Mapping
 
 
 class QueryParameter(BaseModel):
@@ -27,7 +27,7 @@ class API(BaseModel):
     description: str
     endpoint: Optional[str] = None
     query_parameters: Dict[str, QueryParameter] = dict()
-    output_parameters: Dict[str, Component] = dict()
+    output_parameters: Mapping[str, Component] = dict()
     sample_responses: List[Dict[str, Any] | List[Dict[str, Any]]] = []
 
     def __str__(self) -> str:
@@ -72,6 +72,17 @@ class API(BaseModel):
                     outputs.append(f"{item}.{inner_item}")
 
         return outputs
+
+    def get_output_as_component(self) -> Component:
+        required_props = [
+            k for k, v in self.output_parameters.items() if v.required is True
+        ]
+
+        return Component(
+            type="object",
+            properties=self.output_parameters,
+            required=required_props,
+        )
 
     def minified(self, required: Optional[bool] = True) -> MinifiedAPI:
         return MinifiedAPI(

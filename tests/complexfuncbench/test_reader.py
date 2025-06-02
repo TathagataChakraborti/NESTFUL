@@ -41,7 +41,7 @@ class TestReader:
         ).resolve()
 
         with open(abs_path, "w") as f:
-            json.dump([api.dict() for api in catalog.apis], f)
+            json.dump([api.dict() for api in catalog.apis], f, indent=4)
 
         abs_path = Path.joinpath(
             self.path_to_file,
@@ -49,4 +49,6 @@ class TestReader:
         ).resolve()
 
         with open(abs_path, "w") as f:
-            json.dump([sample.dict() for sample in sequence_data.data], f)
+            json.dump(
+                [sample.dict() for sample in sequence_data.data], f, indent=4
+            )

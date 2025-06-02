@@ -1,6 +1,6 @@
 [project]
 name = "nestful-wrapper"
-version = "0.0.9"
+version = "0.0.10"
 license = {file = "LICENSE"}
 authors = [
     { name = "Tathagata Chakraborti", email = "tchakra2@ibm.com" },
@@ -26,7 +26,7 @@ classifiers = [
     "Natural Language :: English",
     "License :: OSI Approved :: Apache Software License",
     "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
     "Framework :: Pydantic :: 2",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
     "Topic :: Scientific/Engineering :: Human Machine Interfaces",
