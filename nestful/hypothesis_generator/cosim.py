@@ -73,7 +73,16 @@ class Cosim:
             f"{var} {description} {api.name} {api.description}"
         )
 
-    def cosine_similarity(self, t1: str, t2: str) -> float:
+    def cosine_similarity(
+        self, t1: str, t2: str, preprocess_text: bool = False
+    ) -> float:
+        if preprocess_text is True:
+            t1 = " ".join(split_variable_name(t1))
+            t1 = self.process_text(t1)
+
+            t2 = " ".join(split_variable_name(t2))
+            t2 = self.process_text(t2)
+
         t1 = self.model.encode(t1)
         t2 = self.model.encode(t2)
 
