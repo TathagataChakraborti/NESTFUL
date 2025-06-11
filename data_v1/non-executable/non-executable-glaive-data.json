@@ -3078,7 +3078,7 @@
         "input": "I want to search for books written by Stephen King and create a new task for me to read those books with the title \"Read Stephen King books\", due in on October 1, 2024.",
         "output": [
             {
-                "name": "search_book",
+                "name": "search_books",
                 "arguments": {
                     "author": "Stephen King"
                 },
