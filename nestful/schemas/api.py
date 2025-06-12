@@ -23,6 +23,7 @@ class MinifiedAPI(BaseModel):
 class API(BaseModel):
     model_config = ConfigDict(extra="ignore")
 
+    id: Optional[str] = None
     name: str
     description: str
     endpoint: Optional[str] = None
@@ -101,7 +102,19 @@ class Catalog(BaseModel):
         minified: bool = False,
         required: Optional[bool] = False,
     ) -> Union[API, MinifiedAPI, None]:
-        api_object = next(filter(lambda x: x.name == name, self.apis), None)
+        api_object: Optional[API] = next(
+            (api for api in self.apis if api.name == name), None
+        )
+
+        if api_object is None:
+            api_object = next(
+                (
+                    api
+                    for api in self.apis
+                    if api.id is not None and api.id == name
+                ),
+                None,
+            )
 
         if api_object:
             return api_object if not minified else api_object.minified(required)
