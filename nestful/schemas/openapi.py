@@ -1,6 +1,6 @@
 from __future__ import annotations
 from pydantic import BaseModel, ConfigDict, Field, model_validator
-from typing import Dict, Optional, Any, Union, List
+from typing import Dict, Optional, Any, Union, List, Mapping
 from http import HTTPStatus, HTTPMethod
 
 
@@ -24,7 +24,7 @@ class Component(BaseModel):
     description: Optional[str] = ""
     enum: List[Union[str, Any]] = []
     required: List[str] = []
-    properties: Dict[str, Union[ResponseSelection, Component, Any]] = {}
+    properties: Mapping[str, Union[ResponseSelection, Component, Any]] = {}
     items: Optional[Component] = None
 
     def transform_properties_to_parameter(
