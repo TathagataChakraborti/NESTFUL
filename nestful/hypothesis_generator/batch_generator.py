@@ -16,6 +16,7 @@ def generate_atomic_calls(
     dataset: SequencingDataset,
     catalog: Catalog,
     num_samples: int,
+    use_memory: bool = False,
     min_string_length: int = 3,
     min_array_length: int = 3,
     min_backing_steps: int = 1,
@@ -69,6 +70,7 @@ def generate_atomic_calls(
                     random_sequence,
                     catalog,
                     index=random_index,
+                    use_memory=use_memory,
                     min_string_length=min_string_length,
                     min_array_length=min_array_length,
                 )
@@ -90,6 +92,7 @@ def generate_atomic_calls(
                             random_backing_sequence,
                             catalog,
                             index=len(random_backing_sequence.output),
+                            use_memory=use_memory,
                             min_string_length=min_string_length,
                             min_array_length=min_array_length,
                         )
@@ -106,21 +109,26 @@ def generate_atomic_calls(
                                 random_backing_sequence.output + backing_steps
                             )
 
-                    current_samples.append(
-                        AtomicCall(
-                            call=step,
-                            memory=memory,
-                            question=Question(
-                                user_said=random_sequence.input,
-                                argument=arg_of_interest,
-                                assignment=assignment,
-                                resolved=resolve_item_in_memory(
-                                    assignment, memory
-                                ),
-                            ),
-                            backing_steps=backing_steps,
+                    answer = resolve_item_in_memory(assignment, memory)
+
+                    if answer:
+                        question_object = Question(
+                            user_said=random_sequence.input,
+                            argument=arg_of_interest,
+                            assignment=assignment,
+                            resolved=answer,
                         )
-                    )
+
+                        print(f"Question: {question_object}, Answer: {answer}")
+
+                        current_samples.append(
+                            AtomicCall(
+                                call=step,
+                                memory=memory,
+                                question=question_object,
+                                backing_steps=backing_steps,
+                            )
+                        )
 
                     break
 
