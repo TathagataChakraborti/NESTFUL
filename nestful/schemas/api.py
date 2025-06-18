@@ -26,6 +26,7 @@ class API(BaseModel):
     id: Optional[str] = None
     name: str
     description: str
+    host: Optional[str] = None
     endpoint: Optional[str] = None
     query_parameters: Dict[str, QueryParameter] = dict()
     output_parameters: Mapping[str, Component] = dict()

@@ -103,6 +103,7 @@ class Function(BaseModel):
         return API(
             name=self.name,
             description=description,
+            host="booking-com15.p.rapidapi.com",
             endpoint=endpoint,
             query_parameters=parameters,
             output_parameters=output_parameters,
