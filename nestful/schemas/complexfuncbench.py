@@ -54,6 +54,11 @@ class Function(BaseModel):
         for item, value in self.parameters.properties.items():
             if isinstance(value, Component):
                 parameters[item] = QueryParameter(
+                    type=(
+                        value.type[0]
+                        if isinstance(value.type, List)
+                        else value.type
+                    ),
                     description=value.description,
                     enum=value.enum,
                     required=item in self.parameters.required,
