@@ -75,6 +75,17 @@ class API(BaseModel):
 
         return outputs
 
+    def get_input_as_component(self) -> Component:
+        required_props = [
+            k for k, v in self.query_parameters.items() if v.required is True
+        ]
+
+        return Component(
+            type="object",
+            properties=self.query_parameters,
+            required=required_props,
+        )
+
     def get_output_as_component(self) -> Component:
         required_props = [
             k for k, v in self.output_parameters.items() if v.required is True
