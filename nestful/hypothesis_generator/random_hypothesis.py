@@ -1,7 +1,7 @@
 from nestful import Catalog, API, SequenceStep, SequencingData
 from nestful.schemas.openapi import Component, ResponseSelection
 from nestful.hypothesis_generator.faker_generator import FakerGenerator
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, Mapping
 from hypothesis_jsonschema import from_schema
 from hypothesis.strategies import SearchStrategy
 from hypothesis import given, settings, HealthCheck
@@ -73,7 +73,7 @@ def add_basic_item(
 
 
 def get_output_in_json_form(
-    output_parameters: Dict[str, Component],
+    output_parameters: Mapping[str, Component],
     min_string_length: int = 3,
     min_array_length: int = 3,
     pattern: str = "^[a-zA-Z0-9_.-]*$",
@@ -161,6 +161,7 @@ def generate_dummy_output_sequence(
     sequence: SequencingData,
     catalog: Catalog,
     index: int,
+    use_memory: bool = False,
     min_string_length: int = 3,
     min_array_length: int = 3,
 ) -> Dict[str, Any]:
@@ -171,7 +172,11 @@ def generate_dummy_output_sequence(
 
         if label is not None:
             step_memory = generate_dummy_output_step(
-                sequence.output[i], catalog, min_string_length, min_array_length
+                sequence.output[i],
+                catalog,
+                use_memory,
+                min_string_length,
+                min_array_length,
             )
             memory[label] = step_memory
 
@@ -181,10 +186,19 @@ def generate_dummy_output_sequence(
 def generate_dummy_output_step(
     step: SequenceStep,
     catalog: Catalog,
+    use_memory: bool = False,
     min_string_length: int = 3,
     min_array_length: int = 3,
 ) -> Dict[str, Any]:
-    hypothesis = Hypothesis(name=step.name or "", catalog=catalog)
+    if use_memory is True:
+        return step.get_memory(fill_in_memory=False).get(step.label or "", {})
+    else:
+        try:
+            hypothesis = Hypothesis(name=step.name or "", catalog=catalog)
 
-    hypothesis.generate_sample(min_string_length, min_array_length)
-    return hypothesis.random_value
+            hypothesis.generate_sample(min_string_length, min_array_length)
+            return hypothesis.random_value
+
+        except Exception as e:
+            print(e)
+            return {}

@@ -16,7 +16,25 @@ class TestResolver:
             },
             "var2": {"location": {"name": "Whitechapel"}},
             "var3": {"location": {"address": {"zipcode": "02142"}}},
+            "var4": {
+                "items": [
+                    {"foo": 1},
+                    {
+                        "bar": {
+                            "baz": 3,
+                        }
+                    },
+                ]
+            },
         }
+
+    def test_array(self) -> None:
+        assert (
+            resolve_item_in_memory(
+                assignment="$var4.items[1].bar.baz$", memory=self.memory
+            )
+            == 3
+        )
 
     def test_direct(self) -> None:
         assert (

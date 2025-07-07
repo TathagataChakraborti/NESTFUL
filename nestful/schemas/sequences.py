@@ -8,7 +8,14 @@ from nestful.memory import extract_references_from_memory, resolve_in_memory
 from json import JSONDecodeError, loads as json_loads
 from copy import deepcopy
 
+import json
+
 DUMMY_VALUE = "INIT"
+
+
+class ErrorTag(BaseModel):
+    error_type: ErrorType = ErrorType.UNKNOWN
+    info: str | Dict[str, Any] | None
 
 
 class Question(BaseModel):
@@ -53,6 +60,20 @@ class SequenceStep(BaseModel):
 
     def __str__(self) -> str:
         return str(self.model_dump(exclude={"errors", "response"}))
+
+    @model_validator(mode="before")
+    @classmethod
+    def json_decode_args(cls, data: Dict[str, Any]) -> Dict[str, Any]:
+        arguments = data.get("arguments", data.get("args", dict()))
+
+        if isinstance(arguments, str):
+            try:
+                arguments = json.loads(arguments)
+            except json.JSONDecodeError:
+                pass
+
+        data["arguments"] = arguments
+        return data
 
     def get_memory(
         self, catalog: Optional[Catalog] = None, fill_in_memory: bool = False
@@ -174,14 +195,6 @@ class SequenceStep(BaseModel):
                 self.name == ground_truth.name
                 and gt_arguments == self_arguments
             )
-
-    # @model_validator(mode="after")
-    # def non_string_assignments(self) -> SequenceStep:
-    #     self.arguments = {
-    #         key: str(item) for key, item in self.arguments.items()
-    #     }
-    #
-    #     return self
 
     @staticmethod
     def parse_pretty_print(pretty_print: str) -> SequenceStep:
@@ -545,8 +558,3 @@ class SequencingData(BaseModel):
 
 class SequencingDataset(BaseModel):
     data: List[SequencingData]
-
-
-class ErrorTag(BaseModel):
-    error_type: ErrorType = ErrorType.UNKNOWN
-    info: str | Dict[str, Any] | None

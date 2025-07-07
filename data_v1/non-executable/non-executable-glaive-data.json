@@ -1497,7 +1497,7 @@
             {
                 "name": "encrypt_data",
                 "arguments": {
-                    "data": "$var1.description$",
+                    "data": "$var1.todo_list$",
                     "encryption_key": "abc123"
                 },
                 "label": "var2"
@@ -1869,7 +1869,7 @@
             {
                 "name": "generate_barcode",
                 "arguments": {
-                    "data": "$var2.BMI$",
+                    "data": "$var1.BMI$",
                     "format": "EAN-13"
                 },
                 "label": "var3"
@@ -3492,7 +3492,7 @@
                     "amount": "$var1.discounted_price$",
                     "tax_rate": 0.05
                 },
-                "label": "var1"
+                "label": "var2"
             },
             {
                 "name": "var_result",

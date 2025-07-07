@@ -35,4 +35,22 @@ class TestHypothesisGeneratorBatch:
             num_samples=1,
         )
 
+        for sample in dataset:
+            assert sample.question and sample.question.resolved
+
         assert len(dataset) == 1
+
+    def test_complexfuncbench_from_memory(self) -> None:
+        sequence_data, catalog = get_nestful_data(name="complexfuncbench")
+
+        dataset = generate_atomic_calls(
+            dataset=sequence_data,
+            catalog=catalog,
+            num_samples=5,
+            use_memory=True,
+        )
+
+        for sample in dataset:
+            assert sample.question and sample.question.resolved
+
+        assert len(dataset) == 5

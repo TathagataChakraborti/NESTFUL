@@ -26,6 +26,7 @@ class API(BaseModel):
     id: Optional[str] = None
     name: str
     description: str
+    host: Optional[str] = None
     endpoint: Optional[str] = None
     query_parameters: Dict[str, QueryParameter] = dict()
     output_parameters: Mapping[str, Component] = dict()
@@ -73,6 +74,17 @@ class API(BaseModel):
                     outputs.append(f"{item}.{inner_item}")
 
         return outputs
+
+    def get_input_as_component(self) -> Component:
+        required_props = [
+            k for k, v in self.query_parameters.items() if v.required is True
+        ]
+
+        return Component(
+            type="object",
+            properties=self.query_parameters,
+            required=required_props,
+        )
 
     def get_output_as_component(self) -> Component:
         required_props = [
