@@ -37,6 +37,7 @@ classifiers = [
 dependencies = [
     "pydantic",
     "jsonref",
+    "jmespath",
     "hypothesis-jsonschema",
     "Faker",
     "genson",
