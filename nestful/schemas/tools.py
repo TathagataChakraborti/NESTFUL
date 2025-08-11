@@ -65,6 +65,7 @@ class Tool(BaseModel):
     name: str
     description: str
     parameters: Component
+    output_parameters: Optional[Component] = None
 
     def convert_to_catalog_spec(self) -> API:
         query_parameters: Dict[str, QueryParameter] = dict()
@@ -78,11 +79,29 @@ class Tool(BaseModel):
                 **tmp_props, required=param in self.parameters.required
             )
 
-        return API(
+        api = API(
             name=self.name,
             description=self.description,
             query_parameters=query_parameters,
         )
+
+        if self.output_parameters is not None:
+            tmp_props = (
+                self.output_parameters.items
+                if self.output_parameters.type == "array"
+                else self.output_parameters
+            )
+
+            if isinstance(tmp_props, Component):
+                api.output_parameters = {}
+
+                for k, v in tmp_props.properties.items():
+                    if isinstance(v, Component):
+                        api.output_parameters[k] = v
+                    else:
+                        raise NotImplementedError()
+
+        return api
 
 
 class OpenAITool(BaseModel):
