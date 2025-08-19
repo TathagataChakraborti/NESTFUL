@@ -1,7 +1,8 @@
 from __future__ import annotations
 from nestful.schemas.openapi import Component
 from pydantic import BaseModel, ConfigDict
-from typing import List, Dict, Optional, Union, Any, Mapping
+from typing import List, Set, Dict, Optional, Union, Any, Mapping
+from copy import deepcopy
 
 
 class QueryParameter(BaseModel):
@@ -64,16 +65,7 @@ class API(BaseModel):
             ]
 
     def get_outputs(self) -> List[str]:
-        outputs = []
-
-        for item in self.output_parameters:
-            outputs.append(item)
-
-            if self.output_parameters[item].properties:
-                for inner_item in self.output_parameters[item].properties:
-                    outputs.append(f"{item}.{inner_item}")
-
-        return outputs
+        return list(flatten_schema(self.output_parameters))
 
     def get_input_as_component(self) -> Component:
         required_props = [
@@ -132,3 +124,37 @@ class Catalog(BaseModel):
             return api_object if not minified else api_object.minified(required)
 
         return None
+
+
+def flatten_schema(
+    schema: Mapping[str, Any],
+    delimiter: str = ".",
+    keychain: Optional[List[str]] = None,
+) -> Set[str]:
+    flattened_keys: Set[str] = set()
+    keychain = keychain or []
+
+    type_of_schema = schema.get("type", None)
+
+    if type_of_schema == "array":
+        schema = schema.get("items", {}) or {}
+        type_of_schema = schema.get("type", "object")
+
+    if type_of_schema is not None:
+        schema = schema.get("properties", {})
+
+    for key, value in schema.items():
+        tmp_keychain = deepcopy(keychain)
+        tmp_keychain.append(key)
+
+        flattened_keys.add(f"{delimiter}".join(tmp_keychain))
+
+        if isinstance(value, Component):
+            value = value.model_dump()
+
+        if isinstance(value, Dict):
+            flattened_keys.update(
+                flatten_schema(value, delimiter, tmp_keychain)
+            )
+
+    return flattened_keys
