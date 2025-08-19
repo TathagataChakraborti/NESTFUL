@@ -1,7 +1,7 @@
 from __future__ import annotations
 from nestful.schemas.openapi import Component
 from pydantic import BaseModel, ConfigDict
-from typing import List, Set, Dict, Optional, Union, Any, Mapping
+from typing import List, Dict, Optional, Union, Any, Mapping
 from copy import deepcopy
 
 
@@ -125,7 +125,6 @@ class Catalog(BaseModel):
 
         return None
 
-
 def flatten_schema(
     schema: Mapping[str, Any],
     delimiter: str = ".",
@@ -140,7 +139,9 @@ def flatten_schema(
         schema = schema.get("items", {}) or {}
         type_of_schema = schema.get("type", "object")
 
-    if type_of_schema is not None:
+    if isinstance(type_of_schema, Component):
+        pass
+    elif type_of_schema is not None:
         schema = schema.get("properties", {})
 
     for key, value in schema.items():
