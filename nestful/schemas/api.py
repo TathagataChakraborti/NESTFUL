@@ -1,7 +1,7 @@
 from __future__ import annotations
 from nestful.schemas.openapi import Component
 from pydantic import BaseModel, ConfigDict
-from typing import List, Dict, Optional, Union, Any, Mapping
+from typing import Set, List, Dict, Optional, Union, Any, Mapping
 from copy import deepcopy
 
 
@@ -124,6 +124,7 @@ class Catalog(BaseModel):
             return api_object if not minified else api_object.minified(required)
 
         return None
+
 
 def flatten_schema(
     schema: Mapping[str, Any],
