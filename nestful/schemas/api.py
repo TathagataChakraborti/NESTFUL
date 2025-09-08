@@ -125,6 +125,23 @@ class Catalog(BaseModel):
 
         return None
 
+    def get_tools(self) -> List[Dict[str, Any]]:
+        tools = []
+
+        for api in self.apis:
+            tools.append(
+                {
+                    "name": api.name,
+                    "description": api.description,
+                    "parameters": api.get_input_as_component().model_dump(),
+                    "output_parameters": (
+                        api.get_output_as_component().model_dump()
+                    ),
+                }
+            )
+
+        return tools
+
 
 def flatten_schema(
     schema: Mapping[str, Any],
