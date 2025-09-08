@@ -73,7 +73,8 @@ class Tool(BaseModel):
         for param, props in self.parameters.properties.items():
             tmp_props = props.dict()
 
-            del tmp_props["required"]
+            if "required" in tmp_props:
+                del tmp_props["required"]
 
             query_parameters[param] = QueryParameter(
                 **tmp_props, required=param in self.parameters.required
