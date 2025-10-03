@@ -1,5 +1,5 @@
 from typing import List, Dict, Union, Any, Tuple, Optional
-from enum import StrEnum, auto
+from enum import auto
 from pydantic import BaseModel
 from genson import SchemaBuilder
 from nestful.schemas.openapi import Component
@@ -10,6 +10,13 @@ from nestful.schemas.sequences import (
     SequencingData,
     SequencingDataset,
 )
+
+
+try:
+    from enum import StrEnum
+except (ImportError, ModuleNotFoundError):
+    # Temporary patch for Python 3.10
+    from backports.strenum import StrEnum  # type: ignore
 
 
 class Role(StrEnum):

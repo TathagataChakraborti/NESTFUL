@@ -1,4 +1,4 @@
-from enum import StrEnum, auto
+from enum import auto
 from pathlib import Path
 from json import load
 from os import listdir
@@ -10,6 +10,13 @@ from typing import Any, Optional, Tuple, List
 from nestful import SequencingDataset, SequencingData, Catalog, API
 from nestful.schemas.openapi import OpenAPI, Component, PathSpec
 from nestful.schemas.api import QueryParameter
+
+
+try:
+    from enum import StrEnum
+except (ImportError, ModuleNotFoundError):
+    # Temporary patch for Python 3.10
+    from backports.strenum import StrEnum  # type: ignore
 
 
 class DataType(StrEnum):

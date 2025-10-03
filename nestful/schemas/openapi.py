@@ -1,7 +1,24 @@
 from __future__ import annotations
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 from typing import Dict, Optional, Any, Union, List, Mapping
-from http import HTTPStatus, HTTPMethod
+from http import HTTPStatus
+
+try:
+    from http import HTTPMethod
+except (ImportError, ModuleNotFoundError):
+    # Temporary patch for Python 3.10
+    from backports.strenum import StrEnum
+
+    class HTTPMethod(StrEnum):  # type: ignore
+        CONNECT = "CONNECT"
+        DELETE = "DELETE"
+        GET = "GET"
+        HEAD = "HEAD"
+        OPTIONS = "OPTIONS"
+        PATCH = "PATCH"
+        POST = "POST"
+        PUT = "PUT"
+        TRACE = "TRACE"
 
 
 class OpenAPIInfo(BaseModel):

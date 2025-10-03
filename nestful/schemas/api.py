@@ -34,7 +34,7 @@ class API(BaseModel):
     sample_responses: List[Dict[str, Any] | List[Dict[str, Any]]] = []
 
     def __str__(self) -> str:
-        self_dict = self.dict(
+        self_dict = self.model_dump(
             include={
                 "name",
                 "description",
