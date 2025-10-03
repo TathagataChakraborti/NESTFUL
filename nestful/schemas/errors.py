@@ -1,6 +1,13 @@
 from __future__ import annotations
-from enum import StrEnum, auto
 from random import choice
+from enum import auto
+
+
+try:
+    from enum import StrEnum
+except (ImportError, ModuleNotFoundError):
+    # Temporary patch for Python 3.10
+    from backports.strenum import StrEnum  # type: ignore
 
 
 class ErrorType(StrEnum):

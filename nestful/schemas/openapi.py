@@ -7,7 +7,7 @@ try:
     from http import HTTPMethod
 except (ImportError, ModuleNotFoundError):
     # Temporary patch for Python 3.10
-    from enum import StrEnum
+    from backports.strenum import StrEnum
 
     class HTTPMethod(StrEnum):  # type: ignore
         GET = "GET"
