@@ -7,9 +7,9 @@ try:
     from http import HTTPMethod
 except (ImportError, ModuleNotFoundError):
     # Temporary patch for Python 3.10
-    from enum import Enum
+    from enum import StrEnum
 
-    class HTTPMethod(Enum):  # type: ignore
+    class HTTPMethod(StrEnum):  # type: ignore
         GET = "GET"
         POST = "POST"
         PUT = "PUT"

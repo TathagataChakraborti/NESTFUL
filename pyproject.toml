@@ -45,6 +45,7 @@ dependencies = [
     "nltk",
     "scipy",
     "jsonschema",
+    "backports.strenum",
 ]
 
 [project.optional-dependencies]
