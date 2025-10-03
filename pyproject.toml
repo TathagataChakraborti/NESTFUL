@@ -1,6 +1,6 @@
 [project]
 name = "nestful-wrapper"
-version = "0.1.4"
+version = "0.1.5"
 license = {file = "LICENSE"}
 authors = [
     { name = "Tathagata Chakraborti", email = "tchakra2@ibm.com" },
