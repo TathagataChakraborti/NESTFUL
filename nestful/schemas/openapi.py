@@ -10,10 +10,15 @@ except (ImportError, ModuleNotFoundError):
     from backports.strenum import StrEnum
 
     class HTTPMethod(StrEnum):  # type: ignore
+        CONNECT = "CONNECT"
+        DELETE = "DELETE"
         GET = "GET"
+        HEAD = "HEAD"
+        OPTIONS = "OPTIONS"
+        PATCH = "PATCH"
         POST = "POST"
         PUT = "PUT"
-        DELETE = "DELETE"
+        TRACE = "TRACE"
 
 
 class OpenAPIInfo(BaseModel):
