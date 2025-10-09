@@ -30,7 +30,7 @@ class API(BaseModel):
     host: Optional[str] = None
     endpoint: Optional[str] = None
     query_parameters: Dict[str, QueryParameter] = dict()
-    output_parameters: Mapping[str, Component] = dict()
+    output_parameters: Dict[str, Component] = dict()
     sample_responses: List[Dict[str, Any] | List[Dict[str, Any]]] = []
 
     def __str__(self) -> str:
@@ -74,7 +74,7 @@ class API(BaseModel):
 
         return Component(
             type="object",
-            properties=self.query_parameters,
+            properties=self.query_parameters,  # type: ignore
             required=required_props,
         )
 
@@ -85,7 +85,7 @@ class API(BaseModel):
 
         return Component(
             type="object",
-            properties=self.output_parameters,
+            properties=self.output_parameters,  # type: ignore
             required=required_props,
         )
 
