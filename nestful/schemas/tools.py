@@ -3,6 +3,7 @@ from pydantic import BaseModel, ConfigDict, model_validator
 from typing import Optional, Dict, Any, List
 from nestful.schemas.sequences import SequenceStep
 from nestful.schemas.api import Component, QueryParameter, API
+from nestful.schemas.openapi import ResponseSelection, process_props
 from nestful.utils import get_token
 
 
@@ -65,7 +66,7 @@ class Tool(BaseModel):
     name: str
     description: str
     parameters: Component
-    output_parameters: Optional[Component] = None
+    output_parameters: Optional[Component | ResponseSelection] = None
 
     def convert_to_catalog_spec(self) -> API:
         query_parameters: Dict[str, QueryParameter] = dict()
@@ -87,20 +88,18 @@ class Tool(BaseModel):
         )
 
         if self.output_parameters is not None:
-            tmp_props = (
-                self.output_parameters.items
-                if self.output_parameters.type == "array"
-                else self.output_parameters
-            )
+            processed_props = process_props(self.output_parameters)
 
-            if isinstance(tmp_props, Component):
-                api.output_parameters = {}
+            if processed_props.type == "array":
+                processed_props = processed_props.items or Component()
 
-                for k, v in tmp_props.properties.items():
-                    if isinstance(v, Component):
-                        api.output_parameters[k] = v
-                    else:
-                        raise NotImplementedError()
+            api.output_parameters = {}
+
+            for k, v in processed_props.properties.items():
+                if isinstance(v, Component):
+                    api.output_parameters[k] = v
+                else:
+                    raise NotImplementedError()
 
         return api
 

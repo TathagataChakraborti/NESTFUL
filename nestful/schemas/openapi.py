@@ -1,6 +1,6 @@
 from __future__ import annotations
 from pydantic import BaseModel, ConfigDict, Field, model_validator
-from typing import Dict, Optional, Any, Union, List, Mapping
+from typing import Dict, Optional, Any, Union, List
 from http import HTTPStatus
 
 try:
@@ -41,7 +41,7 @@ class Component(BaseModel):
     description: Optional[str] = ""
     enum: List[Union[str, Any]] = []
     required: List[str] = []
-    properties: Mapping[str, Union[ResponseSelection, Component, Any]] = {}
+    properties: Dict[str, Union[ResponseSelection, Component, Any]] = {}
     items: Optional[Component] = None
 
     def transform_properties_to_parameter(
@@ -236,3 +236,54 @@ class OpenAPI(BaseModel):
 
         self.paths = new_paths  # type: ignore
         return self
+
+
+def merge_components(
+    c1: Optional[Component], c2: Optional[Component]
+) -> Optional[Component]:
+    if c1 is None and c2 is None:
+        return None
+
+    c1 = c1 or Component()
+    c2 = c2 or Component()
+
+    return Component.model_validate(
+        {
+            **c1.model_dump(),
+            **c2.model_dump(),
+            "items": merge_components(c1.items, c2.items),
+            "properties": {
+                **c1.properties,
+                **c2.properties,
+            },
+        }
+    )
+
+
+def process_props(props: Component | ResponseSelection) -> Component:
+    if isinstance(props, Component):
+        if props.items:
+            props.items = process_props(props.items)
+
+        if props.properties:
+            for k, v in props.properties.items():
+                props.properties[k] = process_props(v)
+
+        return props
+
+    elif isinstance(props, ResponseSelection):
+        merged_component = Component()
+
+        for key in ResponseSelection.model_fields.keys():
+            list_of_components = getattr(props, key)
+
+            if list_of_components:
+                for component in list_of_components:
+                    merged_component = (
+                        merge_components(merged_component, component)
+                        or Component()
+                    )
+
+        return process_props(merged_component)
+    else:
+        raise ValueError(props)
