@@ -1845,6 +1845,11 @@
         "host": "real-time-product-search.p.rapidapi.com",
         "url": "https://rapidapi.com/letscrape-6bRBa3QguO5/api/real-time-product-search/playground/endpoint_c542ccd5-2a31-4be8-bda9-bc87d6359200",
         "query_parameters": {
+            "product_id": {
+                "type": "string",
+                "description": "Product ID of the product for which to fetch details.",
+                "required": true
+            },
             "q": {
                 "type": "string",
                 "description": "Search query or keyword."
